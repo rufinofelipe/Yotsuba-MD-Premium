@@ -10,7 +10,6 @@ const regexPatterns = {
   ]
 }
 
-
 function detectLinks(text) {
   const results = {
     whatsappGroup: false,
@@ -21,13 +20,11 @@ function detectLinks(text) {
     foundLinks: []
   }
   
-  
   const groupMatches = text.match(regexPatterns.whatsappGroup)
   if (groupMatches) {
     results.whatsappGroup = true
     results.foundLinks.push(...groupMatches)
   }
-  
   
   const channelMatches = text.match(regexPatterns.whatsappChannel)
   if (channelMatches) {
@@ -35,20 +32,17 @@ function detectLinks(text) {
     results.foundLinks.push(...channelMatches)
   }
   
-  
   const waMeMatches = text.match(regexPatterns.waMe)
   if (waMeMatches) {
     results.waMe = true
     results.foundLinks.push(...waMeMatches)
   }
   
-  
   const genericMatches = text.match(regexPatterns.genericLink)
   if (genericMatches) {
     results.genericLink = true
     results.foundLinks.push(...genericMatches)
   }
-  
   
   for (const customRegex of regexPatterns.customDomains) {
     const customMatches = text.match(customRegex)
@@ -63,11 +57,9 @@ function detectLinks(text) {
 
 export async function before(m, { conn, isAdmin, isBotAdmin }) {
   try {
-    
     if (!m || !m.text || m.text.trim() === '' || (m.isBaileys && m.fromMe) || !m.isGroup) {
       return true
     }
-    
     
     if (!global.db) global.db = { data: { chats: {} } }
     if (!global.db.data) global.db.data = { chats: {} }
@@ -76,18 +68,15 @@ export async function before(m, { conn, isAdmin, isBotAdmin }) {
     
     const chat = global.db.data.chats[m.chat]
     
-    
     if (!isBotAdmin) return true
     
     const userNumber = m.sender.split('@')[0]
     const linkDetection = detectLinks(m.text)
     
-    
     if (chat.antiLink) {
       const foundProhibitedLink = linkDetection.whatsappGroup || linkDetection.whatsappChannel || linkDetection.waMe
       
       if (foundProhibitedLink && !isAdmin) {
-        
         if (linkDetection.whatsappGroup) {
           try {
             const groupInviteCode = await conn.groupInviteCode(m.chat)
@@ -104,7 +93,7 @@ export async function before(m, { conn, isAdmin, isBotAdmin }) {
         try {
           await conn.reply(
             m.chat,
-            `💙 ¡Ara ara! @${userNumber} ha sido expulsado del escenario virtual por enviar enlaces de WhatsApp! 💙🎤\n\n🎵 ¡En el mundo de Miku no permitimos enlaces de grupos/canales!`,
+            `⚽ ¡Fuera de juego! @${userNumber} ha sido expulsado del campo por enviar enlaces de WhatsApp! 🏃‍♂️🔥\n\n🔵 ¡En Blue Lock no permitimos enlaces de grupos/canales!`,
             m,
             { mentions: [m.sender] }
           )
@@ -120,12 +109,10 @@ export async function before(m, { conn, isAdmin, isBotAdmin }) {
       }
     }
     
-    
     if (chat.antiLink2) {
       const foundAnyLink = linkDetection.genericLink || linkDetection.customDomain
       
       if (foundAnyLink && !isAdmin) {
-        
         if (chat.antiLink && (linkDetection.whatsappGroup || linkDetection.whatsappChannel || linkDetection.waMe)) {
           return false
         }
@@ -135,7 +122,7 @@ export async function before(m, { conn, isAdmin, isBotAdmin }) {
         try {
           await conn.reply(
             m.chat,
-            `💙 ¡Ara ara! @${userNumber} ha sido expulsado del escenario virtual por enviar enlaces prohibidos! 💙🎤\n\n🎵 ¡En el mundo de Miku no permitimos enlaces de ningún tipo!`,
+            `⚽ ¡Tarjeta roja! @${userNumber} ha sido expulsado por enviar enlaces prohibidos! 🏃‍♂️🔥\n\n🔵 ¡En Blue Lock no permitimos enlaces de ningún tipo!`,
             m,
             { mentions: [m.sender] }
           )
@@ -158,4 +145,3 @@ export async function before(m, { conn, isAdmin, isBotAdmin }) {
     return true
   }
 }
-
