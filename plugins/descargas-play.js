@@ -38,7 +38,7 @@ function formatViews(views) {
 const handler = async (m, { conn, text, usedPrefix, command }) => {
   try {
     if (!text.trim()) {
-      return conn.reply(m.chat, `💙 Ingresa el nombre de la música a descargar.\n\nEjemplo: ${usedPrefix}${command} Let you Down Cyberpunk`, m);
+      return conn.reply(m.chat, `⚽ Ingresa el nombre de la música a descargar.\n\nEjemplo: ${usedPrefix}${command} Blue Lock Opening`, m);
     }
 
     const search = await yts(text);
@@ -75,22 +75,22 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
       ['📁 MP4 Documento', 'ytdl_video_doc']
     ];
     
-    const infoText = `*𖹭.╭╭ִ╼࣪━ִﮩ٨ـﮩ💙𝗠𝗶𝗸𝘂𝗺𝗶𝗻🌱ﮩ٨ـﮩ━ִ╾࣪╮╮.𖹭*
+    const infoText = `*𖹭.╭╭ִ╼࣪━ִﮩ٨ـﮩ⚽𝗜𝘀𝗮𝗴𝗶 𝗬𝗼𝗶𝗰𝗵𝗶🏃‍♂️ﮩ٨ـﮩ━ִ╾࣪╮╮.𖹭*
 
-> 💙 *Título:* ${title}
+> ⚽ *Título:* ${title}
 *°.⎯⃘̶⎯̸⎯ܴ⎯̶᳞͇ࠝ⎯⃘̶⎯̸⎯ܴ⎯̶᳞͇ࠝ⎯⃘̶⎯̸.°*
-> 🌱 *Duración:* ${timestamp}
+> 🏃‍♂️ *Duración:* ${timestamp}
 *°.⎯⃘̶⎯̸⎯ܴ⎯̶᳞͇ࠝ⎯⃘̶⎯̸⎯ܴ⎯̶᳞͇ࠝ⎯⃘̶⎯̸.°*
-> 💙 *Vistas:* ${vistas}
+> ⚽ *Vistas:* ${vistas}
 *°.⎯⃘̶⎯̸⎯ܴ⎯̶᳞͇ࠝ⎯⃘̶⎯̸⎯ܴ⎯̶᳞͇ࠝ⎯⃘̶⎯̸.°*
-> 🌱 *Canal:* ${canal}
+> 🏃‍♂️ *Canal:* ${canal}
 *°.⎯⃘̶⎯̸⎯ܴ⎯̶᳞͇ࠝ⎯⃘̶⎯̸⎯ܴ⎯̶᳞͇ࠝ⎯⃘̶⎯̸.°*
-> 💙 *Publicado:* ${ago}
+> ⚽ *Publicado:* ${ago}
 *⏝ּׅ︣︢ۛ۫۫۫۫۫۫ۜ⏝ּׅ︣︢ۛ۫۫۫۫۫۫ۜ⏝ּׅ︣︢ۛ۫۫۫۫۫۫ۜ⏝ּׅ︣︢ۛ۫۫۫۫۫۫ۜ⏝ּׅ︣︢ۛ۫۫۫۫۫۫ۜ⏝ּׅ︣︢ۛ۫۫۫۫۫۫ۜ⏝ּׅ︣︢ۛ۫۫۫۫۫۫ۜ⏝ּׅ︣ׄۛ۫۫۫۫۫۫ۜ*
 
-💌 *Selecciona el formato para descargar:*`;
+🔥 *Selecciona el formato para descargar:*`;
 
-    const footer = '🌱 Hatsune Miku Bot - YouTube';
+    const footer = '🏃‍♂️ Isagi Yoichi Bot - YouTube';
 
     try {
       const thumb = thumbnail ? (await conn.getFile(thumbnail))?.data : null;
@@ -113,7 +113,7 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
 
   } catch (error) {
     console.error("Error completo:", error);
-    return m.reply(`💙 Ocurrió un error: ${error.message || 'Desconocido'}`);
+    return m.reply(`⚽ Ocurrió un error: ${error.message || 'Desconocido'}`);
   }
 };
 
@@ -126,7 +126,7 @@ async function processDownload(conn, m, url, title, option) {
   };
   
   const downloadType = downloadTypes[option] || 'archivo';
-  await conn.reply(m.chat, `💙 Obteniendo ${downloadType}... ⚡`, m);
+  await conn.reply(m.chat, `⚽ Obteniendo ${downloadType}... 🔥`, m);
   
   try {
     const isVideo = option === 2 || option === 4;
@@ -180,13 +180,13 @@ async function processDownload(conn, m, url, title, option) {
     if (user && !user.monedaDeducted) {
       user.moneda = (user.moneda || 0) - 2;
       user.monedaDeducted = true;
-      conn.reply(m.chat, `💙 Has utilizado 2 *Cebollines 🌱*`, m);
+      conn.reply(m.chat, `⚽ Has utilizado 2 *Pases 🏃‍♂️*`, m);
     }
     
     return true;
   } catch (error) {
     console.error("Error al procesar descarga:", error);
-    conn.reply(m.chat, `💙 Error: ${error.message}`, m);
+    conn.reply(m.chat, `⚽ Error: ${error.message}`, m);
     return false;
   }
 }
@@ -329,7 +329,7 @@ handler.before = async (m, { conn }) => {
     
   } catch (error) {
     console.error(`❌ Error en descarga:`, error.message);
-    await conn.reply(m.chat, `💙 Error al procesar la descarga: ${error.message}`, m);
+    await conn.reply(m.chat, `⚽ Error al procesar la descarga: ${error.message}`, m);
   }
   
   return true;
