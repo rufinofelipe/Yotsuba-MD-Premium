@@ -1,35 +1,36 @@
 var handler = async (m, { conn, command, text }) => {
 
-if (!text) return conn.reply(m.chat, `🎤💙 Por favor, ingresa el nombre del fanático para analizar su personalidad virtual ✨🎵`, m)
+if (!text) return conn.reply(m.chat, `⚽🔥 *BLUE LOCK ANALYSIS* 🔥⚽\n\nIngresa el nombre del jugador para analizar su potencial egoísta...`, m)
 
-let personalidad = `🎤💙 *Análisis de Personalidad Virtual* ✨
+let personalidad = `⚽🔥 *ANÁLISIS BLUE LOCK - PROYECCIÓN DE EGOS* 🔥⚽
 
-\`Nombre del Fanático\` : ${text}
-\`Armonía Musical\` : ${pickRandom(['6%','12%','20%','27%','35%','41%','49%','54%','60%','66%','73%','78%','84%','92%','93%','94%','96%','98,3%','99,7%','99,9%','1%','2,9%','0%','0,4%'])}
-\`Rebeldía Virtual\` : ${pickRandom(['6%','12%','20%','27%','35%','41%','49%','54%','60%','66%','73%','78%','84%','92%','93%','94%','96%','98,3%','99,7%','99,9%','1%','2,9%','0%','0,4%'])}
-\`Tipo de Fanático\` : ${pickRandom(['Kawaii Virtual','Idol del Concierto','Estrella Digital','Fan Supremo','Diva Virtual','Tímido/a Musical','Valiente del Escenario','Curioso/a Virtual','Cristal Musical','Fanático/a Binario/a', 'Rebelde Cibernético'])}
-\`Siempre está\` : ${pickRandom(['Cantando Melodías','Bailando Virtual','Distraid@ con Música','Ensayando Coreografías','Chismeando en el Concierto','Escuchando a Miku','De Compras Virtuales','Viendo Conciertos','Chateando en WhatsApp sobre Miku','Descansando después del Show','Conquistando Corazones','En el Escenario Virtual'])}
-\`Inteligencia Musical\` : ${pickRandom(['9%','12%','20%','27%','35%','41%','49%','54%','60%','66%','73%','78%','84%','92%','93%','94%','96%','98,3%','99,7%','99,9%','1%','2,9%','0%','0,4%'])}
-\`Rebeldía Digital\` : ${pickRandom(['9%','12%','20%','27%','35%','41%','49%','54%','60%','66%','73%','78%','84%','92%','93%','94%','96%','98,3%','99,7%','99,9%','1%','2,9%','0%','0,4%'])}
-\`Popularidad Virtual\` : ${pickRandom(['6%','12%','20%','27%','35%','41%','49%','54%','60%','66%','73%','78%','84%','92%','93%','94%','96%','98,3%','99,7%','99,9%','1%','2,9%','0%','0,4%'])}
-\`Valor en el Escenario\` : ${pickRandom(['6%','12%','20%','27%','35%','41%','49%','54%','60%','66%','73%','78%','84%','92%','93%','94%','96%','98,3%','99,7%','99,9%','1%','2,9%','0%','0,4%'])}
-\`Nervios Escénicos\` : ${pickRandom(['6%','12%','20%','27%','35%','41%','49%','54%','60%','66%','73%','78%','84%','92%','93%','94%','96%','98,3%','99,7%','99,9%','1%','2,9%','0%','0,4%'])}
-\`Fama del Concierto\` : ${pickRandom(['6%','12%','20%','27%','35%','41%','49%','54%','60%','66%','73%','78%','84%','92%','93%','94%','96%','98,3%','99,7%','99,9%','1%','2,9%','0%','0,4%'])}
-\`Estilo Musical\` : ${pickRandom(['Fan de Miku', 'Diva Virtual', 'Idol Kawaii', 'Estrella Bisexual', 'Artista Pansexual', 'Feminista Musical', 'Heterosexual Virtual', 'Alpha del Escenario', 'Diva Suprema', 'Rebelde Musical', 'Fan de PlayStation', 'Solista Virtual', 'Amante de la Música'])}
+\`JUGADOR ANALIZADO\` : ${text}
+\`POTENCIAL EGOÍSTA\` : ${pickRandom(['78%','84%','92%','96%','98%','99%','100%','150%','200%','∞%'])}
+\`VISIÓN DIRECTA\` : ${pickRandom(['65%','72%','88%','94%','97%','99%','100%','S+'])}
+\`HAMBRIENTO DE VICTORIAS\` : ${pickRandom(['85%','90%','95%','98%','99%','100%','🔥MAXIMO🔥'])}
+\`TIPO DE DELANTERO\` : ${pickRandom(['Depredador del Área','Genio Táctico','Egoísta Nato','Rey Solitario','Asesino Instintivo','Estratega Frío','Máquina de Goles','Fénix Renacido'])}
+\`ESTADO ACTUAL\` : ${pickRandom(['Devorando rivales','Analizando patrones','En zona de flujo','Cazando en el área','Creando jugadas maestras','Superando límites','Destruyendo defensas','Evolucionando en tiempo real'])}
+\`ARMA SECRETA\` : ${pickRandom(['Meta-Visión','Instinto Asesino','Ego Infinito','Determinación Absoluta','Adaptación Instantánea','Frío Calculador','Hambre de Gol','Voluntad de Acero'])}
+\`DEBILIDAD DETECTADA\` : ${pickRandom(['Exceso de análisis','Ego sobrecalentado','Falta de socios ideales','Miedo al fracaso','Dependencia tácticas','Inconsistencia emocional','Ninguna - Ego Puro'])}
+\`NIVEL DE FLUJO\` : ${pickRandom(['65%','78%','85%','92%','96%','99%','¡ZONA DE FLUJO!','EVOLUCIÓN CONTINUA'])}
+\`COMPATIBILIDAD ISAGI\` : ${pickRandom(['72%','85%','90%','95%','98%','RIVAL IDEAL','ALIADO PERFECTO','ENEMIGO MORTAL'])}
+\`POTENCIAL FINAL\` : ${pickRandom(['Estrella Mundial','Número 1 Japón','Leyenda Blue Lock','Genio Incomprendido','Diamante en Bruto','Jugador de Élite','Fenómeno Único'])}
 
-🎵✨ *¡Análisis completo del mundo virtual de Miku!* ✨🎵`
+🔥 *"En este mundo, solo los más hambrientos sobreviven" - Jinpachi Ego* 🔥
+
+⚽ *Análisis completado - ¡Demuestra tu ego en el campo!* ⚽`
 
 conn.reply(m.chat, personalidad, m)
 
 }
-handler.help = ['personalidad']
-handler.tags = ['fun']
-handler.command = ['personalidad']
+handler.help = ['bluelock', 'isagi', 'ego']
+handler.tags = ['fun', 'anime']
+handler.command = ['bluelock', 'isagi', 'ego', 'analisis']
 handler.group = true;
 handler.register = true
 
 export default handler
 
-
-
-
+function pickRandom(list) {
+    return list[Math.floor(Math.random() * list.length)]
+}
