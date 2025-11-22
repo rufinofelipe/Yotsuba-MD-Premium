@@ -77,7 +77,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isOwner }) => {
     })
 
     
-    let statusText = `┌─「 🤖 *HATSUNE MIKU - SUBBOTS* 」\n`
+    let statusText = `┌─「 🤖 *ISAGI YOICHI - SUBBOTS* 」\n`
     statusText += `├ 📊 *Estado del Servidor*\n`
     statusText += `├ 💾 Memoria RAM: ${memUsage}MB\n`
     statusText += `├ 🟢 SubBots Activos: ${activeConnections.length}\n`
