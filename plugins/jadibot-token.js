@@ -3,7 +3,7 @@ import path from 'path'
 
 let handler = async (m, { conn, args, usedPrefix, command }) => {
   if (!globalThis.db?.data?.settings?.[conn.user.jid]?.jadibotmd) {
-    return m.reply(`💙 El sistema de Sub-Bots está desactivado temporalmente.`)
+    return m.reply(`⚽️ El sistema de Sub-Bots está desactivado temporalmente.`)
   }
 
   if (!args[0]) {
