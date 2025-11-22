@@ -1,3 +1,4 @@
+
 import { totalmem, freemem } from 'os'
 import os from 'os'
 import util from 'util'
@@ -20,21 +21,21 @@ let chats = Object.entries(conn.chats).filter(([id, data]) => id && data.isChats
 let groups = Object.entries(conn.chats).filter(([jid, chat]) => jid.endsWith('@g.us') && chat.isChats && !chat.metadata?.read_only && !chat.metadata?.announce).map(v => v[0])
 
 
-let texto = `🎤💙 *${packname}* �🎤
-🎵 *Velocidad del Escenario Virtual:*
-→ ${latensi.toFixed(4)}ms ✨
+let texto = `⚽🔥 *${packname}* ⚽🔥
+🎯 *Velocidad de Reacción:*
+→ ${latensi.toFixed(4)}ms ⚡
 
-⏰ *Tiempo en Concierto:*
-→ ${muptime} 🎶
+⏰ *Tiempo de Entrenamiento:*
+→ ${muptime} 🏃♂️
 
-💫 *Audiencia Virtual:*
-→ ${chats.length} *Fanáticos privados* 🎤
-→ ${groups.length} *Salas de concierto* 🎵
+💎 *Estadísticas del Campo:*
+→ ${chats.length} *Entrenamientos individuales* 🎯
+→ ${groups.length} *Equipos formados* ⚽
 
-� *Sistema de Actuación:*
-➤ *Memoria Virtual ⪼* ${format(totalmem() - freemem())} / ${format(totalmem())} 💙`.trim()
+🔥 *Sistema del Delantero:*
+➤ *Memoria en Uso ⪼* ${format(totalmem() - freemem())} / ${format(totalmem())} 💪`.trim()
 
-m.react('🎤')
+m.react('⚽')
 
 conn.reply(m.chat, texto, m, )
 
@@ -51,4 +52,3 @@ let h = isNaN(ms) ? '--' : Math.floor(ms / 3600000)
 let m = isNaN(ms) ? '--' : Math.floor(ms / 60000) % 60
 let s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60
 return [h, m, s].map(v => v.toString().padStart(2, 0)).join(':')}
-
