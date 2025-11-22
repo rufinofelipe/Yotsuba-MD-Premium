@@ -45,7 +45,7 @@ title: '👻 Usuarios Fantasmas Detectados',
 hasMediaAttachment: false
 },
 body: { text: listMsg },
-footer: { text: '💙 Hatsune Miku Bot' },
+footer: { text: '⚽️ Isagi Yoichi Bot' },
 nativeFlowMessage: {
 buttons: [{
 name: 'quick_reply',
