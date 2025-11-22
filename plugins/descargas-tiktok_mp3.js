@@ -2,7 +2,7 @@ import fetch from 'node-fetch'
 
 let handler = async (m, { conn, text, usedPrefix, command }) => {
     if (!text) {
-        return conn.reply(m.chat, `💙 Por favor, ingresa un enlace de TikTok.\n\n📝 *Ejemplo:* ${usedPrefix}${command} https://www.tiktok.com/@usuario/video/1234567890`, m);
+        return conn.reply(m.chat, `⚽ Por favor, ingresa un enlace de TikTok.\n\n📝 *Ejemplo:* ${usedPrefix}${command} https://www.tiktok.com/@usuario/video/1234567890`, m);
     }
 
     const tiktokUrl = validateTikTokUrl(text);
@@ -38,7 +38,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
                     mediaType: 2,
                     mediaUrl: tiktokUrl,
                     title: title || 'Audio de TikTok',
-                    body: `👤 ${author || 'Autor desconocido'} | 🎵 Hatsune Miku Bot`,
+                    body: `👤 ${author || 'Autor desconocido'} | 🎵 Isagi Yoichi Bot`,
                     sourceUrl: tiktokUrl,
                     thumbnail: thumbnail ? await getImageBuffer(thumbnail) : null
                 }
@@ -50,7 +50,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
             document: { url: audioUrl },
             mimetype: 'audio/mpeg',
             fileName: `${(title || 'tiktok_audio').replace(/[^\w\s]/gi, '').substring(0, 50)}.mp3`,
-            caption: `🎵 *Audio de TikTok*\n\n📝 *Título:* ${title || 'Audio TikTok'}\n👤 *Autor:* ${author || 'Desconocido'}\n\n💙 *Descargado por Hatsune Miku Bot*`
+            caption: `🎵 *Audio de TikTok*\n\n📝 *Título:* ${title || 'Audio TikTok'}\n👤 *Autor:* ${author || 'Desconocido'}\n\n⚽ *Descargado por Isagi Yoichi Bot*`
         };
 
         await conn.sendMessage(m.chat, docMessage, { quoted: m });
@@ -80,7 +80,7 @@ function validateTikTokUrl(url) {
         const patterns = [
             /(?:https?:\/\/)?(?:www\.)?tiktok\.com\/@([^\/]+)\/video\/(\d+)/,
             /(?:https?:\/\/)?vm\.tiktok\.com\/([A-Za-z0-9]+)/,
-            /(?:https?:\/\/)?vt\.tiktok\.com\/([A-Za-z0-9]+)/,
+            /(?:https?:\/\/)?vt\.tiktok\.com\/([A-Za-z0+9]+)/,
             /(?:https?:\/\/)?m\.tiktok\.com\/v\/(\d+)/,
             /(?:https?:\/\/)?www\.tiktok\.com\/t\/([A-Za-z0-9]+)/,
             /(?:https?:\/\/)?www\.tiktok\.com\/.*\/video\/(\d+)/
@@ -123,7 +123,6 @@ async function downloadAudioFromMultipleAPIs(url) {
         {
             name: 'TikWM-Alt',
             func: () => tiktokAudioTikWMAlt(url)
-        }
     ];
     
     for (const api of apis) {
