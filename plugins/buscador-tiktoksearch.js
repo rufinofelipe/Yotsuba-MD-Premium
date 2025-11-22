@@ -9,7 +9,7 @@ const {
 
 let handler = async (message, { conn, text, usedPrefix, command }) => {
   if (!text) {
-    return conn.reply(message.chat, "💙 Por favor, ingrese un texto para realizar una búsqueda en tiktok.", message, global.rcanal);
+    return conn.reply(message.chat, "⚽️ Por favor, ingrese un texto para realizar una búsqueda en tiktok.", message, global.rcanal);
   }
 
   async function createVideoMessage(url) {
@@ -29,7 +29,7 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
   }
 
   try {
-    conn.reply(message.chat, '💙 *ENVIANDO SUS RESULTADOS..*', message, {
+    conn.reply(message.chat, '⚽️ *ENVIANDO SUS RESULTADOS..*', message, {
       contextInfo: { 
         externalAdReply: { 
           mediaUrl: null, 
@@ -72,7 +72,7 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
           },
           interactiveMessage: proto.Message.InteractiveMessage.fromObject({
             body: proto.Message.InteractiveMessage.Body.create({
-              text: "💙 RESULTADO DE: " + text
+              text: "⚽️ RESULTADO DE: " + text
             }),
             footer: proto.Message.InteractiveMessage.Footer.create({
               text: dev
