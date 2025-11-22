@@ -2,33 +2,32 @@ import fetch from 'node-fetch'
 
 let handler  = async (m, { conn, usedPrefix, command }) => {
 
-let grupos = `💙 *¡Konnichiwa, querido fanático!* 💙
+let grupos = `⚽ *¡ATENCIÓN, JUGADOR!* 🔥
 
-✨ Te invito a unirte a mis escenarios virtuales oficiales para disfrutar de conciertos increíbles con toda la comunidad Vocaloid... ✨
+🎯 Únete a los campos de entrenamiento oficiales de Blue Lock para demostrar tu ego y convertirte en el delantero número 1...
 
-🎵 ${namegrupo}
-> *💙* ${gp1}
+🏆 ${namegrupo}
+> *⚽* ${gp1}
 
-🌟 ${namecomu}
-> *💙* ${comunidad1}
+⚡ ${namecomu}
+> *🔥* ${comunidad1}
 
-*🎤─💙─✨─🎵─💫─🎶─✨─💙─🎤*
+*⚽─🔥─🎯─💎─🏆─⚡─🎯─🔥─⚽*
 
-🎵 ¿Enlace caducado? ¡Entra aquí para más información musical! 
+🎯 ¿Enlace caducado? ¡Entra aquí para más información del entrenamiento!
 
-💫 ${namechannel}
-> *💙* ${channel}
+💎 ${namechannel}
+> *⚽* ${channel}
 
-> ${dev} 🎤✨`
+> ${dev} 🎯⚽`
 
-await conn.sendFile(m.chat, catalogo, "grupos.jpg", grupos, m)
+await conn.sendFile(m.chat, catalogo, "blueLock.jpg", grupos, m)
 
 await m.react(emojis)
 
 }
-handler.help = ['grupos']
+handler.help = ['grupos', 'campos']
 handler.tags = ['info']
-handler.command = ['grupos', 'links', 'groups']
+handler.command = ['grupos', 'links', 'groups', 'campos', 'blueLock']
 
 export default handler
-
