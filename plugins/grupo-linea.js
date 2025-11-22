@@ -27,7 +27,7 @@ await conn.sendMessage(
 m.chat, 
 {
 image: { url: pp },
-caption: `*💙 Lista de usuarios en línea:*\n\n${listaEnLinea}\n\n> ${dev}`,
+caption: `*⚽️ Lista de usuarios en línea:*\n\n${listaEnLinea}\n\n> ${dev}`,
 contextInfo: { mentionedJid: participantesOrdenados },
 },
 { quoted: m })
