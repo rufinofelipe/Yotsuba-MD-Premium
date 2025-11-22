@@ -3,12 +3,12 @@ let handler = async (m, { conn, command }) => {
   if (Date.now() - global.lastDepoolResponse < 2000) return;
   global.lastDepoolResponse = Date.now();
 
-  if (command === 'depool') {
-    const nombre = 'Brauliovh3';
-    const alias = 'DEPOOL';
+  if (command === 'duartexv') {
+    const nombre = 'DuarteXV;
+    const alias = 'DuarteXV;
     const descripcion = `
-👤 *Creador:* ${nombre} (BVH3 ${alias})
-💙 Desarrollador principal de *Hatsune Miku Bot*
+👤 *Creador:* ${nombre} (DuarteXV ${alias})
+⚽️ Desarrollador principal de *Isagi Yoichi Bot*
 
 ¡Gracias por usar el bot! Si quieres apoyar el proyecto, puedes hacerlo con un donativo. Tu ayuda permite que el bot siga activo y mejorando.
 
@@ -16,7 +16,7 @@ let handler = async (m, { conn, command }) => {
 
     const buttons = [
       { buttonId: '.apoyardepool', buttonText: { displayText: '💙 Apoyar' }, type: 1 },
-      { buttonId: '.sabermasdepool', buttonText: { displayText: 'ℹ️ Saber más' }, type: 1 }
+      { buttonId: '.sabermasduarte', buttonText: { displayText: 'ℹ️ Saber más' }, type: 1 }
     ];
 
     await conn.sendMessage(m.chat, {
