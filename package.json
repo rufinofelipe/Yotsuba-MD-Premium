@@ -1,5 +1,5 @@
 {
-  "name": "Hatsune miku",
+  "name": "Isagi Yoichi",
   "version": "2.2.6",
   "description": "WhatsApp Bot Multi Device",
   "main": "index.js",
@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/Brauliovh3",
   "author": {
-    "name": "(ㅎㅊDEPOOLㅊㅎ)"
+    "name": "Duartexv"
   },
   "repository": {
     "type": "git",
