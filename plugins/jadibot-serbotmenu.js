@@ -1,7 +1,7 @@
 const handler = async (m, { conn, usedPrefix, command, args }) => {
   
   if (!globalThis.db.data.settings[conn.user.jid].jadibotmd) {
-    return m.reply(`💙 El comando *${command}* está desactivado temporalmente.`)
+    return m.reply(`🎯 El comando *${command}* está desactivado temporalmente.`)
   }
   
   
@@ -23,7 +23,7 @@ const handler = async (m, { conn, usedPrefix, command, args }) => {
   const maxSubBots = 15 
   
   if (subBotsCount >= maxSubBots) {
-    return m.reply(`💙 No se han encontrado espacios para *Sub-Bots* disponibles. (${subBotsCount}/${maxSubBots})`)
+    return m.reply(`⚽ No se han encontrado espacios para *Sub-Bots* disponibles. (${subBotsCount}/${maxSubBots})`)
   }
 
   
@@ -38,9 +38,9 @@ const handler = async (m, { conn, usedPrefix, command, args }) => {
     ['📄 Código QR', 'serbot_qr']
   ]
 
-  const text = `🤖 *CREAR SUB-BOT PERSISTENTE* 🤖
+  const text = `🤖 *CREAR SUB-BOT PERSISTENTE* ⚽
 
-🌟 *¡Conviértete en un Sub-Bot de Hatsune Miku!*
+🌟 *¡Conviértete en un Sub-Bot de Isagi Yoichi!*
 
 *Selecciona tu método de vinculación preferido:*
 
@@ -67,7 +67,7 @@ const handler = async (m, { conn, usedPrefix, command, args }) => {
 
 ${isDebug ? '\n🔍 *Modo Debug Activado* - Se mostrarán logs detallados' : ''}`
 
-  const footer = '🤖 Sistema de SubBots - Hatsune Miku Bot'
+  const footer = '⚽ Sistema de SubBots - Isagi Yoichi Bot'
   const serBotGif = 'https://media.tenor.com/aGsOxo7R4l0AAAPo/miku-channelcastation.mp4'
 
   try {
@@ -261,7 +261,7 @@ handler.before = async function (m, { conn, usedPrefix }) {
     
     
     if (!globalThis.db?.data?.settings?.[conn.user.jid]?.jadibotmd) {
-      return conn.reply(m.chat, `💙 El sistema de SubBots está desactivado temporalmente.`, m)
+      return conn.reply(m.chat, `🎯 El sistema de SubBots está desactivado temporalmente.`, m)
     }
     
     
@@ -301,7 +301,7 @@ handler.before = async function (m, { conn, usedPrefix }) {
         user.Subs = Date.now()
         return true
         
-      } else if (buttonId === '') {
+      } else if (buttonId === 'serbot_qr') {
         
         
         const { mikuJadiBot } = await import('./jadibot-serbot.js')
