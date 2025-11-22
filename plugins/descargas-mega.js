@@ -3,16 +3,16 @@ import path from "path";
 
 let handler = async (m, { conn, args, usedPrefix, text, command }) => {
     try {
-        if (!text) return conn.reply(m.chat, `💙 Por favor, envía un link de MEGA para descargar el archivo 🎵`, m);
+        if (!text) return conn.reply(m.chat, `⚽ Por favor, envía un link de MEGA para descargar el archivo 🏃‍♂️`, m);
 
         const file = File.fromURL(text);
         await file.loadAttributes();
 
-        if (file.size >= 300000000) return conn.reply(m.chat, `💙 ¡Gomen! El archivo es demasiado pesado (Máximo: 300MB) 💫`, m);
+        if (file.size >= 300000000) return conn.reply(m.chat, `⚽ ¡Error en la jugada! El archivo es demasiado pesado (Máximo: 300MB) 🔥`, m);
 
-        await m.react('🎤');
+        await m.react('⚽');
 
-        const caption = `💙 *Descarga de MEGA* 💙\n\n📁 Archivo: ${file.name}\n📊 Tamaño: ${formatBytes(file.size)}\n\n🎵 ¡Descarga completada! 💫`;
+        const caption = `⚽ *Descarga de MEGA* ⚽\n\n📁 Archivo: ${file.name}\n📊 Tamaño: ${formatBytes(file.size)}\n\n🏃‍♂️ ¡Descarga completada! 🔥`;
 
         const data = await file.downloadBuffer();
 
@@ -31,11 +31,11 @@ let handler = async (m, { conn, args, usedPrefix, text, command }) => {
         let mimetype = mimeTypes[fileExtension] || "application/octet-stream";
 
         await conn.sendFile(m.chat, data, file.name, caption, m, null, { mimetype, asDocument: true });
-        await m.react('✨');
+        await m.react('🔥');
 
     } catch (error) {
-        await m.react('💙');
-        return conn.reply(m.chat, `💙 ¡Gomen! Ocurrió un error en el mundo virtual: ${error.message} 💫`, m);
+        await m.react('⚽');
+        return conn.reply(m.chat, `⚽ ¡Error en la jugada! Ocurrió un problema en el campo: ${error.message} 🔥`, m);
     }
 }
 
