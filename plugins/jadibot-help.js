@@ -21,8 +21,8 @@ let handler = async (m, { conn, args, usedPrefix, command, isOwner }) => {
     const activeConnections = global.conns?.filter(c => c && c.user && isSocketReady(c)) || []
     const totalBots = global.conns?.filter(c => c && c.user).length || 0
     
-    let helpText = `┌─「 🤖 *HATSUNE MIKU - SUBBOT MANAGER* 」\n`
-    helpText += `├ 💙 *Sistema de SubBots Ultra-Persistente*\n`
+    let helpText = `┌─「 🤖 *ISAGI YOICHI - SUBBOT MANAGER* 」\n`
+    helpText += `├ ⚽️ *Sistema de SubBots Ultra-Persistente*\n`
     helpText += `├ 📊 Estado: ${activeConnections.length}/${totalBots} activos\n`
     helpText += `├ 💾 Memoria: ${memUsage}MB\n`
     helpText += `└────────────────────\n\n`
@@ -131,7 +131,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isOwner }) => {
     helpText += `└ Espera o elimina un SubBot existente\n\n`
 
     helpText += `⏰ *Última actualización:* ${new Date().toLocaleString('es-ES')}\n`
-    helpText += `💙 *Hatsune Miku Bot* - Sistema SubBot Ultra-Persistente`
+    helpText += `⚽️ *Isagi Yoichi Bot* - Sistema SubBot Ultra-Persistente`
 
     await m.reply(helpText)
     console.log(chalk.green(`✅ Ayuda de SubBot enviada a ${m.sender}`))
