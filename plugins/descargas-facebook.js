@@ -1,3 +1,4 @@
+
 import { igdl } from 'ruhend-scraper'
 import fetch from 'node-fetch'
 
@@ -33,14 +34,14 @@ const handler = async (m, { text, conn, args }) => {
       if (isVideo) {
         await conn.sendMessage(m.chat, { 
           video: { url: mediaUrl }, 
-          caption: `💙 *Facebook Video*\n\n✨ Resolución: ${data.resolution || 'Auto'}\n\n🎵 Descargado por Hatsune Miku Bot`, 
+          caption: `⚽ *Facebook Video*\n\n🔥 Resolución: ${data.resolution || 'Auto'}\n\n🏃‍♂️ Descargado por Isagi Yoichi Bot`, 
           fileName: 'facebook.mp4', 
           mimetype: 'video/mp4' 
         }, { quoted: m })
       } else {
         await conn.sendMessage(m.chat, { 
           image: { url: mediaUrl }, 
-          caption: `💙 *Facebook Image*\n\n🎵 Descargado por Hatsune Miku Bot` 
+          caption: `⚽ *Facebook Image*\n\n🏃‍♂️ Descargado por Isagi Yoichi Bot` 
         }, { quoted: m })
       }
     }
