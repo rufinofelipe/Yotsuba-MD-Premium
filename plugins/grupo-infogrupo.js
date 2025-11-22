@@ -4,36 +4,35 @@ const handler = async (m, {conn, participants, groupMetadata}) => {
   const groupAdmins = participants.filter((p) => p.admin)
   const listAdmin = groupAdmins.map((v, i) => `${i + 1}. @${v.id.split('@')[0]}`).join('\n')
   const owner = groupMetadata.owner || groupAdmins.find((p) => p.admin === 'superadmin')?.id || m.chat.split`-`[0] + '@s.whatsapp.net'
-  const text = `🎤 *･ﾟ INFO DEL CONCIERTO VIRTUAL ﾟ･* 💙
-🎵 *ID del Escenario:* ${groupMetadata.id}
-✨ *Nombre del Concierto:* ${groupMetadata.subject}
-🌟 *Fanáticos:* ${participants.length} Participantes
-💫 *Organizador Principal:* @${owner.split('@')[0]}
-🎶 *Staff del Concierto:*
+  const text = `⚽ *･ﾟ INFORMACIÓN DEL CAMPO BLUE LOCK ﾟ･* 🔥
+🎯 *ID del Campo:* ${groupMetadata.id}
+🏆 *Nombre del Equipo:* ${groupMetadata.subject}
+👥 *Jugadores en Cancha:* ${participants.length} Depredadores
+👑 *Director Técnico:* @${owner.split('@')[0]}
+⚽ *Capitanes del Equipo:*
 ${listAdmin}
 
-🎤˚₊· ͟͟͞͞➳❥ *CONFIGURACIÓN DEL ESCENARIO VIRTUAL*
+🔥 *CONFIGURACIÓN DEL ENTRENAMIENTO*
 
-💙 *${botname}* » ${isBanned ? 'Desactivado' : 'Activado'}
-✨ *Bienvenida Musical:* ${welcome ? 'Activado' : 'Desactivado'}
-🎵 *Detección Virtual:* ${detect ? 'Activado' : 'Desactivado'}  
-🌟 *Anti-Enlaces:* ${antiLink ? 'Activado' : 'Desactivado'} 
-💫 *Auto-Aceptar Fans:* ${autoAceptar ? 'Activado' : 'Desactivado'}
-🎶 *Auto-Rechazar:* ${autoRechazar ? 'Activado' : 'Desactivado'}
-🎤 *Contenido +18:* ${nsfw ? 'Activado' : 'Desactivado'}
-✨ *Modo Admin Virtual:* ${modoadmin ? 'Activado' : 'Desactivado'}
-💙 *Reacciones Miku:* ${reaction ? 'Activado' : 'Desactivado'}
-🌟 *Anti-Fake Fans:* ${antifake ? 'Activado' : 'Desactivado'}
+⚽ *${botname}* » ${isBanned ? 'EXPULSADO' : 'EN ACTIVO'}
+🎯 *Bienvenida Blue Lock:* ${welcome ? 'ACTIVADO' : 'DESACTIVADO'}
+🔍 *Detección de Talentos:* ${detect ? 'ACTIVADO' : 'DESACTIVADO'}  
+🚫 *Anti-Distracciones:* ${antiLink ? 'ACTIVADO' : 'DESACTIVADO'} 
+✅ *Auto-Aceptar Retadores:* ${autoAceptar ? 'ACTIVADO' : 'DESACTIVADO'}
+❌ *Auto-Rechazar Débiles:* ${autoRechazar ? 'ACTIVADO' : 'DESACTIVADO'}
+🔞 *Contenido Intenso:* ${nsfw ? 'PERMITIDO' : 'PROHIBIDO'}
+💎 *Modo Estratégico:* ${modoadmin ? 'ACTIVADO' : 'DESACTIVADO'}
+⚡ *Reacciones Competitivas:* ${reaction ? 'ACTIVADO' : 'DESACTIVADO'}
+🛡️ *Anti-Imitadores:* ${antifake ? 'ACTIVADO' : 'DESACTIVADO'}
 
-🎵 *Descripción del Concierto:*
-${groupMetadata.desc?.toString() || 'Sin Descripción Musical'}`.trim();
+📝 *FILOSOFÍA DEL EQUIPO:*
+${groupMetadata.desc?.toString() || 'Sin filosofía definida...'}`.trim();
   conn.sendFile(m.chat, pp, 'img.jpg', text, m, false, {mentions: [...groupAdmins.map((v) => v.id), owner]});
 };
-handler.help = ['infogrupo'];
+handler.help = ['infogrupo', 'infocampo'];
 handler.tags = ['grupo'];
-handler.command = ['infogrupo', 'gp'];
+handler.command = ['infogrupo', 'gp', 'infocampo', 'blueLockInfo'];
 handler.register = true
 handler.group = true;
 
 export default handler;
-
