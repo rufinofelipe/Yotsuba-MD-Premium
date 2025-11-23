@@ -13,8 +13,8 @@ let handler = async (m, { conn, usedPrefix }) => {
     let name2 = conn.getName(m.sender)
 
     let str = m.mentionedJid.length > 0 || m.quoted 
-        ? `💙 \`${name2}\` se sonrojó por \`${name || who}\` en el concierto virtual 😊` 
-        : `💙 \`${name2}\` se sonrojó kawaii en el mundo virtual de Miku 😊`
+        ? `⚽️ \`${name2}\` se sonrojó por \`${name || who}\` en el campo de entrenamiento 😊` 
+        : `⚽️ \`${name2}\` se sonrojó kawai😊`
     
     if (m.isGroup) {
         let pp = 'https://files.catbox.moe/guqe6z.mp4'
