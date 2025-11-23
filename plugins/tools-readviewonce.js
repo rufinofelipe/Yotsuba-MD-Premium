@@ -1,8 +1,8 @@
 let { downloadContentFromMessage } = (await import('@whiskeysockets/baileys'));
 
 let handler = async (m, { conn }) => {
-if (!m.quoted) return conn.reply(m.chat, `💙 Responde a una imagen ViewOnce.`, m, global.rcanal)
-if (!m?.quoted || !m?.quoted?.viewOnce) return conn.reply(m.chat, `💙 Responde a una imagen ViewOnce.`, m, global.rcanal)
+if (!m.quoted) return conn.reply(m.chat, `⚽️ Responde a una imagen ViewOnce.`, m, global.rcanal)
+if (!m?.quoted || !m?.quoted?.viewOnce) return conn.reply(m.chat, `⚽️ Responde a una imagen ViewOnce.`, m, global.rcanal)
 let buffer = await m.quoted.download(false);
 if (/videoMessage/.test(m.quoted.mtype)) {
 return conn.sendFile(m.chat, buffer, 'media.mp4', m.quoted.caption || '', m)
