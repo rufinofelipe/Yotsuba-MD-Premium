@@ -2,7 +2,7 @@ const pHora = 30
 const pDia = 700
 const cHora = 1
 const cDia = 20
-const moneda = 'Cebollines 🌱'
+const moneda = 'Blue-lock-points'
 
 let handler = async (m, { conn, usedPrefix, command, args }) => {
 
@@ -12,22 +12,22 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
 ° *h :* Horas = ${pHora} ${moneda}
 ° *d :* Días = ${pDia} ${moneda}
 
-💙 Ejemplo :
+⚽️ Ejemplo :
 ${command} 1 h ---> 1 hora premium.
 ${command} 1 d ---> 1 día premium.`
   let name = await conn.getName(m.sender)
   if (!args[0]) return conn.reply(m.chat, texto, m)
   let type
   let user = global.db.data.users[m.sender]
-  if (isNaN(args[0])) return conn.reply(m.chat, `💙 Solo se aceptan números.\n> Ejemplo: ${command} 1 h`, m)
+  if (isNaN(args[0])) return conn.reply(m.chat, `⚽️ Solo se aceptan números.\n> Ejemplo: ${command} 1 h`, m)
   let kk = args[1] || "h"
   let precio = kk === "h" ? pHora : pDia
   let comision = kk === "h" ? cHora : cDia
   if (!args[1] || (args[1] !== "h" && args[1] !== "d")) {
-    return conn.reply(m.chat, `💙 Formato no válido.`, m)
+    return conn.reply(m.chat, `⚽️ Formato no válido.`, m)
   }
   if (user.coin < (precio + comision)) {
-    return conn.reply(m.chat, `💙 No tienes suficientes ${moneda} para comprar la membresía premium!`, m)
+    return conn.reply(m.chat, `⚽️ No tienes suficientes ${moneda} para comprar la membresía premium!`, m)
   }
   let tiempo
   if (args[1] === "h") {
@@ -53,7 +53,7 @@ ${command} 1 d ---> 1 día premium.`
 ⴵ Tiempo Premium » ${args[0]} ${type}
 📟 Total a pagar » ${precio * args[0] + comision * args[0]} ${moneda}
 ⛁ ${moneda} » ${user.coin}
-💙 Tenía » ${user.coin + precio * args[0] + comision * args[0]}
+⚽️ Tenía » ${user.coin + precio * args[0] + comision * args[0]}
 💥 Comisión » -${comision * args[0]} (incluida)`
   conn.sendMessage(m.chat, { text: cap, mentions: [m.sender] }, { quoted: m })
 }
