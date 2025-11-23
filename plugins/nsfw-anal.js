@@ -2,8 +2,8 @@ import fs from 'fs';
 import path from 'path';
 
 let handler = async (m, { conn, usedPrefix }) => {
-if (!db.data.chats[m.chat].nsfw && m.isGroup) {
-    return m.reply(`💙 El contenido *+18* está desactivado en este escenario virtual.\n> Un administrador puede activarlo con el comando » *#nsfw on* 🎵`);
+    if (!db.data.chats[m.chat].nsfw && m.isGroup) {
+        return m.reply(`🔞 El contenido *+18* está desactivado en este grupo.\n> Un administrador puede activarlo con el comando » *#nsfw on*`);
     }
 
     let who;
@@ -20,11 +20,11 @@ if (!db.data.chats[m.chat].nsfw && m.isGroup) {
 
     let str;
     if (m.mentionedJid.length > 0) {
-        str = `💙 \`${name2}\` *Se la metio muy fuerte a * \`${name || who}\` *en el mundo digital* 🎤`; 
+        str = `💫 *${name2}* comparte un momento de intimidad con *${name || who}* en un encuentro apasionado 🔥`; 
     } else if (m.quoted) {
-        str = `✨ \`${name2}\` *la partio muy fuerte a* \`${name || who}\` *en el ciberespacio* 🎶`;
+        str = `✨ *${name2}* vive un encuentro íntimo y apasionado con *${name || who}* 💞`;
     } else {
-        str = `💙 \`${name2}\` *está experimentando con ritmos intensos en el mundo virtual* 💫`.trim();
+        str = `💫 *${name2}* está explorando su sensualidad en un momento de intimidad consigo mismo 🌙`.trim();
     }
     
     if (m.isGroup) {
@@ -40,7 +40,12 @@ if (!db.data.chats[m.chat].nsfw && m.isGroup) {
         const video = videos[Math.floor(Math.random() * videos.length)];
         
         let mentions = [who]; 
-        conn.sendMessage(m.chat, { video: { url: video }, gifPlayback: true, caption: str, mentions }, { quoted: m });
+        conn.sendMessage(m.chat, { 
+            video: { url: video }, 
+            gifPlayback: true, 
+            caption: str, 
+            mentions 
+        }, { quoted: m });
     }
 }
 
@@ -50,4 +55,3 @@ handler.command = ['anal','culiar'];
 handler.group = true;
 
 export default handler;
-
