@@ -26,7 +26,7 @@ export async function before(m, { conn, participants, groupMetadata }) {
       return true
     }
 
-    const canalUrl = 'https://whatsapp.com/channel/0029Vb73g1r1NCrTbefbFQ2T'
+    const canalUrl = 'https://whatsapp.com/channel/0029VajYamSIHphMAl3ABi1o'
     const groupSize = (participants || []).length
 
     const sendSingleWelcome = async (jid, text, user, quoted) => {
@@ -44,7 +44,7 @@ export async function before(m, { conn, participants, groupMetadata }) {
 
         if (!ppBuffer) {
           try {
-            const defaultResponse = await fetch('https://files.catbox.moe/l8qiik.jpeg')
+            const defaultResponse = await fetch('https://i.pinimg.com/736x/30/42/b8/3042b89ced13fefda4e75e3bc6dc2a57.jpg')
             ppBuffer = await defaultResponse.buffer()
           } catch (e) {
             ppBuffer = null
@@ -77,33 +77,13 @@ export async function before(m, { conn, participants, groupMetadata }) {
         if (!user) continue
         
         const userName = user.split('@')[0]
-        const welcomeText = `👋 *@${userName} HA INGRESADO AL CAMPO*
-
-╭─⊷ *BLUE LOCK PROTOCOL*
-│• 🎯 *OBJETIVO:* Ser el mejor
-│• 🔥 *EGO:* ${groupSize} contendientes
-│• ⚽ *META:* Evolucionar o ser eliminado
-╰─
-
-¿Qué debes hacer para dominar este espacio?
-
-*OBSERVA. ANALIZA. DEVORA.* 
-
-Aquí no hay lugar para mediocres. Solo aquellos con hambre de superación sobreviven.
-
-╭─⊷ *DIRECTRICES*
-│• 🧠 Usa *#help* para conocer las herramientas
-│• 🔥 Tu ego es tu arma más poderosa
-│• ⚡ Visualiza tu jugada perfecta
-╰─
-
-*EL PARTIDO HA COMENZADO. DEMUESTRA QUE TU "YO" FUTURO ES MÁS FUERTE.*` @${userName}!
+        const welcomeText = `👋 ¡Hola @${userName}!
 
 🎉Bienvenido a *${groupMetadata?.subject || 'el grupo'}*
 
 🔥Somos *${groupSize}* miembros
 
-⚽️${global.welcom1 || 'El futbol nos une'}
+⚽️${global.welcom1 || 'La música nos une'}
 
 📝Ayuda: *#help*
 
@@ -126,21 +106,7 @@ Aquí no hay lugar para mediocres. Solo aquellos con hambre de superación sobre
         if (!user) continue
         
         const userName = user.split('@')[0]
-        const byeText = `👋 *@${userName} HA SIDO ELIMINADO*
-
-╭─⊷ *BLUE LOCK ASSESSMENT*
-│• ❌ *STATUS:* No superó el corte
-│• 🔄 *MOTIVO:* Falta de evolución
-│• 📉 *RESULTADO:* Abandona el proyecto
-╰─
-
-No pudiste adaptarte. No supiste devorar a tus rivales.
-
-En Blue Lock, solo los más fuertes sobreviven. Quizás en otro campo encuentres tu respuesta.
-
-*HAS FALLADO EN CONVERTIRTE EN LA PIEZA DEFINITIVA.*
-
-⚽️ *Recuerda:* El fútbol es egoísmo. Quien no marca goles, no gana.`
+        const byeText = `👋 ¡Hasta luego @${userName}!
 
 😢Te extrañaremos en *${groupMetadata?.subject || 'el grupo'}*
 
