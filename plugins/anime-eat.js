@@ -12,8 +12,8 @@ let handler = async (m, { conn, usedPrefix }) => {
     let name2 = conn.getName(m.sender)
 
     let str = m.mentionedJid.length > 0 || m.quoted 
-        ? `\`${name2}\` está comiendo con \`${name || who}\` en el café virtual (っ˘ڡ˘ς) 🍰💙` 
-        : `\`${name2}\` está comiendo en el mundo virtual (っ˘ڡ˘ς) ✨🎵`
+        ? `\`${name2}\` está comiendo con \`${name || who}\` en el Blue Lock (っ˘ڡ˘ς) 🍰⚽️` 
+        : `\`${name2}\` está comiendo en Blue Lock (っ˘ڡ˘ς) ✨🏆`
     
     if (m.isGroup) {
         let pp = 'https://media.tenor.com/ZBO4pyuseVcAAAPo/engage-kiss-kanna.mp4'
