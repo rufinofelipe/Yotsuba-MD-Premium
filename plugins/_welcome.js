@@ -26,7 +26,7 @@ export async function before(m, { conn, participants, groupMetadata }) {
       return true
     }
 
-    const canalUrl = 'https://whatsapp.com/channel/0029VajYamSIHphMAl3ABi1o'
+    const canalUrl = 'https://whatsapp.com/channel/0029Vb73g1r1NCrTbefbFQ2T'
     const groupSize = (participants || []).length
 
     const sendSingleWelcome = async (jid, text, user, quoted) => {
@@ -44,7 +44,7 @@ export async function before(m, { conn, participants, groupMetadata }) {
 
         if (!ppBuffer) {
           try {
-            const defaultResponse = await fetch('https://i.pinimg.com/736x/30/42/b8/3042b89ced13fefda4e75e3bc6dc2a57.jpg')
+            const defaultResponse = await fetch('https://files.catbox.moe/ckanyi.jpg')
             ppBuffer = await defaultResponse.buffer()
           } catch (e) {
             ppBuffer = null
