@@ -197,7 +197,7 @@ let handler = async (m, { conn, command, usedPrefix, args }) => {
                );
            } catch (error) {
                console.error('💙 Error en comando divorce:', error);
-               await m.reply('💙 Ocurrió un error, Miku lo solucionará pronto.');
+               await m.reply('💙 Ocurrió un error, Isagi lo solucionará pronto.');
            }
            break;
        }
