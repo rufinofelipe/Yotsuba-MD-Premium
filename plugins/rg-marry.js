@@ -27,7 +27,7 @@ function isHATSUNE_MIKU() {
         if (pkg.repository.url !== 'git+https://github.com/Brauliovh3/HATSUNE_MIKU.git') return false;
         return true;
     } catch (e) {
-        console.error('💙 Error al leer package.json:', e);
+        console.error('⚽️ Error al leer package.json:', e);
         return false;
     }
 }
@@ -37,7 +37,7 @@ let marriages = loadMarriages();
 let handler = async (m, { conn, command, usedPrefix, args }) => {
     // Comentamos la verificación para que el comando funcione
     // if (!isHATSUNE_MIKU()) {
-    //     await m.reply('💙 Comando no disponible por el momento. Espera a Miku~');
+    //     await m.reply('⚽️ Comando no disponible por el momento. Espera a Isagi~');
     //     return;
     // }
 
@@ -53,7 +53,7 @@ let handler = async (m, { conn, command, usedPrefix, args }) => {
     const isDivorce = /^(divorce|divorciarse)$/i.test(command);
 
     async function handleError(e) {
-        await m.reply('💙 Ocurrió un error, Miku lo solucionará pronto.');
+        await m.reply('⚽️ Ocurrió un error, Isagi lo solucionará pronto.');
         console.log(e);
     }
 
@@ -70,7 +70,7 @@ let handler = async (m, { conn, command, usedPrefix, args }) => {
                 
                 let senderData = global.db.users[m.sender];
                 if (senderData && senderData.age < 18) {
-                    await m.reply('💙 Debes ser mayor de 18 años para casarte. ¡Miku cuida de ti!');
+                    await m.reply('⚽️ Debes ser mayor de 18 años para casarte. ¡Isagi cuida de ti!');
                     return;
                 }
                 let sender = m.sender;
@@ -79,7 +79,7 @@ let handler = async (m, { conn, command, usedPrefix, args }) => {
             if (marriages[sender]) {
                 await conn.reply(
                     m.chat,
-                    `💙 Ya estás casado/a con *@${marriages[sender].split('@')[0]}*\n> Si quieres terminar el matrimonio, usa *#divorce*`,
+                    `⚽️ Ya estás casado/a con *@${marriages[sender].split('@')[0]}*\n> Si quieres terminar el matrimonio, usa *#divorce*`,
                     m,
                     { mentions: [marriages[sender]] }
                 );
@@ -90,7 +90,7 @@ let handler = async (m, { conn, command, usedPrefix, args }) => {
             if (!m.mentionedJid || m.mentionedJid.length === 0) {
                 await conn.reply(
                     m.chat,
-                    `💙 Debes mencionar a alguien para proponer matrimonio o aceptar la propuesta.\n> Ejemplo » *${usedPrefix}${command} @${conn.user.jid.split('@')[0]}*`,
+                    `⚽️ Debes mencionar a alguien para proponer matrimonio o aceptar la propuesta.\n> Ejemplo » *${usedPrefix}${command} @${conn.user.jid.split('@')[0]}*`,
                     m,
                     { mentions: [conn.user.jid] }
                 );
@@ -103,7 +103,7 @@ let handler = async (m, { conn, command, usedPrefix, args }) => {
             if (marriages[to]) {
                 await conn.reply(
                     m.chat,
-                    `💙 @${to.split('@')[0]} ya está casado/a con: *@${marriages[to].split('@')[0]}*. ¡Busca a tu Miku ideal!`,
+                    `⚽️ @${to.split('@')[0]} ya está casado/a con: *@${marriages[to].split('@')[0]}*. ¡Busca a tu Isagi!`,
                     m,
                     { mentions: [to, marriages[to]] }
                 );
@@ -112,7 +112,7 @@ let handler = async (m, { conn, command, usedPrefix, args }) => {
 
             
             if (sender === to) {
-                await m.reply('💙 ¡No puedes casarte contigo mismo! Miku te anima a buscar tu pareja.');
+                await m.reply('⚽️ ¡No puedes casarte contigo mismo! Isagi te anima a buscar tu pareja.');
                 return;
             }
 
@@ -138,7 +138,7 @@ let handler = async (m, { conn, command, usedPrefix, args }) => {
 
                await conn.reply(
                    m.chat,
-                   `💙 ｡･:*:･ﾟ💍,｡･:*:･ﾟ💍\n¡Felicidades! Se han casado 💙\n\n*•.¸💙 Esposo/a @${sender.split('@')[0]} 💙•.¸*\n*•.¸💙 Esposo/a @${to.split('@')[0]} 💙•.¸*\n\n\`¡Disfruten de su luna de miel con Miku~!\`\n\n｡･:*:･ﾟ💍,｡･:*:･ﾟ💍`,
+                   `💙 ｡･:*:･ﾟ💍,｡･:*:･ﾟ💍\n¡Felicidades! Se han casado 💙\n\n*•.¸💙 Esposo/a @${sender.split('@')[0]} 💙•.¸*\n*•.¸💙 Esposo/a @${to.split('@')[0]} 💙•.¸*\n\n\`¡Disfruten de su luna de miel con Isagi~!\`\n\n｡･:*:･ﾟ💍,｡･:*:･ﾟ💍`,
                    m,
                    { mentions: [sender, to] }
                );
@@ -147,15 +147,15 @@ let handler = async (m, { conn, command, usedPrefix, args }) => {
                proposals[sender] = to;
                await conn.reply(
                    m.chat,
-                   `💙 @${proposalJid.split('@')[0]}, @${sender.split('@')[0]} te ha propuesto matrimonio~\n¿Aceptas ser su Miku? 💙\n> Para aceptar, responde: *${usedPrefix}${command} @${sender.split('@')[0]}*`,
+                   `💙 @${proposalJid.split('@')[0]}, @${sender.split('@')[0]} te ha propuesto matrimonio~\n¿Aceptas ser su pareja? 💙\n> Para aceptar, responde: *${usedPrefix}${command} @${sender.split('@')[0]}*`,
                    m,
                    { mentions: [sender, proposalJid] }
                );
            }
            break;
            } catch (error) {
-               console.error('💙 Error en comando marry:', error);
-               await m.reply('💙 Ocurrió un error, Miku lo solucionará pronto.');
+               console.error('⚽️ Error en comando marry:', error);
+               await m.reply('⚽️ Ocurrió un error, Isagi lo solucionará pronto.');
            }
        }
 
@@ -169,7 +169,7 @@ let handler = async (m, { conn, command, usedPrefix, args }) => {
                }
                
                if (!marriages[sender]) {
-                   await conn.reply(m.chat, '💙 No estás casado/a con nadie. ¡Miku está aquí para animarte!', m);
+                   await conn.reply(m.chat, '⚽️ No estás casado/a con nadie. ¡Isagi está aquí para animarte!', m);
                    return;
                }
                let partner = marriages[sender];
@@ -191,7 +191,7 @@ let handler = async (m, { conn, command, usedPrefix, args }) => {
 
                await conn.reply(
                    m.chat,
-                   `💙 @${sender.split('@')[0]} y @${partner.split('@')[0]} han terminado su matrimonio.\n¡Ánimo! Miku siempre te apoyará 💙`,
+                   `💙 @${sender.split('@')[0]} y @${partner.split('@')[0]} han terminado su matrimonio.\n¡Ánimo! Isagi siempre te apoyará 💙`,
                    m,
                    { mentions: [sender, partner] }
                );
