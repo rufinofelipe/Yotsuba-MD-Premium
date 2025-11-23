@@ -12,8 +12,8 @@ let handler = async (m, { conn, usedPrefix }) => {
     let name2 = conn.getName(m.sender)
 
     let str = m.mentionedJid.length > 0 || m.quoted 
-        ? `\`${name2}\` está mareado con \`${name || who}\` en el concierto virtual (⸝⸝๑﹏๑⸝⸝) 🎤💙` 
-        : `\`${name2}\` está mareado en el mundo virtual (⸝⸝๑﹏๑⸝⸝) ✨🎵`
+        ? `\`${name2}\` está mareado con \`${name || who}\` en el campo de blue lock(⸝⸝๑﹏๑⸝⸝) 🏆⚽️` 
+        : `\`${name2}\` está mareado en el campo (⸝⸝๑﹏๑⸝⸝) ✨`
     
     if (m.isGroup) {
         let pp = 'https://media.tenor.com/MAGJ3RtxAKgAAAPo/anime-aqua.mp4'
