@@ -11,7 +11,7 @@ let handler = async (m, { conn, args, participants }) => {
     
     let totalPages = Math.ceil(sortedLevel.length / pageSize);
     
-    let text = `🎤 *RANKING HATSUNE MIKU* 🎤
+    let text = `⚽️ *RANKING ISAGI YOICHI* ⚽️
 
 ⚽️ *Top de Usuarios con más XP* 🔥
 
