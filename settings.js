@@ -90,7 +90,7 @@ global.comunidad1 = 'https://chat.whatsapp.com/GPfABUmCuVN2Qu1d1PPcBY'
 global.channel = 'https://whatsapp.com/channel/0029Vb73g1r1NCrTbefbFQ2T'
 global.channel2 = 'https://whatsapp.com/channel/0029VbBIilK7tkj7TROe690d'
 global.md = 'https://github.com/Brauliovh3/HATSUNE-MIKU'
-global.correo = 'duartexv.ofc@gmail.com 
+global.correo = 'duartexv.ofc@gmail.com' 
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
