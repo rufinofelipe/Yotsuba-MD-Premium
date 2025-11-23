@@ -10,7 +10,7 @@ let handler = async (m, { conn, usedPrefix, command }) => {
 
   if (!/image\/(jpe?g|png)/i.test(mime)) {
     await conn.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
-    return conn.reply(m.chat, `💙 *Responde a una imagen*`, m, rcanal)
+    return conn.reply(m.chat, `⚽️ *Responde a una imagen*`, m, rcanal)
   }
 
   try {
@@ -61,7 +61,7 @@ let handler = async (m, { conn, usedPrefix, command }) => {
 
     await conn.sendMessage(m.chat, {
       image: resultBuffer,
-      caption: `✨ *Imagen Mejorada HD*\n💫 *Itsuki-Nakano*`
+      caption: `✨ *Imagen Mejorada HD*\n💫 *Isagi Yoichi*`
     }, { quoted: m })
 
     await conn.sendMessage(m.chat, { react: { text: '✅', key: m.key } })
