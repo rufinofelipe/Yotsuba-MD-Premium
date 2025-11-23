@@ -1,7 +1,7 @@
 const handler = async (m, { conn, text, command }) => {
  const yh = global.loli;
  const url = yh[Math.floor(Math.random() * yh.length)];
- conn.sendMessage(m.chat, { image: { url: url }, caption: "💙 Aquí tienes una imagen loli aleatoria" }, { quoted: m });
+ conn.sendMessage(m.chat, { image: { url: url }, caption: "⚽️ Aquí tienes una imagen loli aleatoria" }, { quoted: m });
 };
 
 handler.help = ['loli'];
