@@ -16,24 +16,24 @@ let handler = async (m, { conn, text }) => {
         who = m.chat;
     }
     
-    if (!who) return m.reply(`🎤💙 Por favor, menciona al fanático o cita un mensaje en el concierto virtual ✨`);
+    if (!who) return m.reply(`⚽🔵 Por favor, menciona al jugador o cita un mensaje en el campo de Blue Lock 🎯`);
     
     let txt = text.replace('@' + who.split`@`[0], '').trim();
-    if (!txt) return m.reply(`🎤💙 Por favor, ingresa la cantidad de notas musicales que deseas añadir al concierto virtual ✨🎵`);
-    if (isNaN(txt)) return m.reply(`🎤💙 Solo números son válidos en el mundo virtual de Miku ✨💫`);
+    if (!txt) return m.reply(`⚽🔵 Por favor, ingresa la cantidad de puntos de ego que deseas añadir al jugador 🎯`);
+    if (isNaN(txt)) return m.reply(`⚽🔵 Solo números son válidos en el sistema de Blue Lock 🔵`);
     
     let dmt = parseInt(txt);
     let coin = dmt;
     let pjk = Math.ceil(dmt * impts);
     coin += pjk;
     
-    if (coin < 1) return m.reply(`🎤💙 El mínimo es *1* nota musical en el concierto virtual ✨🎵`);
+    if (coin < 1) return m.reply(`⚽🔵 El mínimo es *1* punto de ego en Blue Lock 🎯`);
     
     let users = global.db.data.users;
     users[who].coin += dmt;
     
-    m.reply(`🎤� *Notas Musicales Añadidas al Concierto Virtual:*
-» ${dmt} 💎\n@${who.split('@')[0]}, recibiste ${dmt} notas musicales en el mundo virtual de Miku ✨🎵�`, null, { mentions: [who] });
+    m.reply(`⚽🎯 *Puntos de Ego Añadidos al Jugador:*
+» ${dmt} ⚡\n@${who.split('@')[0]}, recibió ${dmt} puntos de ego para dominar el campo 🔵🔥`, null, { mentions: [who] });
 };
 
 handler.help = ['addcoins *<@user>*'];
@@ -42,6 +42,3 @@ handler.command = ['añadircoin', 'addcoin', 'addcoins'];
 handler.rowner = true;
 
 export default handler;
-
-
-
