@@ -16,11 +16,11 @@ global.botNumber = ''
 
 global.owner = [
 // <-- Número @s.whatsapp.net -->
-  ['573244642273', 'DuarteXV, true],
-  ['573244642273', 'DuarteXV, true],
+  ['573244642273', 'DuarteXV', true],
+  ['573244642273', 'DuarteXV', true],
   
 // <-- Número @lid -->
-  ['141807421759536', 'DuarteXV, true]
+  ['141807421759536', 'DuarteXV', true]
 ];
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
@@ -52,7 +52,7 @@ global.etiqueta = '⚽️DuarteXV⚽️'
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
-global.moneda = 'Blue-Lock-Points 
+global.moneda = 'Blue-Lock-Points'
 global.welcom1 = '! Bienvenido al campo! ⚽️ \n✨ Soy Isagi Yoichi ✨ \n⚽️ Edita este mensaje con setwelcome ⚽️'
 global.welcom2 = '💫 ¡Hasta la próxima! Gracias por jugar con nosotros 🌟 \n⚽️ ¡Esperamos verte pronto en el campo! ⚽️ \n🔥 Edita este mensaje con setbye 🔥'
 global.banner = 'https://files.catbox.moe/l8qiik.jpeg'
