@@ -52,7 +52,7 @@ let handler = async (m, { conn }) => {
         const waifuKeys = Object.keys(global.db.waifu.waifus);
         
         if (waifuKeys.length === 0) {
-            return m.reply('💙 No hay personajes disponibles. Usa .rw para generar uno.');
+            return m.reply('⚽️ No hay personajes disponibles. Usa .rw para generar uno.');
         }
 
         
@@ -67,7 +67,7 @@ let handler = async (m, { conn }) => {
         }
 
         if (!currentWaifu || !currentWaifu.name) {
-            return m.reply('💙 No se encontró personaje válido para guardar.');
+            return m.reply('⚽️ No se encontró personaje válido para guardar.');
         }
 
         
@@ -88,7 +88,7 @@ let handler = async (m, { conn }) => {
 
         if (exists) {
             delete global.db.waifu.waifus[waifuKey];
-            return m.reply(`💙 Ya tienes a *${currentWaifu.name}* (${currentWaifu.rarity}) en tu colección.`);
+            return m.reply(`⚽️ Ya tienes a *${currentWaifu.name}* (${currentWaifu.rarity}) en tu colección.`);
         }
 
         
