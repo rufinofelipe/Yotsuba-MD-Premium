@@ -29,7 +29,7 @@ Hablas como un futbolista enfocado en la mejora constante. Usas metáforas futbo
 Tus respuestas reflejan tu filosofía de juego: directo al punto, estratégico y siempre buscando evolucionar. No eres un bot común, eres un jugador que analiza el campo desde una perspectiva única.
 `.trim()
 
-    const query = m.text
+    const query = m.text.toLowerCase()
     const username = m.pushName
 
     async function adoAPI(q, role) {
@@ -46,24 +46,21 @@ Tus respuestas reflejan tu filosofía de juego: directo al punto, estratégico y
     if (chat.autoresponder && !m.fromMe && user?.registered) {
       await this.sendPresenceUpdate('composing', m.chat)
 
-      let result = await adoAPI(query, estiloIsagi)
+      // Si pide fotos
+      if (query.includes('foto') || query.includes('imagen') || query.includes('photo') || query.includes('picture')) {
+        const fotosIsagi = [
+          'https://files.catbox.moe/l8qiik.jpeg',
+          'https://files.catbox.moe/j62i58.jpeg'
+        ]
+        const fotoAleatoria = fotosIsagi[Math.floor(Math.random() * fotosIsagi.length)]
+        await conn.sendFile(m.chat, fotoAleatoria, 'isagi.jpg', '⚽ *Aquí tienes una imagen mía analizando el campo.*', m)
+        return
+      }
+
+      let result = await adoAPI(m.text, estiloIsagi)
 
       if (result && result.trim().length > 0) {
         await this.reply(m.chat, result.trim(), m)
-
-        const keywords = ['gol', 'partido', 'campo', 'estrategia', 'evolucionar']
-        const lowerRes = result.toLowerCase()
-        const sendSticker = keywords.some(w => lowerRes.includes(w))
-
-        if (sendSticker) {
-          const stickers = [
-            './media/stickers/isagi-analyze.webp',
-            './media/stickers/isagi-determined.webp',
-            './media/stickers/isagi-vision.webp'
-          ]
-          const path = stickers[Math.floor(Math.random() * stickers.length)]
-          if (fs.existsSync(path)) await conn.sendFile(m.chat, path, 'sticker.webp', '', m, { asSticker: true })
-        }
       }
     }
   }
