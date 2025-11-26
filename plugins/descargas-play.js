@@ -180,7 +180,7 @@ async function processDownload(conn, m, url, title, option) {
     if (user && !user.monedaDeducted) {
       user.moneda = (user.moneda || 0) - 2;
       user.monedaDeducted = true;
-      conn.reply(m.chat, `⚽ Has utilizado 2 *Pases 🏃‍♂️*`, m);
+      conn.reply(m.chat, `⚽ Has utilizado 2 *Blue-Lock-Points🏃‍♂️*`, m);
     }
     
     return true;
