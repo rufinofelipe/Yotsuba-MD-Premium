@@ -35,7 +35,7 @@ global.prems = []
 global.libreria = 'Baileys'
 global.baileys = 'V 6.7.17' 
 global.vs = '2.2.5'
-global.nameqr = '⚽️ Isagi-Yoichi-MD 🎵'
+global.nameqr = '⚽️ Isagi-Yoichi-MD ⚽️'
 global.namebot = 'I S A G I Y O I C H I B O T'
 global.sessions = 'Sessions'
 global.jadi = 'JadiBots' 
@@ -44,7 +44,7 @@ global.jadi = 'JadiBots'
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
 global.packname = '⚽️ 𝐼𝑆𝐴𝐺𝐼 𝑌𝑂𝐼𝐶𝐻𝐼 𝐵𝑂𝑇 ⚽️'
-global.botname = '𝙄𝙎𝘼𝙂𝙄 𝙔𝙊𝙄𝘾𝙃𝙄'
+global.botname = '† ɪsᴀɢɪ ʏᴏɪᴄʜɪ †'
 global.wm = '⚽️◟𝓘𝓼𝓪𝓰𝓲 𝓨𝓸𝓲𝓬𝓱𝓲◞⚽️'
 global.author = '© DuarteXV'
 global.dev = '© 🄿🄾🅆🄴🅁🄴🄳 DuarteXV'
