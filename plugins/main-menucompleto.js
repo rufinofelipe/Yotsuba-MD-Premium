@@ -21,7 +21,7 @@ Soy *Isagi Yoichi IA* ⚽👁️ *${(conn.user.jid == global.conn.user.jid ? '(B
 *|✎ Jugadores:* ${totalreg.toLocaleString()}
 *|✎ Tiempo Activo:* ${uptime}
 *|✎ Comandos:* ${totalCommands}
-*|✎ Sistema:* PixelCrew-Bails
+*|✎ Sistema:* Multi Device 
 *╰─ׅ─ׅ┈─๋︩︪─⚽👁️─╯*
 
 *╭╼𝅄꒰𑁍⃪⚽👁️ ꒱ 𐔌 ESTADÍSTICAS PERSONALES 𐦯*
