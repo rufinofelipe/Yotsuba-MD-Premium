@@ -1,87 +1,96 @@
 import fetch from 'node-fetch'
 
-// Base de datos COMPLETA de jugadores
+// Base de datos COMPLETA de jugadores con los nombres CORREGIDOS
 const jugadoresDB = [
     {
-        nombre: "Lionel Messi",
-        foto: "https://files.catbox.moe/3cd6cz.jpeg",
+        nombre: "Cristiano Ronaldo",
+        foto: "https://files.catbox.moe/ny56tl.jpg",
         rareza: "⭐️⭐️⭐️⭐️⭐️",
-        habilidad: "Gambeta Divina",
-        stats: { ATA: 98, PAS: 95, TEC: 99 },
-        precio: 50000000,
-        posicion: "Delantero"
-    },
-    {
-        nombre: "Cristiano Ronaldo", 
-        foto: "https://files.catbox.moe/pi3jxo.jpeg",
-        rareza: "⭐️⭐️⭐️⭐️⭐️",
-        habilidad: "Chut Mortal", 
+        habilidad: "Chut Mortal",
         stats: { ATA: 97, FUE: 96, VEL: 90 },
         precio: 48000000,
         posicion: "Delantero"
     },
     {
+        nombre: "Lionel Messi", 
+        foto: "https://files.catbox.moe/prjre5.jpeg",
+        rareza: "⭐️⭐️⭐️⭐️⭐️",
+        habilidad: "Gambeta Divina", 
+        stats: { ATA: 98, PAS: 95, TEC: 99 },
+        precio: 50000000,
+        posicion: "Delantero"
+    },
+    {
+        nombre: "Diego Maradona",
+        foto: "https://files.catbox.moe/3cd6cz.jpeg",
+        rareza: "⭐️⭐️⭐️⭐️⭐️",
+        habilidad: "Mano de Dios", 
+        stats: { ATA: 96, TEC: 98, DRI: 97 },
+        precio: 45000000,
+        posicion: "Mediocampista"
+    },
+    {
         nombre: "Neymar Jr",
-        foto: "https://files.catbox.moe/qtnfhk.jpeg",
+        foto: "https://files.catbox.moe/nr1h6l.jpeg",
         rareza: "⭐️⭐️⭐️⭐️",
-        habilidad: "Drible Mágico", 
+        habilidad: "Drible Mágico",
         stats: { ATA: 92, TEC: 96, AGI: 95 },
         precio: 35000000,
         posicion: "Extremo"
     },
     {
-        nombre: "Kylian Mbappé",
-        foto: "https://files.catbox.moe/gc2dat.jpeg",
+        nombre: "Ronaldinho",
+        foto: "https://files.catbox.moe/cv3ddr.jpeg",
         rareza: "⭐️⭐️⭐️⭐️⭐️",
-        habilidad: "Velocidad Explosiva",
-        stats: { ATA: 95, VEL: 98, AGI: 93 },
-        precio: 45000000,
-        posicion: "Delantero"
-    },
-    {
-        nombre: "Erling Haaland",
-        foto: "https://files.catbox.moe/lqeemw.jpeg", 
-        rareza: "⭐️⭐️⭐️⭐️⭐️",
-        habilidad: "Fuerza Brutal",
-        stats: { ATA: 96, FUE: 97, REM: 95 },
+        habilidad: "Sonrisa Mágica",
+        stats: { ATA: 94, TEC: 97, DRI: 98 },
         precio: 42000000,
-        posicion: "Delantero"
-    },
-    {
-        nombre: "Kevin De Bruyne",
-        foto: "https://files.catbox.moe/mpd9zn.jpeg",
-        rareza: "⭐️⭐️⭐️⭐️",
-        habilidad: "Pase Perfecto",
-        stats: { ATA: 88, PAS: 97, VIS: 96 },
-        precio: 38000000,
         posicion: "Mediocampista"
     },
     {
-        nombre: "Virgil van Dijk",
-        foto: "https://files.catbox.moe/cv3ddr.jpeg",
+        nombre: "Vinicius Jr",
+        foto: "https://files.catbox.moe/mpd9zn.jpeg",
         rareza: "⭐️⭐️⭐️⭐️",
-        habilidad: "Muro Defensivo",
-        stats: { DEF: 96, FUE: 94, TAC: 95 },
-        precio: 32000000,
-        posicion: "Defensa"
+        habilidad: "Velocidad Extrema",
+        stats: { ATA: 91, VEL: 96, DRI: 93 },
+        precio: 38000000,
+        posicion: "Extremo"
+    },
+    {
+        nombre: "Lamine Yamal",
+        foto: "https://files.catbox.moe/lqeemw.jpeg",
+        rareza: "⭐️⭐️⭐️⭐️",
+        habilidad: "Talento Joven",
+        stats: { ATA: 88, TEC: 92, VEL: 90 },
+        precio: 30000000,
+        posicion: "Extremo"
     },
     {
         nombre: "Luka Modrić",
-        foto: "https://files.catbox.moe/nr1h6l.jpeg",
-        rareza: "⭐️⭐️⭐️⭐️",
+        foto: "https://files.catbox.moe/gc2dat.jpeg",
+        rareza: "⭐️⭐️⭐️⭐️⭐️",
         habilidad: "Control Total",
-        stats: { PAS: 94, TEC: 93, VIS: 95 },
-        precio: 30000000,
+        stats: { PAS: 97, TEC: 94, VIS: 96 },
+        precio: 40000000,
         posicion: "Mediocampista"
     },
     {
-        nombre: "Robert Lewandowski",
-        foto: "https://files.catbox.moe/ny56tl.jpg",
-        rareza: "⭐️⭐️⭐️⭐️⭐️",
-        habilidad: "Remate Letal",
-        stats: { ATA: 97, REM: 96, POS: 95 },
-        precio: 40000000,
-        posicion: "Delantero"
+        nombre: "Cole Palmer",
+        foto: "https://files.catbox.moe/qtnfhk.jpeg",
+        rareza: "⭐️⭐️⭐️⭐️",
+        habilidad: "Tiro Preciso",
+        stats: { ATA: 89, PAS: 91, REM: 90 },
+        precio: 32000000,
+        posicion: "Mediocampista"
+    },
+    {
+        nombre: "Pedri",
+        foto: "https://files.catbox.moe/pi3jxo.jpeg",
+        rareza: "⭐️⭐️⭐️⭐️",
+        habilidad: "Pase Perfecto",
+        stats: { PAS: 93, TEC: 92, VIS: 94 },
+        precio: 35000000,
+        posicion: "Mediocampista"
     }
 ]
 
