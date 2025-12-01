@@ -26,14 +26,14 @@ let handler = async (m, { conn, usedPrefix }) => {
     }
 
     if (m.isGroup) {
-        let pp = 'https://qu.ax/gRjHK.mp4'; 
-        let pp2 = 'https://qu.ax/VjjCJ.mp4'; 
-        let pp3 = 'https://qu.ax/ltieQ.mp4';
-        let pp4 = 'https://qu.ax/oryVi.mp4';
-        let pp5 = 'https://qu.ax/YprzU.mp4';
-        let pp6 = 'https://qu.ax/nxaUW.mp4';
-        let pp7 = 'https://qu.ax/woSGV.mp4';
-        let pp8 = 'https://qu.ax/WkmA.mp4';
+        let pp = 'https://files.catbox.moe/r2sqr6.mp4';
+        let pp2 = 'https://files.catbox.moe/djxcmh.gif';
+        let pp3 = 'https://files.catbox.moe/qexeg6.gif';
+        let pp4 = ''
+https://files.catbox.moe/z4qasn.mp4';       let pp5 = https://files.catbox.moe/z4qasn.mp4';
+        let pp6 = 'https://files.catbox.moe/m6za3s.gif';
+        let pp7 = 'https://files.catbox.moe/43af3m.mp4';
+        let pp8 = 'https://files.catbox.moe/9ft8yi.mp4';
 
         const videos = [pp, pp2, pp3, pp4, pp5, pp6, pp7, pp8];
         const video = videos[Math.floor(Math.random() * videos.length)];
