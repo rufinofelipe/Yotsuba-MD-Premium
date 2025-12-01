@@ -30,7 +30,7 @@ let handler = async (m, { conn, usedPrefix }) => {
         let pp2 = 'https://files.catbox.moe/djxcmh.gif';
         let pp3 = 'https://files.catbox.moe/qexeg6.gif';
         let pp4 = 
-'https://files.catbox.moe/z4qasn.mp4';       let pp5 = https://files.catbox.moe/z4qasn.mp4';
+'https://files.catbox.moe/z4qasn.mp4';       let pp5 = 'https://files.catbox.moe/z4qasn.mp4';
         let pp6 = 'https://files.catbox.moe/m6za3s.gif';
         let pp7 = 'https://files.catbox.moe/43af3m.mp4';
         let pp8 = 'https://files.catbox.moe/9ft8yi.mp4';
