@@ -19,7 +19,7 @@ let handler = async (m, { conn, args, participants }) => {
         let userName = participants.some(p => jid === p.jid) ? conn.getName(jid) : jid.split`@`[0];
         
         return `${medal} *#${position}* • ${userName}
-   🏆 Total: *${total.toLocaleString()}* Cebollines`;
+   🏆 Total: *${total.toLocaleString()}* Blue-Lock-Points`;
     }).join('\n\n');
 
     text += `\n\n🔥 *Isagi Yoichi Bot* ⚽️`;
