@@ -13,7 +13,7 @@ let namechannel = '🎯 CANAL OFICIAL'
 let channel = 'https://whatsapp.com/channel/0029Vb73g1r1NCrTbefbFQ2T'
 
 let dev = 'Creado por DuarteXV'
-let catalogo = 'https://files.catbox.moe/j62i58.jpeg' // Usando tu foto de Isagi
+let catalogo = 'https://files.catbox.moe/kepzok.jpg' // Usando tu foto de Isagi
 let emojis = '⚽' // Emoji para la reacción
 
 let grupos = `⚽ *¡ATENCIÓN, JUGADOR!* 🔥
