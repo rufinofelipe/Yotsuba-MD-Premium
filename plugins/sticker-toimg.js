@@ -1,7 +1,7 @@
-import fs from 'fs'
-import path from 'path'
 import webp from 'webp-converter'
 import { fileURLToPath } from 'url'
+import path from 'path'
+import fs from 'fs'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -19,7 +19,10 @@ let handler = async (m, { conn }) => {
         fs.writeFileSync(tempWebp, media)
 
         await webp.cwebp(tempWebp, tempPng, "-q 80")
-        await conn.sendFile(m.chat, tempPng, 'sticker.png', null, m)
+
+        const buffer = fs.readFileSync(tempPng)
+
+        await conn.sendMessage(m.chat, { image: buffer }, { quoted: m })
 
         fs.unlinkSync(tempWebp)
         fs.unlinkSync(tempPng)
