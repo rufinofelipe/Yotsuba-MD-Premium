@@ -12,7 +12,7 @@ let handler = async (m, { text }) => {
             params: {
                 apikey: 'DuarteXVKey34',
                 q: text,
-                limit: 35
+                limit: 23
             }
         })
 
