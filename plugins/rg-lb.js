@@ -42,7 +42,7 @@ handler.help = ['lb'];
 handler.tags = ['rpg'];
 handler.command = ['lboard', 'top', 'lb']; 
 handler.group = true;
-handler.register = true;
+handler.reg = true;
 handler.fail = null;
 handler.exp = 0;
 
