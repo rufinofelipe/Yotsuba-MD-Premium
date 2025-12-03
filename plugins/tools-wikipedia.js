@@ -22,8 +22,8 @@ let handler = async (m, { text }) => {
         let reply = `🔰 *Wikipedia* - Resultados para: "${text}"\n\n`
         data.result.forEach((r, i) => {
             reply += `*${i + 1}.* Título: ${r.title}\n`
-            reply += `Descripción: ${r.description || 'Sin descripción disponible.'}\n`
-            reply += `URL: ${r.url}\n\n`
+            reply += `🍄 *Descripción:* ${r.description || 'Sin descripción disponible.'}\n`
+            reply += `🌾 *URL:* ${r.url}\n\n`
         })
 
      
