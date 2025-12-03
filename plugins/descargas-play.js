@@ -112,7 +112,7 @@ const handler = async (m, { conn, text, command }) => {
       try {
         const data = await fetchWithFallback(videoAPIs)
         await conn.sendMessage(m.chat, {
-          document: { url: data.url },
+          video: { url: data.url },
           fileName: `${data.title || 'video'}.mp4`,
           mimetype: 'video/mp4'
         }, { quoted: m })
