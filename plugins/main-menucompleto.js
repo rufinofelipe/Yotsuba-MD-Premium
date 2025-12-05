@@ -218,7 +218,7 @@ body: 'Sistema de Visión Egoísta - Modo Fútbol',
 mediaType: 1,
 mediaUrl: global.redes || '',
 sourceUrl: global.redes || '',
-thumbnail: await (await fetch(global.banner || 'https://files.catbox.moe/l8qiik.jpeg')).buffer(),
+thumbnail: await (await fetch(global.banner || 'http://files.hostrta.win/files/xzadonix_76.jpg')).buffer(),
 showAdAttribution: false,
 containsAutoReply: true,
 renderLargerThumbnail: true
