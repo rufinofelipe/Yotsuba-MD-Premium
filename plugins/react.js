@@ -23,7 +23,7 @@ const handler = async (m, { conn, args }) => {
       return m.reply(`✎ Máximo 4 emojis permitidos.`)
     }
 
-    const apiKey = 'f6be3a763a23ef4a3fa3fb0268694ee6246016d5ce1d6801e7fc354ce803b5ed'
+    const apiKey = '4c1ba7d76b2967b1816dde1f7909c5ce394d1a805ccb5baf25e237da53ce4d8f'
 
     const requestData = {
       post_link: postLink,
