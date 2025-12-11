@@ -1,10 +1,17 @@
 export function before(m) {
   const user = global.db.data.users[m.sender];
   if (user.afk > -1) {
-    const tiempo = new Date() - user.afk;
-    const tiempoFormateado = msToTime(tiempo);
+    const tiempoInactivo = new Date() - user.afk;
+    const horas = Math.floor(tiempoInactivo / 3600000);
+    const minutos = Math.floor((tiempoInactivo % 3600000) / 60000);
+    const segundos = Math.floor((tiempoInactivo % 60000) / 1000);
     
-    conn.reply(m.chat, `${emoji} Dejastes De Estar Inactivo\n${user.afkReason ? 'Motivo De La Inactividad: ' + user.afkReason : ''}\n\n*Tiempo Inactivo: ${tiempoFormateado}*`, m);
+    let tiempoTexto = '';
+    if (horas > 0) tiempoTexto += `${horas}h `;
+    if (minutos > 0) tiempoTexto += `${minutos}m `;
+    if (segundos > 0) tiempoTexto += `${segundos}s`;
+    
+    conn.reply(m.chat, `${emoji} Dejaste De Estar Inactivo\n${user.afkReason ? 'Motivo De La Inactividad: ' + user.afkReason : ''}\n\n*Tiempo Inactivo: ${tiempoTexto.trim() || '0s'}*`, m);
     user.afk = -1;
     user.afkReason = '';
   }
@@ -20,25 +27,18 @@ export function before(m) {
       continue;
     }
     const reason = user.afkReason || '';
-    const tiempo = new Date() - afkTime;
-    const tiempoFormateado = msToTime(tiempo);
     
-    conn.reply(m.chat, `${emoji2} El Usuario Esta Inactivo No Lo Etiquetes.\n*Tiempo Inactivo: ${tiempoFormateado}*${reason ? '\n*Motivo: ' + reason + '*' : ''}`, m);
+    const tiempoInactivo = new Date() - afkTime;
+    const horas = Math.floor(tiempoInactivo / 3600000);
+    const minutos = Math.floor((tiempoInactivo % 3600000) / 60000);
+    const segundos = Math.floor((tiempoInactivo % 60000) / 1000);
+    
+    let tiempoTexto = '';
+    if (horas > 0) tiempoTexto += `${horas}h `;
+    if (minutos > 0) tiempoTexto += `${minutos}m `;
+    if (segundos > 0) tiempoTexto += `${segundos}s`;
+    
+    conn.reply(m.chat, `${emoji2} El Usuario Esta Inactivo No Lo Etiquetes.\n*Tiempo Inactivo: ${tiempoTexto.trim() || '0s'}*${reason ? '\n*Motivo: ' + reason + '*' : ''}`, m);
   }
   return true;
-}
-
-function msToTime(ms) {
-  const segundos = Math.floor((ms / 1000) % 60);
-  const minutos = Math.floor((ms / (1000 * 60)) % 60);
-  const horas = Math.floor((ms / (1000 * 60 * 60)) % 24);
-  const dias = Math.floor(ms / (1000 * 60 * 60 * 24));
-  
-  let resultado = [];
-  if (dias > 0) resultado.push(`${dias}d`);
-  if (horas > 0) resultado.push(`${horas}h`);
-  if (minutos > 0) resultado.push(`${minutos}m`);
-  if (segundos > 0) resultado.push(`${segundos}s`);
-  
-  return resultado.join(' ') || '0s';
 }
