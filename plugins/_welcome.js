@@ -11,16 +11,12 @@ export async function before(m, { conn, participants, groupMetadata }) {
     if (!global.db.data.chats[m.chat]) global.db.data.chats[m.chat] = {}
 
     const chat = global.db.data.chats[m.chat]
-    
-    if (chat.welcome === undefined) {
-      chat.welcome = true
-    }
-    if (chat.welcome === false && chat.welcome !== true) {
-      chat.welcome = true
-    }
-    
+
+    if (chat.welcome === undefined) chat.welcome = true
+    if (chat.welcome === false && chat.welcome !== true) chat.welcome = true
+
     console.log(`🔍 Estado welcome para ${m.chat}:`, chat.welcome)
-    
+
     if (!chat.welcome) {
       console.log('❌ Welcome desactivado, saltando...')
       return true
@@ -52,10 +48,10 @@ export async function before(m, { conn, participants, groupMetadata }) {
         }
 
         console.log('📤 Enviando welcome con imagen ampliada y botón de canal...')
-        
+
         const buttons = []
         const urls = [['⚽️ Ver Canal', canalUrl]]
-        
+
         await conn.sendNCarousel(jid, text, '⚽️ Isagi Yoichi Bot', ppBuffer, buttons, null, urls, null, quoted, [user], { width: 1024, height: 1024 })
 
       } catch (err) {
@@ -66,18 +62,19 @@ export async function before(m, { conn, participants, groupMetadata }) {
 
     if (m.messageStubType === 27) {
       console.log('🎉 Nuevo usuario detectado (tipo 27)')
-      
+
       const users = m.messageStubParameters || []
       if (users.length === 0) {
         console.log('⚠️ No hay usuarios en messageStubParameters')
         return true
       }
-      
+
       for (const user of users) {
         if (!user) continue
-        
-        const userName = user.split('@')[0]
-        const welcomeText = `👋 ¡Hola @${userName}!
+
+        const mentionTag = '@' + user.replace(/@.+/, '')
+
+        const welcomeText = `👋 ¡Hola ${mentionTag}!
 
 🎉Bienvenido a *${groupMetadata?.subject || 'el grupo'}*
 
@@ -90,23 +87,26 @@ export async function before(m, { conn, participants, groupMetadata }) {
 🏆Únete a nuestro canal oficial`
 
         await sendSingleWelcome(m.chat, welcomeText, user, m)
-        console.log(`✅ Welcome enviado a ${userName}`)
+        console.log(`✅ Welcome enviado a ${mentionTag}`)
         await new Promise(resolve => setTimeout(resolve, 1000))
       }
       return true
     }
 
+
     if (m.messageStubType === 28 || m.messageStubType === 32) {
       console.log(`👋 Usuario salió (tipo ${m.messageStubType})`)
-      
+
       const users = m.messageStubParameters || []
       if (users.length === 0) return true
-      
+
       for (const user of users) {
         if (!user) continue
-        
-        const userName = user.split('@')[0]
-        const byeText = `👋 ¡Hasta luego @${userName}!
+
+
+        const mentionTag = '@' + user.replace(/@.+/, '')
+
+        const byeText = `👋 ¡Hasta luego ${mentionTag}!
 
 😢Te extrañaremos en *${groupMetadata?.subject || 'el grupo'}*
 
@@ -115,13 +115,14 @@ export async function before(m, { conn, participants, groupMetadata }) {
 ⚽️Síguenos en nuestro canal oficial🏆`
 
         await sendSingleWelcome(m.chat, byeText, user, m)
-        console.log(`✅ Goodbye enviado a ${userName}`)
+        console.log(`✅ Goodbye enviado a ${mentionTag}`)
         await new Promise(resolve => setTimeout(resolve, 1000))
       }
       return true
     }
 
     return true
+
   } catch (e) {
     console.error('plugins/_welcome error', e)
     return true
