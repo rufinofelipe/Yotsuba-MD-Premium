@@ -22,41 +22,47 @@ export async function before(m, { conn, participants, groupMetadata }) {
       return true
     }
 
-    const canalUrl = 'https://whatsapp.com/channel/0029Vb73g1r1NCrTbefbFQ2T'
     const groupSize = (participants || []).length
 
     const sendSingleWelcome = async (jid, text, user, quoted) => {
       try {
-        let ppBuffer = null
+        let ppUrl = null
         try {
-          const ppUrl = await conn.profilePictureUrl(user, 'image').catch(() => null)
-          if (ppUrl) {
-            const response = await fetch(ppUrl)
-            ppBuffer = await response.buffer()
-          }
+          ppUrl = await conn.profilePictureUrl(user, 'image').catch(() => null)
         } catch (e) {
           console.log('Error obteniendo foto de perfil:', e)
         }
 
-        if (!ppBuffer) {
-          try {
-            const defaultResponse = await fetch('https://files.catbox.moe/ckanyi.jpg')
-            ppBuffer = await defaultResponse.buffer()
-          } catch (e) {
-            ppBuffer = null
-          }
+        if (!ppUrl) {
+          ppUrl = 'https://files.catbox.moe/ckanyi.jpg'
         }
 
-        console.log('📤 Enviando welcome con imagen ampliada y botón de canal...')
+        console.log('📤 Enviando welcome con imagen no descargable y reenvío desde canal...')
 
-        const buttons = []
-        const urls = [['⚽️ Ver Canal', canalUrl]]
-
-        await conn.sendNCarousel(jid, text, '⚽️ Isagi Yoichi Bot', ppBuffer, buttons, null, urls, null, quoted, [user], { width: 1024, height: 1024 })
+        await conn.sendMessage(jid, {
+          text: text,
+          contextInfo: {
+            mentionedJid: [user],
+            forwardingScore: 999,
+            isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+              newsletterJid: global.ch.ch1,
+              newsletterName: '⚽️ Isagi Yoichi Bot',
+              serverMessageId: -1
+            },
+            externalAdReply: {
+              title: botname,
+              body: `Bienvenido al grupo • ${groupSize} miembros`,
+              thumbnailUrl: ppUrl,
+              mediaType: 1,
+              renderLargerThumbnail: true
+            }
+          }
+        }, { quoted })
 
       } catch (err) {
         console.log('sendSingleWelcome error:', err)
-        return await conn.reply(jid, `${text}\n\n⚽️ *Ver Canal:* ${canalUrl}`, quoted, { mentions: [user] })
+        return await conn.reply(jid, text, quoted, { mentions: [user] })
       }
     }
 
@@ -76,15 +82,10 @@ export async function before(m, { conn, participants, groupMetadata }) {
 
         const welcomeText = `👋 ¡Hola ${mentionTag}!
 
-🎉Bienvenido a *${groupMetadata?.subject || 'el grupo'}*
-
-🔥Somos *${groupSize}* miembros
-
-⚽️${global.welcom1 || 'El futbol nos une'}
-
-📝Ayuda: *#help*
-
-🏆Únete a nuestro canal oficial`
+🎉 Bienvenido a *${groupMetadata?.subject || 'el grupo'}*
+🔥 Somos *${groupSize}* miembros
+⚽️ ${global.welcom1 || 'El futbol nos une'}
+📝 Ayuda: *#help*`
 
         await sendSingleWelcome(m.chat, welcomeText, user, m)
         console.log(`✅ Welcome enviado a ${mentionTag}`)
@@ -92,7 +93,6 @@ export async function before(m, { conn, participants, groupMetadata }) {
       }
       return true
     }
-
 
     if (m.messageStubType === 28 || m.messageStubType === 32) {
       console.log(`👋 Usuario salió (tipo ${m.messageStubType})`)
@@ -103,16 +103,12 @@ export async function before(m, { conn, participants, groupMetadata }) {
       for (const user of users) {
         if (!user) continue
 
-
         const mentionTag = '@' + user.replace(/@.+/, '')
 
         const byeText = `👋 ¡Hasta luego ${mentionTag}!
 
-😢Te extrañaremos en *${groupMetadata?.subject || 'el grupo'}*
-
-🔥${global.welcom2 || 'Gracias por ser parte de la comunidad'}
-
-⚽️Síguenos en nuestro canal oficial🏆`
+😢 Te extrañaremos en *${groupMetadata?.subject || 'el grupo'}*
+🔥 ${global.welcom2 || 'Gracias por ser parte de la comunidad'}`
 
         await sendSingleWelcome(m.chat, byeText, user, m)
         console.log(`✅ Goodbye enviado a ${mentionTag}`)
