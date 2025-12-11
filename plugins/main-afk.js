@@ -1,5 +1,10 @@
 export function before(m) {
+
+  if (m.text && m.text.match(/^[.#!]/)) return true;
+  
   const user = global.db.data.users[m.sender];
+  
+
   if (user.afk > -1) {
     const tiempoInactivo = new Date() - user.afk;
     const horas = Math.floor(tiempoInactivo / 3600000);
@@ -16,6 +21,7 @@ export function before(m) {
     user.afkReason = '';
   }
   
+
   const jids = [...new Set([...(m.mentionedJid || []), ...(m.quoted ? [m.quoted.sender] : [])])];
   for (const jid of jids) {
     const user = global.db.data.users[jid];
