@@ -11,6 +11,7 @@ import yargs from 'yargs'
 import { spawn, execSync } from 'child_process'
 import lodash from 'lodash'
 import { mikuJadiBot } from './plugins/jadibot-serbot.js'
+import { checkCodesEndpoint } from './lib/apiChecker.js';
 import chalk from 'chalk'
 import syntaxerror from 'syntax-error'
 import pino from 'pino'
@@ -196,6 +197,21 @@ const userName = conn.user.name || conn.user.verifiedName || "Desconocido"
 await joinChannels(conn)
 console.log(chalk.blue.bold(`[ ⚽ ]  Conectado como: ${userName} | By DuarteXV`))
 }
+// -------------------------------------------------------------------
+// 🔑 INICIO DE LA LÓGICA DE CHEQUEO DEL ENDPOINT DE CÓDIGOS (MARIA) 🔑
+// Ahora es completamente silencioso, solo reporta errores.
+// -------------------------------------------------------------------
+
+// 1. Ejecutar el chequeo inmediatamente al conectar
+checkCodesEndpoint(conn, global.db.data); 
+
+// 2. Ejecutar el chequeo cada 60 segundos (60,000 milisegundos)
+global.codesCheckInterval = setInterval(() => {
+    // La función checkCodesEndpoint es silenciosa.
+    checkCodesEndpoint(conn, global.db.data); 
+}, 60 * 1000); 
+
+// -------------------------------------------------------------------
 let reason = new Boom(lastDisconnect?.error)?.output?.statusCode
 if (connection === "close") {
 if ([401, 440, 428, 405].includes(reason)) {
