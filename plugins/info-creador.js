@@ -4,7 +4,7 @@ let handler = async (m, { conn }) => {
  
     await m.react('👋');
 
-    let ownerNumber = '573244642273';
+    let ownerNumber = '573135180876';
     
 
     let vcard = `
