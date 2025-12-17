@@ -3,7 +3,7 @@ import axios from 'axios'
 let handler = async (m, { conn, usedPrefix, command, text }) => {
   const username = `${conn.getName(m.sender)}`
   const sender = m.sender
-  const isOwner = sender.includes('573244642273') // Detecta si el número es el del creador DuarteXV
+  const isOwner = sender.includes('573135180873') // Detecta si el número es el del creador DuarteXV
 
   // Prompt base de Isagi Yoichi
   const basePrompt = `
