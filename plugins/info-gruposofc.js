@@ -4,7 +4,7 @@ let handler = async (m, { conn, usedPrefix, command }) => {
 
 // Define aquí tus links reales
 let namegrupo = '⚽ BLUE LOCK - PRINCIPAL'
-let gp1 = 'https://chat.whatsapp.com/B9YHlQE1XVGDhyKhnSIrX2'
+let gp1 = 'https://chat.whatsapp.com/EVX80wx40aN8jk38haeSx6'
 
 let namecomu = '🔥 COMUNIDAD BLUE LOCK'
 let comunidad1 = 'https://chat.whatsapp.com/GPfABUmCuVN2Qu1d1PPcBY'
