@@ -1,35 +1,38 @@
-let handler = async (m, { conn, usedPrefix, command }) => {
-    // No necesitamos verificar si es grupo o admin, los flags al final ya lo hacen.
+let handler = async (m, { conn, participants }) => {
     const groupMetadata = await conn.groupMetadata(m.chat);
-    const botId = conn.user.jid.split(':')[0] + '@s.whatsapp.net';
+    
+    // 1. Identificación estricta (Bot y Dueños)
+    const botId = conn.user.jid;
     const ownerBot = (global.owner?.[0]?.[0] || '') + '@s.whatsapp.net';
     const ownerGroup = groupMetadata.owner || '';
-
-    // Filtramos para NO tocar al Bot, al dueño del Bot o al Creador del grupo
+    
+    // Lista blanca para evitar que el bot se auto-elimine o toque a sus creadores
     const whitelist = [botId, ownerBot, ownerGroup];
 
-    // 1. Lista de admins para quitarles el rango (excepto whitelist)
+    // 2. Filtrar Admins para degradar (que no estén en whitelist)
     const adminsToDemote = groupMetadata.participants
         .filter(p => p.admin && !whitelist.includes(p.id))
         .map(p => p.id);
 
-    // 2. Lista completa de usuarios a eliminar
+    // 3. Filtrar Usuarios para expulsar (que no estén en whitelist)
     const usersToKick = groupMetadata.participants
         .filter(p => !whitelist.includes(p.id))
         .map(p => p.id);
 
-    if (usersToKick.length === 0) return conn.reply(m.chat, `ℹ️ No hay usuarios para eliminar.`, m);
+    if (usersToKick.length === 0) {
+        return conn.reply(m.chat, `ℹ️ No hay usuarios para expulsar (el grupo ya está limpio o solo hay personal autorizado).`, m);
+    }
 
-    // Mensaje de advertencia
-    let texto = `⚠️ *ADVERTENCIA DE LIMPIEZA*\n\n`;
-    texto += `Se realizará lo siguiente:\n`;
-    texto += `• Quitar admin a: *${adminsToDemote.length}* usuarios.\n`;
-    texto += `• Expulsar a: *${usersToKick.length}* usuarios.\n\n`;
-    texto += `¿Estás seguro? Responde con *"si"* para proceder.`;
+    // 4. Confirmación
+    let msgConfirm = `⚠️ *CONTROL DE ELIMINACIÓN TOTAL*\n\n`;
+    msgConfirm += `Se han identificado:\n`;
+    msgConfirm += `• Admins a degradar: *${adminsToDemote.length}*\n`;
+    msgConfirm += `• Usuarios a expulsar: *${usersToKick.length}*\n\n`;
+    msgConfirm += `*Seguridad:* El Bot y los dueños están protegidos.\n\n`;
+    msgConfirm += `¿Proceder? Responde con *"si"* para iniciar.`;
 
-    await conn.reply(m.chat, texto, m);
+    await conn.reply(m.chat, msgConfirm, m);
 
-    // Guardamos los datos en una variable global temporal
     const confirmationKey = `kickall-${m.chat}-${m.sender}`;
     global.confirmationData = global.confirmationData || {};
     global.confirmationData[confirmationKey] = {
@@ -38,15 +41,15 @@ let handler = async (m, { conn, usedPrefix, command }) => {
         timeout: setTimeout(() => {
             if (global.confirmationData[confirmationKey]) {
                 delete global.confirmationData[confirmationKey];
-                conn.reply(m.chat, '⏱️ Tiempo de confirmación agotado.', m);
+                conn.reply(m.chat, '⏱️ Tiempo agotado. Limpieza cancelada.', m);
             }
-        }, 30000) // 30 segundos
+        }, 60000) // 1 minuto para confirmar
     };
 };
 
 handler.before = async (m, { conn }) => {
     const confirmationKey = `kickall-${m.chat}-${m.sender}`;
-    if (!global.confirmationData || !global.confirmationData[confirmationKey] || !m.text) return;
+    if (!global.confirmationData?.[confirmationKey] || !m.text) return;
     
     const data = global.confirmationData[confirmationKey];
     const response = m.text.toLowerCase().trim();
@@ -55,36 +58,35 @@ handler.before = async (m, { conn }) => {
         clearTimeout(data.timeout);
         delete global.confirmationData[confirmationKey];
 
-        await conn.reply(m.chat, `⏳ Iniciando proceso... esto puede tardar un poco.`, m);
+        await conn.reply(m.chat, `🚀 *Iniciando Limpieza...*\n\nPaso 1: Degradando administradores...\nPaso 2: Expulsión masiva.`, m);
 
-        // PASO 1: Quitar Admins (en bloques de 5 para no saturar)
+        // PASO 1: Quitar Admin a todos los que no son whitelist
         if (data.adminsToDemote.length > 0) {
             for (let i = 0; i < data.adminsToDemote.length; i += 5) {
                 const batch = data.adminsToDemote.slice(i, i + 5);
                 await conn.groupParticipantsUpdate(m.chat, batch, 'demote');
-                await new Promise(r => setTimeout(r, 1500)); 
+                await new Promise(r => setTimeout(r, 2000)); // Delay para evitar saturación
             }
         }
 
-        // PASO 2: Expulsar uno por uno
-        let successCount = 0;
+        // PASO 2: Expulsar uno por uno con reporte
+        let success = 0;
         for (const user of data.usersToKick) {
             try {
                 await conn.groupParticipantsUpdate(m.chat, [user], 'remove');
-                successCount++;
-                // Delay de 1 segundo entre cada expulsión para evitar ban del bot
-                await new Promise(r => setTimeout(r, 1000));
+                success++;
+                await new Promise(r => setTimeout(r, 1200)); // Delay antiban
             } catch (e) {
-                console.error(`Fallo al eliminar a ${user}`);
+                console.error(`Error al expulsar: ${user}`);
             }
         }
 
-        await conn.reply(m.chat, `✅ *Limpieza terminada*\n\nSe eliminaron exitosamente a *${successCount}* usuarios.`, m);
+        await conn.reply(m.chat, `✅ *PROCESO FINALIZADO*\n\nSe han expulsado *${success}* usuarios del grupo con éxito.`, m);
 
     } else if (response === 'no') {
         clearTimeout(data.timeout);
         delete global.confirmationData[confirmationKey];
-        await conn.reply(m.chat, '❌ Acción cancelada.', m);
+        await conn.reply(m.chat, '❌ Operación cancelada por el usuario.', m);
     }
 };
 
@@ -92,7 +94,7 @@ handler.help = ['kickall'];
 handler.tags = ['group'];
 handler.command = /^(kickall|expulsartodos)$/i;
 
-// Estos flags reemplazan los ifs manuales dentro del código
+// Validaciones automáticas del framework
 handler.group = true;
 handler.admin = true;
 handler.botAdmin = true;
