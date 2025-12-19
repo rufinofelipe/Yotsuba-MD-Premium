@@ -1,222 +1,118 @@
-let handler = async (m, { conn, usedPrefix, command, participants }) => {
+let handler = async (m, { conn, usedPrefix, command }) => {
     try {
-        // 1. Verificar si es grupo
-        if (!m.isGroup) {
-            return conn.reply(m.chat, `⚠️ Este comando solo funciona en grupos.`, m);
-        }
+        // 1. Validaciones iniciales
+        if (!m.isGroup) return conn.reply(m.chat, `⚠️ Este comando solo se puede usar en grupos.`, m);
 
-        // 2. Verificar que el bot sea administrador
         const groupMetadata = await conn.groupMetadata(m.chat);
-        
-        // Obtener información del bot
-        const botParticipant = groupMetadata.participants.find(p => p.id === conn.user.jid);
-        if (!botParticipant?.admin) {
-            return conn.reply(m.chat, `❌ El bot debe ser administrador para usar este comando.`, m);
-        }
-
-        // 3. Verificar que el remitente sea administrador
-        // WhatsApp puede usar diferentes formatos para el ID (con o sin :)
-        const sender = m.sender;
-        const senderId = sender.includes(':') ? sender.split(':')[0] : sender;
-        
-        const userParticipant = groupMetadata.participants.find(p => {
-            const participantId = p.id.includes(':') ? p.id.split(':')[0] : p.id;
-            return participantId === senderId;
-        });
-
-        if (!userParticipant) {
-            return conn.reply(m.chat, `❌ No se pudo verificar tu participación en el grupo.`, m);
-        }
-
-        if (!userParticipant.admin) {
-            return conn.reply(m.chat, `❌ Solo los administradores pueden usar este comando.`, m);
-        }
-
-        // 4. Obtener lista de participantes a expulsar
-        const ownerGroup = groupMetadata.owner || groupMetadata.participants.find(p => p.admin === 'superadmin')?.id;
+        const botId = conn.user.jid.split(':')[0] + '@s.whatsapp.net';
         const ownerBot = (global.owner?.[0]?.[0] || '') + '@s.whatsapp.net';
-        
-        // Filtrar participantes para expulsar
-        const usersToKick = groupMetadata.participants
-            .filter(p => {
-                const participantId = p.id.includes(':') ? p.id.split(':')[0] : p.id;
-                const botId = conn.user.jid.includes(':') ? conn.user.jid.split(':')[0] : conn.user.jid;
-                const ownerGroupId = ownerGroup?.includes(':') ? ownerGroup.split(':')[0] : ownerGroup;
-                const ownerBotId = ownerBot?.includes(':') ? ownerBot.split(':')[0] : ownerBot;
-                
-                return (
-                    participantId !== botId && // No el bot
-                    participantId !== ownerGroupId && // No el dueño del grupo
-                    participantId !== ownerBotId && // No el dueño del bot
-                    !p.admin // Solo expulsar no administradores
-                );
-            })
+        const ownerGroup = groupMetadata.owner || '';
+
+        // Verificar que el bot sea admin
+        const botParticipant = groupMetadata.participants.find(p => p.id === botId);
+        if (!botParticipant?.admin) return conn.reply(m.chat, `❌ ¡Error! El bot necesita ser **Administrador** para ejecutar esta acción.`, m);
+
+        // 2. Identificar a quiénes NO debemos tocar (Bot, Dueño Bot, Dueño Grupo)
+        const whitelist = [botId, ownerBot, ownerGroup];
+
+        // 3. Obtener lista de todos los que son admins actualmente (para quitarles el rango)
+        const adminsToDemote = groupMetadata.participants
+            .filter(p => p.admin && !whitelist.includes(p.id))
             .map(p => p.id);
 
-        if (usersToKick.length === 0) {
-            return conn.reply(m.chat, `ℹ️ No hay usuarios para expulsar.`, m);
-        }
+        // 4. Obtener lista total de usuarios a eliminar (todos menos la whitelist)
+        const usersToKick = groupMetadata.participants
+            .filter(p => !whitelist.includes(p.id))
+            .map(p => p.id);
 
-        // 5. Confirmación antes de proceder
-        await conn.reply(m.chat, 
-            `⚠️ *CONFIRMACIÓN REQUERIDA*\n\n` +
-            `Se expulsarán a *${usersToKick.length} usuarios*.\n\n` +
-            `Responde con:\n` +
-            `• *"sí"* para confirmar\n` +
-            `• *"no"* para cancelar\n\n` +
-            `Tienes 30 segundos para responder.`,
-            m
-        );
+        if (usersToKick.length === 0) return conn.reply(m.chat, `ℹ️ No hay usuarios para eliminar (solo están el staff principal).`, m);
 
-        // 6. Esperar confirmación
-        const confirmationKey = `kickall-confirm-${m.chat}-${senderId}`;
+        // 5. Mensaje de advertencia y preparación
+        await conn.reply(m.chat, `⚠️ *INICIANDO LIMPIEZA TOTAL*\n\n` +
+            `• Usuarios a degradar: ${adminsToDemote.length}\n` +
+            `• Usuarios a expulsar: ${usersToKick.length}\n\n` +
+            `*Responde con "si" para confirmar.*`, m);
+
+        // Guardar datos para la confirmación
+        const confirmationKey = `kickall-${m.chat}-${m.sender}`;
         global.confirmationData = global.confirmationData || {};
         global.confirmationData[confirmationKey] = {
+            adminsToDemote,
             usersToKick,
-            timestamp: Date.now(),
-            senderId: senderId
+            status: 'waiting'
         };
 
-        // Limpiar después de 30 segundos
+        // Tiempo límite de 30 segundos
         setTimeout(() => {
             if (global.confirmationData[confirmationKey]) {
                 delete global.confirmationData[confirmationKey];
-                conn.reply(m.chat, '⏱️ Tiempo de confirmación agotado.', m);
             }
         }, 30000);
 
-    } catch (error) {
-        console.error('Error en handler:', error);
-        conn.reply(m.chat, `❌ Error: ${error.message}`, m);
+    } catch (e) {
+        console.error(e);
+        conn.reply(m.chat, `❌ Ocurrió un error inesperado.`, m);
     }
 };
 
-// Manejador de respuestas
 handler.before = async (m, { conn }) => {
-    try {
-        if (!m.isGroup || !m.text) return;
-        
-        const sender = m.sender;
-        const senderId = sender.includes(':') ? sender.split(':')[0] : sender;
-        const confirmationKey = `kickall-confirm-${m.chat}-${senderId}`;
-        const data = global.confirmationData?.[confirmationKey];
-        
-        if (!data) return;
-        
-        const response = m.text.toLowerCase().trim();
-        
-        if (response === 'sí' || response === 'si') {
-            // Eliminar datos de confirmación
-            delete global.confirmationData[confirmationKey];
-            
-            // 7. Procesar expulsión de todos los usuarios
-            await conn.reply(m.chat, 
-                `⏳ Expulsando a ${data.usersToKick.length} usuarios...\n` +
-                `Esto puede tomar unos segundos.`,
-                m
-            );
-            
-            let successCount = 0;
-            let failCount = 0;
-            let reportMessage = '';
-            
-            // 8. Procesar cada usuario
-            for (const user of data.usersToKick) {
-                try {
-                    // Expulsar al usuario
-                    await conn.groupParticipantsUpdate(m.chat, [user], 'remove');
-                    successCount++;
-                    
-                    // Pequeña pausa para evitar limitaciones de WhatsApp
-                    await new Promise(resolve => setTimeout(resolve, 500));
-                    
-                } catch (userError) {
-                    console.log(`Error con usuario ${user}:`, userError);
-                    const username = user.split('@')[0];
-                    reportMessage += `✗ ${username}: ${userError.message}\n`;
-                    failCount++;
-                }
-            }
-            
-            // 9. Reporte final
-            const finalMessage = 
-                `✅ *Proceso completado*\n\n` +
-                `✓ Expulsados exitosamente: ${successCount}\n` +
-                `✗ Fallos en expulsión: ${failCount}\n`;
-            
-            if (reportMessage) {
-                await conn.reply(m.chat, finalMessage + `\n📋 Detalles de fallos:\n${reportMessage}`, m);
-            } else {
-                await conn.reply(m.chat, finalMessage, m);
-            }
-            
-        } else if (response === 'no') {
-            delete global.confirmationData[confirmationKey];
-            await conn.reply(m.chat, '❌ Comando cancelado.', m);
-        }
-    } catch (error) {
-        console.error('Error en before handler:', error);
-        conn.reply(m.chat, `❌ Error: ${error.message}`, m);
-    }
-};
+    const confirmationKey = `kickall-${m.chat}-${m.sender}`;
+    const data = global.confirmationData?.[confirmationKey];
+    
+    if (!data || m.text.toLowerCase() !== 'si') return;
 
-// Función alternativa más simple (sin confirmación)
-const simpleKickAll = async (m, { conn }) => {
     try {
-        if (!m.isGroup) return;
-        
-        const groupMetadata = await conn.groupMetadata(m.chat);
-        
-        // Verificar que el bot sea admin
-        const botParticipant = groupMetadata.participants.find(p => p.id === conn.user.jid);
-        if (!botParticipant?.admin) {
-            return conn.reply(m.chat, '❌ El bot debe ser administrador.', m);
+        delete global.confirmationData[confirmationKey];
+        await conn.reply(m.chat, `⏳ Procesando... Por favor no envíes más comandos hasta terminar.`, m);
+
+        // PASO 1: Quitar admins
+        if (data.adminsToDemote.length > 0) {
+            await conn.reply(m.chat, `Step 1: Quitando rangos administrativos...`, m);
+            // WhatsApp permite quitar admins en grupos de hasta 5-10 a la vez
+            for (let i = 0; i < data.adminsToDemote.length; i += 5) {
+                const batch = data.adminsToDemote.slice(i, i + 5);
+                await conn.groupParticipantsUpdate(m.chat, batch, 'demote');
+                await new Promise(r => setTimeout(r, 1500)); // Delay seguridad
+            }
         }
+
+        // PASO 2: Expulsar uno por uno y confirmar
+        await conn.reply(m.chat, `Step 2: Expulsando usuarios (${data.usersToKick.length})...`, m);
         
-        // Verificar que el usuario sea admin
-        const sender = m.sender;
-        const userParticipant = groupMetadata.participants.find(p => p.id === sender);
-        if (!userParticipant?.admin) {
-            return conn.reply(m.chat, '❌ Solo los administradores pueden usar este comando.', m);
-        }
-        
-        // Obtener usuarios a expulsar
-        const usersToKick = groupMetadata.participants
-            .filter(p => !p.admin && p.id !== conn.user.jid)
-            .map(p => p.id);
-        
-        if (usersToKick.length === 0) {
-            return conn.reply(m.chat, 'ℹ️ No hay usuarios para expulsar.', m);
-        }
-        
-        await conn.reply(m.chat, `Expulsando a ${usersToKick.length} usuarios...`, m);
-        
-        // Expulsar en lotes pequeños
-        const batchSize = 3;
-        for (let i = 0; i < usersToKick.length; i += batchSize) {
-            const batch = usersToKick.slice(i, i + batchSize);
+        let success = 0;
+        let failed = 0;
+
+        for (const user of data.usersToKick) {
             try {
-                await conn.groupParticipantsUpdate(m.chat, batch, 'remove');
-                await new Promise(resolve => setTimeout(resolve, 2000));
-            } catch (e) {
-                console.error('Error en batch:', e);
+                await conn.groupParticipantsUpdate(m.chat, [user], 'remove');
+                success++;
+                // Pausa dinámica: si son muchos, pausa más larga para evitar ban
+                await new Promise(r => setTimeout(r, 1000)); 
+            } catch (err) {
+                failed++;
+                console.error(`Fallo al expulsar a ${user}`);
             }
         }
+
+        // PASO 3: Reporte Final
+        const report = `✅ *LIMPIEZA COMPLETADA*\n\n` +
+            `• Expulsados con éxito: ${success}\n` +
+            `• Fallidos: ${failed}\n\n` +
+            `*Nota:* Si hubo fallos, puede ser por conexión o límites de WhatsApp.`;
         
-        await conn.reply(m.chat, `✅ Se expulsaron ${usersToKick.length} usuarios.`, m);
-        
-    } catch (error) {
-        console.error('Error en simpleKickAll:', error);
-        conn.reply(m.chat, `❌ Error: ${error.message}`, m);
+        await conn.reply(m.chat, report, m);
+
+    } catch (e) {
+        console.error(e);
+        await conn.reply(m.chat, `❌ Error crítico durante la ejecución.`, m);
     }
 };
 
-// Configuración del comando
 handler.help = ['kickall'];
 handler.tags = ['group'];
-handler.command = /^(kickall|expulsartodos|echaratodos)$/i;
+handler.command = /^(kickall|expulsartodos)$/i;
 handler.group = true;
 handler.admin = true;
-handler.botAdmin = true; // El bot necesita ser admin para expulsar
+handler.botAdmin = true;
 
 export default handler;
