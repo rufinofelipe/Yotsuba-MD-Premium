@@ -1,29 +1,5 @@
-import moment from 'moment-timezone';
-import PhoneNumber from 'awesome-phonenumber';
-import fetch from 'node-fetch';
-
 let handler = async (m, { conn, args }) => {
-    let userId;
-    if (m.quoted && m.quoted.sender) {
-        userId = m.quoted.sender;
-    } else {
-        userId = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.sender;
-    }
-
-    let user = global.db.data.users[userId];
-
-    let name = conn.getName(userId);
-    let cumpleanos = user.birth || 'No especificado';
-    let genero = user.genre || 'No especificado';
-    let pareja = user.marry || 'Nadie';
-    let description = user.description || 'Sin Descripción';
-    let exp = user.exp || 0;
-    let nivel = user.level || 0;
-    let role = user.role || 'Sin Rango';
-    let coins = user.coin || 0;
-    let bankCoins = user.bank || 0;
-
-    let perfil = await conn.profilePictureUrl(userId, 'image').catch(_ => 'https://files.catbox.moe/svtosy.mp4');
+    // ... (tu lógica para obtener userId, user, name, etc., se mantiene igual hasta la variable `perfil`) ...
 
     let profileText = `
 ⚽️ *Perfil* ◢@${userId.split('@')[0]}◤
@@ -43,25 +19,10 @@ ${description}
 🔰 *Premium* » ${user.premium ? '✅' : '❌'}
   `.trim();
 
-    await conn.sendMessage(m.chat, { 
-        text: profileText,
-        contextInfo: {
-            mentionedJid: [userId],
-            externalAdReply: {
-                title: '⚽️ Perfil de Usuario ⚽️',
-                body: dev,
-                thumbnailUrl: perfil,
-                mediaType: 1,
-                showAdAttribution: true,
-                renderLargerThumbnail: true
-            }
-        }
+    // Envía la imagen de perfil y el texto de forma separada y compatible
+    await conn.sendMessage(m.chat, {
+        image: { url: perfil },
+        caption: profileText,
+        mentions: [userId] // Para mencionar al usuario en el texto
     }, { quoted: m });
 };
-
-handler.help = ['profile'];
-handler.tags = ['rg'];
-handler.command = ['profile', 'perfil'];
-
-export default handler;
-
