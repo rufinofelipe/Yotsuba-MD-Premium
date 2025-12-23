@@ -1,100 +1,122 @@
-let handler  = async (m, { conn }) => {
-conn.reply(m.chat,`*┌────「 𝚁𝙴𝚃𝙾 」─*\n*“${pickRandom(global.bucin)}”*\n*└────「 𝙼𝚈𝚂𝚃𝙸𝙲 」─*`, m)
+let handler = async (m, { conn }) => {
+  let reto = pickRandom(global.reto)
+  let mensaje = `
+╔═══════════════════════
+║    ✨ 𝙍𝙀𝙏𝙊 𝙈𝙔𝙎𝙏𝙄𝘾 ✨
+╠═══════════════════════
+║
+║  🔥 𝙍𝙀𝙏𝙊:
+║  "${reto}"
+║
+╠═══════════════════════
+║    ⏳ 𝙏𝙄𝙀𝙈𝙋𝙊: 24 𝙝𝙤𝙧𝙖𝙨
+║    ⚠️  𝙉𝙊 𝙋𝙐𝙀𝘿𝙀𝙎 𝙍𝙀𝙃𝙐𝙎𝘼𝙍
+╚═══════════════════════
+`.trim()
+  
+  conn.reply(m.chat, mensaje, m)
 }
+
 handler.help = ['reto']
-handler.tags = ['fun']
-handler.command = /^reto/i
+handler.tags = ['fun', 'games']
+handler.command = /^reto$/i
+handler.group = true
 export default handler
 
 function pickRandom(list) {
-  return list[Math.floor(list.length * Math.random())]
+  return list[Math.floor(Math.random() * list.length)]
 }
 
-global.bucin = [
-"Pasa el pack de una hormiga",
-"Dile a tus amigos que te vas a vivir a EU y mándame una captura de lo que te haya dicho",
-"Grita desde la ventana que quieres mamar y mándame el vídeo",
-"Escribe el nombre de tu crush",
-"Debes de poner el nombre de mi creador en tu estado de WhatsApp, sin dar contexto",
-"Envíame una fotografía tuya",
-"Debes de dibujar en alguna parte de tu cuerpo el nombre de algún integrante del grupo, luego realiza una foto y envíala",
-"Hazte una foto dándole un beso a una Televisión",
- "Mándame una fotografía en ropa interior",
-"Escribe en tu estado de WhatsApp que te gusta comer tierra",
-"Debes de poner la fotografía de un participante del grupo que sea del sexo opuesto al tuyo en tu perfil de WhatsApp durante 3 días 📸📸",
-"Tienes que mandar un audio cantando la canción: Un pato que va cantando alegremente cua cua 🦆",
-"Envía un mensaje a tu ex y dile todavía me gustas", "Envía un audio diciendo amo a The Shadow Brokers - Bot", 
-"Dile a tu crush que la amas y pasa captura al grupo", "Envía un audio cantando", 
-"Envía una foto en la que salgas tu sin taparte la cara ni nada", "Envía un video bailando", 
-"Invita a personas que no conoces a tomarse una selfi contigo y luego envíalo al grupo", 
-"Elija algunos números aleatorios de sus contactos y envíeles un mensaje de texto con el mensaje 'Estoy embarazad@'.", 
-"¡Tome cualquier bebida que esté cerca de usted, luego mézclela con chile y beba!", 
-"Tome un número aleatorio de sus contactos, llámelo y dígale 'te amo' ", 
-"Compre la comida más barata en la cafetería (o compre una botella de agua) y diga entre sollozos a sus compañeros de clase: 'Esta ... es la comida más cara que he comprado)' ", 
-" Compre una botella de coca cola y salpique flores con ella frente a la multitud.", 
-" Párese cerca del refrigerador, cierre los ojos, elija alimentos al azar en él, incluso cuando coma, sus ojos deben estar cerrados.", 
-" De pie en medio de la cancha de baloncesto y gritando: 'TE AMO MI PRÍNCIPE / PRINCESA' ", 
-"Presenta tus respetos a alguien de la clase y luego di: 'Estoy a su servicio, Majestad' ", 
-" Caminando aplaudiendo y cantando la canción 'Feliz cumpleaños' de la clase al pasillo.", 
-" Arrodíllate sobre una rodilla y di '¿Cásate conmigo?' la primera persona en entrar a la habitación.", 
-" Haz un tocado absurdo con tejido, sea lo que sea, sigue pidiendo poses frente a la cámara, sigue subiendo", 
-"Dile 'ERES HERMOSA / MUY HERMOSA, NO MIENTES' a la chica que crees que es la más bonita de esta clase.", 
-" Dile a alguien en clase: 'Primero me dijeron que era tu gemelo, nos separamos y luego me sometí a una cirugía plástica. Y esto es lo más serio que he dicho' ", 
-" Tirar el cuaderno de alguien a la basura, frente a sus ojos, diciendo 'Este libro nadie puede entender' ", 
-" ¡Arranca el pelo de tu propia pierna 3 veces!", 
-" Chatea con tus padres, diles que los extrañas con emoticonos tristes.", 
-" Intente buscar en Google cosas aterradoras o ridículas como tripofobia, etc.", 
-" Siéntese relajado en medio de la cancha de baloncesto mientras finge que es una playa para tomar el sol.", 
-" Llena tu boca de agua y tienes que aguantar hasta dos rondas, si te ríes y derramas o bebes, entonces tienes que volver a llenar y agregar una ronda más.", 
-" Salude a la primera persona que entre en esta sala y diga '¡Bienvenido a Quién quiere ser millonario!' ", 
-"Envía un mensaje de texto a tus padres '¡Hola, hermano! ¡Acabo de comprar el último número de la revista Playboy!' ", 
-"Envíales un mensaje de texto a tus padres: 'Mamá, papá, ya sé que soy un niño adoptado del orfanato. No ocultes esto más'.", 
-" Envía tres números aleatorios en tus contactos y escribe 'Me acabo de convertir en modelo de la revista Playboy' ", 
-" ¡Come una cucharada de salsa de soja dulce y salsa de soja!", 
-" Come algo pero no uses las manos.", 
-" Enojarse con sus amigos que no vienen a pesar de que tienen una cita para jugar 'Verdad o Reto' juntos", 
-"¡Rompe el huevo con la cabeza!", 
-"Coma alimentos que se hayan mezclado y tendrán un sabor extraño, pero asegúrese de que los alimentos no sean dañinos para la salud a largo o corto plazo.", 
-"Baila como Girls 'Generation para los niños frente a la clase, o baila como Super Junior para las niñas.", 
-"Izar el asta de la bandera sin la bandera.", 
-"Hablando de la persona que te gusta, de tus amigos más cercanos, del sexo opuesto que no conoces en absoluto y cosas por el estilo.", 
-"Copia los peinados de todos tus amigos.", 
-"Cantando la canción HAI TAYO frente a mucha gente mientras baila", 
-"Cante la canción Baby Shark en voz alta en el aula.", 
-"Pedir prestado algo a los vecinos", 
-"Pide la firma de uno de los profesores más feroces mientras dices 'Eres verdaderamente la persona que más admiro en el mundo' ", 
-" Pídale dinero a alguien (al azar ) en la calle diciendo 'No tengo dinero para tomar un angkot'.", 
-" Beba algo que haya sido preparado / acordado, pero asegúrese de que no sea peligroso, puede ser como beber jarabe mezclado con salsa de soja.", 
-" Hablando con el emoticono-miedo de la persona que te gusta, está bien conversar con lo que quieras, a través de cualquier medio que puedas.", 
-" Canta tu película de Disney favorita fuera de casa mientras gritas.", 
-" Nombra de 1 azul a 20 azules rápidamente y no debes cometer ningún error. Si está mal, debe repetirse desde el principio.", 
-" Póngase una corona de papel de copia y diga a todos en la habitación 'HONOR AL REY' mientras señala a cada persona con una regla.", 
-" Vuelve a ponerte los pantalones hasta la mañana siguiente.", 
-" Abraza a la persona que NO te agrada en clase y di: 'Muchas gracias por ser la mejor persona para mí' ", 
-" Ve a un campo amplio, luego corre lo más rápido posible mientras dices 'Estoy loco, estoy loco' ", 
-" Elija una flor y luego conéctela a alguien que no conoce (debe ser del sexo opuesto)", 
-" Elige a una persona al azar en la calle, luego di 'No sabes que eres hermosa' (ala One Direction)", 
-" Fingir estar poseído ejm: poseído por un tigre, etc.", 
-" Pídale que silbe ya que su boca está nuevamente llena de comida.", 
-" Pide ser un mesero para que te sirva con tus amigos para el almuerzo.", 
-" Dígales que usen calcetines para hacer guantes.", 
-"Dígales que usen el sombrero más extraño / el casco más absurdo durante la próxima ronda.", 
-"Llama a tu mamá y dile 'mamá, quiero casarme lo antes posible' ", 
-"Llama a tu ex y di 'te extraño' ", 
-"Cambia de ropa con la persona más cercana hasta la siguiente ronda.", 
-"Actualice el estado en WhatsApp lo que sea con palabras que comiencen con 'S' ", 
-"Sube un video de canto a YouTube que esté cantando canciones populares.", 
-"Colorea tus uñas de las manos y de los pies de diferentes colores durante una semana.", 
-"come 2 cucharadas de arroz sin guarniciones", 
-"Envie el emoji '🦄💨' cada vez que escriba en un grupo 1 día", 
-"diga '¡Bienvenido a Quién quiere ser millonario!' a todos los grupos que tienes", 
-"canta el coro de la última canción que tocaste", 
-"Envia un audio de voz a tu ex / enamorado / novia, dile hola (nombre), quiero llamar, solo un momento. Te Extraño🥺👉🏼👈🏼 ", 
-"Dile a la gente al azar: Primero me dijeron que era tu gemelo, nos separamos y luego me sometí a una cirugía plástica. Y esto", 
-"¡Haz 1 rima para el primer jugador!", 
-"cuenta tu propia versión de cosas vergonzosas", 
-"cambiar el nombre a 'Gay' durante 24 horas", 
-"¡Menciona tu tipo de novia!", 
-"Di 'Estoy enamorado de ti, ¿quieres ser mi novio o no?' al último sexo opuesto con el que conversaste en WhatsApp, espera a que responda", 
-"Háblale a tu ex por WhatsApp y dile 'te amo, por favor vuelve'. Manda una captura de pantalla como evidencia de reto cumplido!"
-] 
+global.reto = [
+  // RETOS DIGITALES 🌐
+  "Pon la foto de perfil de alguien del grupo durante 24 horas",
+  "Envía un mensaje a tu ex diciendo 'Aún pienso en ti' y pasa captura",
+  "Publica en tu estado: 'Vendo contenido picante, preguntar al DM'",
+  "Envía un audio cantando tu canción favorita desentonando a propósito",
+  "Cambia tu nombre de WhatsApp por '😈 El Travieso' por 1 día",
+  "Envía un mensaje al último contacto que te escribió diciendo '¿Ya me extrañabas?'",
+  "Publica una foto tuya de hace 5 años en tus estados",
+  
+  // RETOS EN PÚBLICO 🎤
+  "Grita por la ventana '¡Quiero ser famoso en TikTok!'",
+  "Pídele un abrazo a un desconocido en la calle",
+  "Baila 30 segundos en medio de un centro comercial",
+  "Canta el himno nacional frente a 3 personas",
+  "Pídele un selfie a 5 desconocidos diferentes",
+  "Imita a un animal en el transporte público",
+  "Pregunta en voz alta en una tienda '¿Venden amor aquí?'",
+  
+  // RETOS CON AMIGOS 👥
+  "Debes llamar a tu mejor amigo/a y decirle 'Te amo platónicamente'",
+  "Haz que un amigo te maquille con los ojos cerrados y sube la foto",
+  "Deja que un amigo publique lo que quiera en tus redes por 1 hora",
+  "Haz 10 flexiones mientras tus amigos te gritan motivación",
+  "Cuenta tu secreto más vergonzoso al grupo",
+  "Deja que los demás dibujen en tu cara con marcador",
+  
+  // RETOS AUDACES 😈
+  "Habla con acento extranjero por 1 hora completa",
+  "Come una cucharada de algo dulce, salado y picante mezclado",
+  "Usa la ropa al revés por todo el día",
+  "Envía un mensaje de voz susurrando cosas aleatorias a 3 contactos",
+  "Toma un shot de jugo de limón puro sin hacer gestos",
+  "Camina de espaldas por 10 minutos en un lugar público",
+  "Pídele a alguien que no conoces que te enseñe a bailar",
+  
+  // RETOS CREATIVOS 🎨
+  "Escribe un poema de 4 versos sobre el primer objeto que veas",
+  "Haz un dibujo con los ojos cerrados y compártelo",
+  "Inventa una canción sobre el grupo y cántala",
+  "Crea un baile tonto y enséñalo a alguien",
+  "Escribe una historia corta donde todos en el grupo sean superhéroes",
+  "Haz un meme sobre ti mismo y compártelo",
+  
+  // RETOS EMBARAZOSOS 😳
+  "Llama a tu mamá y dile que conociste al amor de tu vida",
+  "Publica en Facebook 'Busco novio/a, requisitos: respirar'",
+  "Habla usando solo emojis por 15 minutos",
+  "Ponte calcetines diferentes y toma una foto mostrándolos",
+  "Pídele matrimonio a tu bot de WhatsApp favorito",
+  "Pretende ser un influencer por 1 hora en tus conversaciones",
+  
+  // RETOS DE COMIDA 🍽️
+  "Come algo sin usar las manos",
+  "Combina 3 bebidas diferentes y tómalas de un trago",
+  "Come un limón como si fuera una naranja",
+  "Prueba algo que nunca hayas comido y graba tu reacción",
+  "Haz un sandwich con ingredientes aleatorios que encuentres",
+  "Come helado en un día frío frente a una ventana",
+  
+  // RETOS DE REDES 📱
+  "Sube un TikTok con el filtro más ridículo que encuentres",
+  "Publica en Instagram una foto tuya haciendo puchero",
+  "Cambia todas tus fotos de perfil por memes por 24 horas",
+  "Responde todas las historias de tus contactos por 1 hora",
+  "Crea un reel imitando a tu celebridad favorita",
+  "Haz un live explicando cómo se hacen los noodles instantáneos",
+  
+  // RETOS EXTRAS 🌟
+  "Habla en tercera persona por todo un día",
+  "Escribe una carta de amor a tu yo del futuro",
+  "Haz 3 cumplidos genuinos a personas diferentes hoy",
+  "Aprende y recita un trabalenguas difícil",
+  "Construye un fuerte con sábanas y toma fotos dentro",
+  "Haz una lista de 10 cosas que amas de ti mismo",
+  "Dile a alguien 'Eres importante para mí' sin contexto",
+  
+  // RETOS VIRALES 🚀
+  "Haz el baile del renacuajo en un lugar público",
+  "Graba un video diciendo 'Buenos días, familia' como los youtubers",
+  "Intenta hacer un truco de magia y graba cuando falle",
+  "Ponte una mascarilla facial verde y sal a comprar pan",
+  "Haz un unboxing exagerado de algo ordinario",
+  "Crea un tutorial de algo que no sabes hacer",
+  
+  // RETOS NOCTURNOS 🌙
+  "Cuenta una historia de terror a las 3 AM y grábala",
+  "Toma una foto a la luna y escribe algo poético",
+  "Ve a un lugar oscuro y canta una canción suave",
+  "Escribe todos tus miedos en un papel y quémalo después",
+  "Haz un ritual tonto para atraer buena suerte",
+  "Mira las estrellas por 10 minutos sin distracciones"
+]
