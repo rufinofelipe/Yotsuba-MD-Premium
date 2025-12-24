@@ -5,7 +5,7 @@ const path = require('path');
 const moment = require('moment');
 
 // Configuración
-const PREFIX = '!';
+const PREFIX = '.';
 const dataDir = path.join(__dirname, 'data');
 const usersFile = path.join(dataDir, 'users.json');
 const waifusFile = path.join(dataDir, 'waifus.json');
@@ -15,7 +15,7 @@ if (!fs.existsSync(dataDir)) {
     fs.mkdirSync(dataDir, { recursive: true });
 }
 
-// Datos iniciales de waifus disponibles
+// Datos iniciales de waifus
 const defaultWaifus = [
     { 
         id: 1, 
@@ -23,7 +23,8 @@ const defaultWaifus = [
         type: "Mágica", 
         baseHunger: 50, 
         baseHappiness: 70,
-        rarity: "Común"
+        rarity: "Común",
+        emoji: "🌸"
     },
     { 
         id: 2, 
@@ -31,7 +32,8 @@ const defaultWaifus = [
         type: "Guerra", 
         baseHunger: 30, 
         baseHappiness: 80,
-        rarity: "Rara"
+        rarity: "Rara",
+        emoji: "⚔️"
     },
     { 
         id: 3, 
@@ -39,7 +41,8 @@ const defaultWaifus = [
         type: "Hielo", 
         baseHunger: 60, 
         baseHappiness: 60,
-        rarity: "Común"
+        rarity: "Común",
+        emoji: "❄️"
     },
     { 
         id: 4, 
@@ -47,7 +50,8 @@ const defaultWaifus = [
         type: "Fuego", 
         baseHunger: 40, 
         baseHappiness: 90,
-        rarity: "Épica"
+        rarity: "Épica",
+        emoji: "🔥"
     },
     { 
         id: 5, 
@@ -55,11 +59,24 @@ const defaultWaifus = [
         type: "Agua", 
         baseHunger: 55, 
         baseHappiness: 75,
-        rarity: "Rara"
+        rarity: "Rara",
+        emoji: "💧"
+    },
+    { 
+        id: 6, 
+        name: "Luna", 
+        type: "Oscuridad", 
+        baseHunger: 45, 
+        baseHappiness: 65,
+        rarity: "Legendaria",
+        emoji: "🌙"
     }
 ];
 
-// Cargar o inicializar datos
+// Sistema de comandos
+const handlers = new Map();
+
+// Sistema de datos
 let users = {};
 let waifus = {};
 
@@ -106,10 +123,11 @@ function getUser(userId) {
             lastAdoption: null,
             lastFed: null,
             lastInteraction: null,
-            food: 5,
-            coins: 100,
+            food: 10,
+            coins: 200,
             level: 1,
-            xp: 0
+            xp: 0,
+            dailyClaimed: null
         };
     }
     return users[userId];
@@ -143,7 +161,8 @@ function adoptWaifu(userId, waifuData) {
         xp: 0,
         adoptedAt: moment().toISOString(),
         lastFed: moment().toISOString(),
-        lastCared: moment().toISOString()
+        lastCared: moment().toISOString(),
+        bond: 0
     };
     
     user.waifu = adoptedWaifu;
@@ -162,147 +181,331 @@ function updateWaifuStatus(userId) {
     const lastFed = moment(waifu.lastFed);
     const lastCared = moment(waifu.lastCared);
     
-    // Reducir hambre con el tiempo (1 punto cada 10 minutos)
-    const minutesSinceFed = now.diff(lastFed, 'minutes');
-    const hungerReduction = Math.floor(minutesSinceFed / 10);
+    // Reducir hambre con el tiempo
+    const hoursSinceFed = now.diff(lastFed, 'hours');
+    const hungerReduction = Math.min(30, hoursSinceFed * 5);
     waifu.hunger = Math.max(0, waifu.hunger - hungerReduction);
     
     // Reducir felicidad si tiene hambre
-    if (waifu.hunger < 30) {
-        const minutesSinceCared = now.diff(lastCared, 'minutes');
-        const happinessReduction = Math.floor(minutesSinceCared / 15);
+    if (waifu.hunger < 50) {
+        const hoursSinceCared = now.diff(lastCared, 'hours');
+        const happinessReduction = Math.min(20, hoursSinceCared * 3);
         waifu.happiness = Math.max(0, waifu.happiness - happinessReduction);
     }
     
-    waifu.lastFed = lastFed.add(hungerReduction * 10, 'minutes').toISOString();
     saveData();
 }
 
-function feedWaifu(userId) {
-    const user = getUser(userId);
-    if (!user.waifu) return { success: false, message: "No tienes una waifu para alimentar" };
-    
-    if (user.food <= 0) {
-        return { success: false, message: "No tienes comida. Compra más con !comprar" };
+// =================== COMANDOS ===================
+
+// Comando: adoptar
+const adoptarCommand = {
+    command: 'adoptar',
+    help: 'Adopta una waifu aleatoria (espera de 1 hora entre adopciones)',
+    category: 'Waifu',
+    handler: async (userId, args) => {
+        if (!canAdopt(userId)) {
+            const user = getUser(userId);
+            const nextAdoption = moment(user.lastAdoption).add(1, 'hour');
+            return `⏰ Debes esperar hasta ${nextAdoption.format('HH:mm')} para adoptar otra waifu`;
+        }
+        
+        if (users[userId]?.waifu) {
+            return "❌ Ya tienes una waifu. Usa .liberar antes de adoptar otra";
+        }
+        
+        const randomWaifu = getRandomWaifu();
+        const adoptedWaifu = adoptWaifu(userId, randomWaifu);
+        
+        return `🎉 ¡Felicidades! Adoptaste a *${adoptedWaifu.emoji} ${adoptedWaifu.name}* (${adoptedWaifu.type})!\n` +
+               `✨ Rareza: ${adoptedWaifu.rarity}\n` +
+               `💝 Cuídala bien! Aliméntala con .alimentar y cuídala con .cuidar\n` +
+               `📊 Revisa su estado con .mivaifu`;
     }
-    
-    const waifu = user.waifu;
-    const now = moment();
-    const lastFed = moment(waifu.lastFed);
-    
-    // Solo puede alimentar cada 30 minutos
-    if (now.diff(lastFed, 'minutes') < 30) {
-        const minutesLeft = 30 - now.diff(lastFed, 'minutes');
-        return { 
-            success: false, 
-            message: `Debes esperar ${minutesLeft} minutos para alimentar de nuevo` 
-        };
+};
+
+// Comando: mivaifu
+const mivaifuCommand = {
+    command: 'mivaifu',
+    help: 'Muestra el estado actual de tu waifu',
+    category: 'Waifu',
+    handler: async (userId, args) => {
+        const user = getUser(userId);
+        if (!user.waifu) return "❌ No tienes una waifu. Usa .adoptar para adoptar una.";
+        
+        updateWaifuStatus(userId);
+        const waifu = user.waifu;
+        
+        const hungerBar = '🍖'.repeat(Math.floor(waifu.hunger / 20)) + '◻️'.repeat(5 - Math.floor(waifu.hunger / 20));
+        const happinessBar = '💖'.repeat(Math.floor(waifu.happiness / 20)) + '◻️'.repeat(5 - Math.floor(waifu.happiness / 20));
+        const bondBar = '💝'.repeat(Math.floor(waifu.bond / 20)) + '◻️'.repeat(5 - Math.floor(waifu.bond / 20));
+        
+        const now = moment();
+        const adoptedAgo = moment(waifu.adoptedAt).from(now);
+        
+        let status = `${waifu.emoji} *${waifu.name}* (${waifu.type})\n`;
+        status += `✨ Rareza: ${waifu.rarity} | Nivel: ${waifu.level}\n`;
+        status += `📊 XP: ${waifu.xp}/${waifu.level * 100}\n\n`;
+        status += `🍖 Hambre: ${hungerBar} ${waifu.hunger}/100\n`;
+        status += `💖 Felicidad: ${happinessBar} ${waifu.happiness}/100\n`;
+        status += `💝 Vínculo: ${bondBar} ${waifu.bond}/100\n\n`;
+        status += `🕐 Adoptada: ${adoptedAgo}\n`;
+        status += `📦 Comida: ${user.food} | 🪙 Monedas: ${user.coins}`;
+        
+        if (waifu.hunger < 30) status += `\n\n⚠️ *${waifu.name} tiene hambre!* Usa .alimentar`;
+        if (waifu.happiness < 30) status += `\n⚠️ *${waifu.name} está triste!* Usa .cuidar`;
+        
+        return status;
     }
-    
-    user.food -= 1;
-    waifu.hunger = Math.min(100, waifu.hunger + 30);
-    waifu.lastFed = now.toISOString();
-    
-    // Ganar XP por alimentar
-    waifu.xp += 10;
-    if (waifu.xp >= waifu.level * 50) {
-        waifu.level += 1;
-        waifu.xp = 0;
+};
+
+// Comando: alimentar
+const alimentarCommand = {
+    command: 'alimentar',
+    help: 'Alimenta a tu waifu (30min de espera)',
+    category: 'Waifu',
+    handler: async (userId, args) => {
+        const user = getUser(userId);
+        if (!user.waifu) return "❌ No tienes una waifu para alimentar";
+        
+        if (user.food <= 0) {
+            return "❌ No tienes comida. Compra más con .comprar";
+        }
+        
+        const waifu = user.waifu;
+        const now = moment();
+        const lastFed = moment(waifu.lastFed);
+        
+        if (now.diff(lastFed, 'minutes') < 30) {
+            const minutesLeft = 30 - now.diff(lastFed, 'minutes');
+            return `⏰ Debes esperar ${minutesLeft} minutos para alimentar de nuevo`;
+        }
+        
+        user.food -= 1;
+        waifu.hunger = Math.min(100, waifu.hunger + 40);
+        waifu.happiness = Math.min(100, waifu.happiness + 10);
+        waifu.bond = Math.min(100, waifu.bond + 5);
+        waifu.lastFed = now.toISOString();
+        waifu.xp += 15;
+        
+        if (waifu.xp >= waifu.level * 100) {
+            waifu.level += 1;
+            waifu.xp = 0;
+            user.coins += 50;
+        }
+        
+        saveData();
+        
+        return `🍖 Alimentaste a ${waifu.emoji} *${waifu.name}*!\n` +
+               `🍗 Hambre: ${waifu.hunger}/100 | 💖 +10 Felicidad\n` +
+               `📊 Nivel: ${waifu.level} | XP: ${waifu.xp}/${waifu.level * 100}\n` +
+               `💝 Vínculo: +5 | 📦 Comida restante: ${user.food}`;
     }
+};
+
+// Comando: cuidar
+const cuidarCommand = {
+    command: 'cuidar',
+    help: 'Cuida a tu waifu (20min de espera)',
+    category: 'Waifu',
+    handler: async (userId, args) => {
+        const user = getUser(userId);
+        if (!user.waifu) return "❌ No tienes una waifu para cuidar";
+        
+        const waifu = user.waifu;
+        const now = moment();
+        const lastCared = moment(waifu.lastCared);
+        
+        if (now.diff(lastCared, 'minutes') < 20) {
+            const minutesLeft = 20 - now.diff(lastCared, 'minutes');
+            return `⏰ Debes esperar ${minutesLeft} minutos para cuidar de nuevo`;
+        }
+        
+        waifu.happiness = Math.min(100, waifu.happiness + 30);
+        waifu.bond = Math.min(100, waifu.bond + 10);
+        waifu.lastCared = now.toISOString();
+        waifu.xp += 10;
+        
+        if (waifu.xp >= waifu.level * 100) {
+            waifu.level += 1;
+            waifu.xp = 0;
+            user.coins += 30;
+        }
+        
+        saveData();
+        
+        return `💖 Cuidaste a ${waifu.emoji} *${waifu.name}*!\n` +
+               `😊 Felicidad: ${waifu.happiness}/100\n` +
+               `📊 Nivel: ${waifu.level} | XP: ${waifu.xp}/${waifu.level * 100}\n` +
+               `💝 Vínculo: +10 | 🪙 Monedas: ${user.coins}`;
+    }
+};
+
+// Comando: comprar
+const comprarCommand = {
+    command: 'comprar',
+    help: 'Compra comida para tu waifu (ej: .comprar 5)',
+    category: 'Economía',
+    handler: async (userId, args) => {
+        const amount = parseInt(args) || 1;
+        if (amount < 1 || amount > 20) {
+            return "❌ Puedes comprar entre 1 y 20 comidas a la vez";
+        }
+        
+        const user = getUser(userId);
+        const cost = amount * 25;
+        
+        if (user.coins < cost) {
+            return `❌ No tienes suficientes monedas. Necesitas ${cost}, tienes ${user.coins}`;
+        }
+        
+        user.coins -= cost;
+        user.food += amount;
+        saveData();
+        
+        return `🛒 Compraste ${amount} comida(s) por ${cost} monedas\n` +
+               `📦 Comida: ${user.food} | 🪙 Monedas: ${user.coins}`;
+    }
+};
+
+// Comando: liberar
+const liberarCommand = {
+    command: 'liberar',
+    help: 'Libera a tu waifu actual para adoptar otra',
+    category: 'Waifu',
+    handler: async (userId, args) => {
+        const user = getUser(userId);
+        if (!user.waifu) return "❌ No tienes una waifu para liberar";
+        
+        const waifuName = user.waifu.name;
+        const bonus = user.waifu.level * 20;
+        
+        user.waifu = null;
+        user.lastAdoption = moment().toISOString();
+        user.coins += bonus;
+        saveData();
+        
+        return `😢 Liberaste a *${waifuName}*. Recibiste ${bonus} monedas por tu bondad.\n` +
+               `⏰ Puedes adoptar otra en 1 hora con .adoptar`;
+    }
+};
+
+// Comando: inventario
+const inventarioCommand = {
+    command: 'inventario',
+    help: 'Muestra tu inventario y recursos',
+    category: 'General',
+    handler: async (userId, args) => {
+        const user = getUser(userId);
+        
+        let response = `📦 *INVENTARIO DE ${userId}*\n\n`;
+        response += `🍖 Comida: ${user.food}\n`;
+        response += `🪙 Monedas: ${user.coins}\n`;
+        response += `🎯 Nivel Usuario: ${user.level}\n`;
+        response += `⭐ XP Usuario: ${user.xp}/${user.level * 200}\n\n`;
+        
+        if (user.waifu) {
+            response += `🌸 *WAIFU ACTUAL*\n`;
+            response += `${user.waifu.emoji} ${user.waifu.name} (${user.waifu.type})\n`;
+            response += `✨ Rareza: ${user.waifu.rarity} | Nivel: ${user.waifu.level}\n`;
+            response += `💝 Vínculo: ${user.waifu.bond}/100`;
+        } else {
+            response += `❌ No tienes waifu actualmente\n`;
+            response += `Usa .adoptar para conseguir una`;
+        }
+        
+        return response;
+    }
+};
+
+// Comando: diario
+const diarioCommand = {
+    command: 'diario',
+    help: 'Reclama tu recompensa diaria',
+    category: 'Economía',
+    handler: async (userId, args) => {
+        const user = getUser(userId);
+        const today = moment().format('YYYY-MM-DD');
+        
+        if (user.dailyClaimed === today) {
+            return "⏰ Ya reclamaste tu recompensa diaria hoy. Vuelve mañana!";
+        }
+        
+        const reward = 100 + (user.level * 20);
+        user.coins += reward;
+        user.food += 5;
+        user.dailyClaimed = today;
+        saveData();
+        
+        return `🎁 *RECOMPENSA DIARIA*\n\n` +
+               `🪙 +${reward} monedas\n` +
+               `🍖 +5 comida\n\n` +
+               `📦 Inventario actual:\n` +
+               `Monedas: ${user.coins} | Comida: ${user.food}`;
+    }
+};
+
+// Comando: ayuda
+const ayudaCommand = {
+    command: 'ayuda',
+    help: 'Muestra todos los comandos disponibles',
+    category: 'General',
+    handler: async (userId, args) => {
+        const categories = {};
+        
+        // Agrupar comandos por categoría
+        for (const [_, cmd] of handlers) {
+            if (!categories[cmd.category]) {
+                categories[cmd.category] = [];
+            }
+            categories[cmd.category].push(cmd);
+        }
+        
+        let response = `🌸 *WAIFU BOT - COMANDOS* 🌸\n\n`;
+        response += `Prefijo: *${PREFIX}*\n\n`;
+        
+        for (const [category, commands] of Object.entries(categories)) {
+            response += `*${category.toUpperCase()}*\n`;
+            commands.forEach(cmd => {
+                response += `• *${PREFIX}${cmd.command}* - ${cmd.help}\n`;
+            });
+            response += `\n`;
+        }
+        
+        response += `📝 *Ejemplos:*\n`;
+        response += `${PREFIX}adoptar - Adopta una waifu\n`;
+        response += `${PREFIX}alimentar - Alimenta a tu waifu\n`;
+        response += `${PREFIX}comprar 5 - Compra 5 comidas\n`;
+        
+        return response;
+    }
+};
+
+// Registrar comandos
+function registerCommands() {
+    const commandList = [
+        adoptarCommand,
+        mivaifuCommand,
+        alimentarCommand,
+        cuidarCommand,
+        comprarCommand,
+        liberarCommand,
+        inventarioCommand,
+        diarioCommand,
+        ayudaCommand
+    ];
     
-    saveData();
-    return { 
-        success: true, 
-        message: `🍖 Alimentaste a ${waifu.name}! Hambre: ${waifu.hunger}/100\nNivel: ${waifu.level} | XP: ${waifu.xp}/${waifu.level * 50}` 
-    };
+    commandList.forEach(cmd => {
+        handlers.set(cmd.command, cmd);
+    });
 }
 
-function careWaifu(userId) {
-    const user = getUser(userId);
-    if (!user.waifu) return { success: false, message: "No tienes una waifu para cuidar" };
-    
-    const waifu = user.waifu;
-    const now = moment();
-    const lastCared = moment(waifu.lastCared);
-    
-    // Solo puede cuidar cada 20 minutos
-    if (now.diff(lastCared, 'minutes') < 20) {
-        const minutesLeft = 20 - now.diff(lastCared, 'minutes');
-        return { 
-            success: false, 
-            message: `Debes esperar ${minutesLeft} minutos para cuidar de nuevo` 
-        };
-    }
-    
-    waifu.happiness = Math.min(100, waifu.happiness + 25);
-    waifu.lastCared = now.toISOString();
-    
-    // Ganar XP por cuidar
-    waifu.xp += 5;
-    if (waifu.xp >= waifu.level * 50) {
-        waifu.level += 1;
-        waifu.xp = 0;
-    }
-    
-    saveData();
-    return { 
-        success: true, 
-        message: `💖 Cuidaste a ${waifu.name}! Felicidad: ${waifu.happiness}/100\nNivel: ${waifu.level} | XP: ${waifu.xp}/${waifu.level * 50}` 
-    };
-}
-
-function buyFood(userId, amount = 1) {
-    const user = getUser(userId);
-    const cost = amount * 20;
-    
-    if (user.coins < cost) {
-        return { success: false, message: `No tienes suficientes monedas. Necesitas ${cost}, tienes ${user.coins}` };
-    }
-    
-    user.coins -= cost;
-    user.food += amount;
-    saveData();
-    
-    return { 
-        success: true, 
-        message: `🛒 Compraste ${amount} comida(s) por ${cost} monedas\nComida: ${user.food} | Monedas: ${user.coins}` 
-    };
-}
-
-function getWaifuStatus(userId) {
-    const user = getUser(userId);
-    if (!user.waifu) return "No tienes una waifu. Usa !adoptar para adoptar una.";
-    
-    const waifu = user.waifu;
-    updateWaifuStatus(userId);
-    
-    const hungerBar = '🍖'.repeat(Math.floor(waifu.hunger / 20)) + '◻️'.repeat(5 - Math.floor(waifu.hunger / 20));
-    const happinessBar = '💖'.repeat(Math.floor(waifu.happiness / 20)) + '◻️'.repeat(5 - Math.floor(waifu.happiness / 20));
-    
-    const now = moment();
-    const adoptedAgo = moment(waifu.adoptedAt).from(now);
-    
-    let statusMessage = `🌸 *${waifu.name}* (${waifu.type})\n`;
-    statusMessage += `✨ Rareza: ${waifu.rarity} | Nivel: ${waifu.level}\n`;
-    statusMessage += `📊 XP: ${waifu.xp}/${waifu.level * 50}\n\n`;
-    statusMessage += `🍖 Hambre: ${hungerBar} ${waifu.hunger}/100\n`;
-    statusMessage += `💖 Felicidad: ${happinessBar} ${waifu.happiness}/100\n\n`;
-    statusMessage += `🕐 Adoptada: ${adoptedAgo}\n`;
-    statusMessage += `📦 Comida: ${user.food} | 🪙 Monedas: ${user.coins}`;
-    
-    // Advertencias
-    if (waifu.hunger < 30) {
-        statusMessage += `\n\n⚠️ *${waifu.name} tiene hambre!* Usa !alimentar`;
-    }
-    if (waifu.happiness < 30) {
-        statusMessage += `\n⚠️ *${waifu.name} está triste!* Usa !cuidar`;
-    }
-    
-    return statusMessage;
-}
+// =================== BOT PRINCIPAL ===================
 
 async function startBot() {
+    // Cargar datos y registrar comandos
     loadData();
+    registerCommands();
     
     const { state, saveCreds } = await useMultiFileAuthState('auth_info');
     
@@ -323,12 +526,14 @@ async function startBot() {
                 startBot();
             }
         } else if (connection === 'open') {
-            console.log('Bot conectado correctamente');
+            console.log('🌸 Waifu Bot conectado correctamente');
+            console.log(`📋 Comandos cargados: ${handlers.size}`);
         }
     });
     
     sock.ev.on('creds.update', saveCreds);
     
+    // Handler de mensajes
     sock.ev.on('messages.upsert', async ({ messages }) => {
         const message = messages[0];
         
@@ -344,100 +549,22 @@ async function startBot() {
         
         if (!text.startsWith(PREFIX)) return;
         
-        const command = text.toLowerCase().slice(PREFIX.length).split(' ')[0];
-        const args = text.slice(PREFIX.length + command.length).trim();
+        const args = text.slice(PREFIX.length).trim().split(/ +/);
+        const command = args.shift().toLowerCase();
+        const argString = args.join(' ');
         
-        console.log(`Comando recibido: ${command} de ${userId}`);
+        console.log(`[CMD] ${userId}: ${PREFIX}${command} ${argString}`);
         
         try {
-            let response = '';
-            
-            switch(command) {
-                case 'adoptar':
-                    if (!canAdopt(userId)) {
-                        const user = getUser(userId);
-                        const nextAdoption = moment(user.lastAdoption).add(1, 'hour');
-                        response = `Debes esperar hasta ${nextAdoption.format('HH:mm')} para adoptar otra waifu`;
-                    } else if (users[userId]?.waifu) {
-                        response = "Ya tienes una waifu. Usa !liberar antes de adoptar otra";
-                    } else {
-                        const randomWaifu = getRandomWaifu();
-                        const adoptedWaifu = adoptWaifu(userId, randomWaifu);
-                        response = `🎉 ¡Felicidades! Adoptaste a *${adoptedWaifu.name}* (${adoptedWaifu.type})!\n`;
-                        response += `✨ Rareza: ${adoptedWaifu.rarity}\n`;
-                        response += `💝 Cuídala bien! Aliméntala con !alimentar y cuídala con !cuidar\n`;
-                        response += `📊 Revisa su estado con !mivaifu`;
-                    }
-                    break;
-                    
-                case 'mivaifu':
-                case 'status':
-                    response = getWaifuStatus(userId);
-                    break;
-                    
-                case 'alimentar':
-                case 'feed':
-                    const feedResult = feedWaifu(userId);
-                    response = feedResult.message;
-                    break;
-                    
-                case 'cuidar':
-                case 'care':
-                    const careResult = careWaifu(userId);
-                    response = careResult.message;
-                    break;
-                    
-                case 'comprar':
-                    const amount = parseInt(args) || 1;
-                    if (amount < 1 || amount > 10) {
-                        response = "Puedes comprar entre 1 y 10 comidas a la vez";
-                    } else {
-                        const buyResult = buyFood(userId, amount);
-                        response = buyResult.message;
-                    }
-                    break;
-                    
-                case 'liberar':
-                    const user = getUser(userId);
-                    if (user.waifu) {
-                        const waifuName = user.waifu.name;
-                        user.waifu = null;
-                        user.lastAdoption = moment().toISOString();
-                        user.coins += 50; // Bonificación por liberar
-                        saveData();
-                        response = `😢 Liberaste a ${waifuName}. Recibiste 50 monedas por tu bondad.\nPuedes adoptar otra en 1 hora con !adoptar`;
-                    } else {
-                        response = "No tienes una waifu para liberar";
-                    }
-                    break;
-                    
-                case 'inventario':
-                case 'inv':
-                    const userData = getUser(userId);
-                    response = `📦 *Tu Inventario*\n`;
-                    response += `🍖 Comida: ${userData.food}\n`;
-                    response += `🪙 Monedas: ${userData.coins}\n`;
-                    if (userData.waifu) {
-                        response += `🌸 Waifu: ${userData.waifu.name} (Nivel ${userData.waifu.level})`;
-                    }
-                    break;
-                    
-                case 'ayuda':
-                case 'help':
-                    response = `🌸 *Comandos del Waifu Bot* 🌸\n\n`;
-                    response += `*!adoptar* - Adopta una waifu aleatoria (1h de espera)\n`;
-                    response += `*!mivaifu* - Ver estado de tu waifu\n`;
-                    response += `*!alimentar* - Alimenta a tu waifu (30min espera)\n`;
-                    response += `*!cuidar* - Cuida a tu waifu (20min espera)\n`;
-                    response += `*!comprar [cantidad]* - Compra comida (20 monedas c/u)\n`;
-                    response += `*!liberar* - Libera a tu waifu (+50 monedas)\n`;
-                    response += `*!inventario* - Ver tu inventario\n`;
-                    response += `*!ayuda* - Muestra esta ayuda`;
-                    break;
-                    
-                default:
-                    response = `Comando no reconocido. Usa !ayuda para ver los comandos disponibles`;
+            if (!handlers.has(command)) {
+                await sock.sendMessage(sender, { 
+                    text: `❌ Comando no encontrado. Usa ${PREFIX}ayuda para ver los comandos disponibles` 
+                });
+                return;
             }
+            
+            const cmd = handlers.get(command);
+            const response = await cmd.handler(userId, argString);
             
             await sock.sendMessage(sender, { text: response });
             
@@ -449,19 +576,19 @@ async function startBot() {
         }
     });
     
-    // Actualizar estado de waifus cada 5 minutos
+    // Actualizar estado de waifus cada 10 minutos
     setInterval(() => {
-        console.log('Actualizando estado de waifus...');
+        console.log('[SISTEMA] Actualizando estado de waifus...');
         for (const userId in users) {
             if (users[userId].waifu) {
                 updateWaifuStatus(userId);
             }
         }
         saveData();
-    }, 5 * 60 * 1000);
+    }, 10 * 60 * 1000);
 }
 
-// Manejo de errores no capturados
+// Manejo de errores
 process.on('uncaughtException', (error) => {
     console.error('Error no capturado:', error);
 });
