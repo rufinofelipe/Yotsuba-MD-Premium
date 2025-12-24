@@ -159,9 +159,9 @@ const listarWaifusHandler = async (m, { conn, participants }) => {
 };
 
 // Agregar comando para ver waifu propia
-handler.help = ['agarrar @tag'];
+handler.help = ['waifus'];
 handler.tags = ['fun'];
-handler.command = ['grabboobs', 'agarrartetas'];
+handler.command = ['adoptarwaifu'];
 handler.group = true;
 
 // Comandos adicionales
