@@ -39,7 +39,7 @@ const waifusList = [
         id: 6,
         name: 'Waguri',
         image: 'https://files.catbox.moe/ra9n34.jpeg',
-        anime: 'Bocchi the Rock!',
+        anime: 'La nobleza de las flores',
         rarity: 'Rara'
     },
     {
