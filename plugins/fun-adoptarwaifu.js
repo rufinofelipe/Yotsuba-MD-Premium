@@ -2,30 +2,30 @@
 const waifusList = [
     {
         id: 1,
-        name: 'China Fujiwara',
-        image: 'https://files.catbox.moe/b1hf5t.jpg',
-        anime: 'Kaguya-sama: Love is War',
+        name: 'Hinata',
+        image: 'https://raw.githubusercontent.com/ANDERSONARRUE/Img.2/main/upload_1766616841694.jpg',
+        anime: 'Naruto',
         rarity: 'Común'
     },
     {
         id: 2,
         name: 'Futaba',
-        image: 'https://files.catbox.moe/ldwptn.jpeg',
-        anime: 'Persona 5',
+        image: 'https://raw.githubusercontent.com/ANDERSONARRUE/Img.2/main/upload_1766616887654.jpg',
+        anime: 'May kadowaki',
         rarity: 'Rara'
     },
     {
         id: 3,
-        name: 'Ellen Joe',
-        image: 'https://files.catbox.moe/3usriy.webp',
-        anime: 'Nikke: Goddess of Victory',
+        name: 'Sada Naohiro',
+        image: 'https://raw.githubusercontent.com/ANDERSONARRUE/Img.2/main/upload_1766617095809.jpg',
+        anime: 'Over Flow',
         rarity: 'Épica'
     },
     {
         id: 4,
-        name: 'Yidhari Fujumi',
-        image: 'https://files.catbox.moe/czaoiv.webp',
-        anime: 'OC Original',
+        name: 'Aqua',
+        image: 'https://raw.githubusercontent.com/ANDERSONARRUE/Img.2/main/upload_1766617152528.jpg',
+        anime: 'Konosuba',
         rarity: 'Legendaria'
     },
     {
