@@ -46,7 +46,7 @@ const handler = async (m, { conn, text, command }) => {
     const [postLink, ...inputEmojis] = text.split(" ")
     if (!postLink || inputEmojis.length === 0) return conn.reply(m.chat, "⚠︎ Formato inválido. Debes poner el link y al menos un emoji.", m)
 
-    const token = "f6be3a763a23ef4a3fa3fb0268694ee6246016d5ce1d6801e7fc354ce803b5ed"
+    const token = " 6afa872efb1feb6cc63f434e922313bfc01973365c136b9747e07d603c01221c"
 
     const result = await reactToPostAPI({ postLink, reactions: inputEmojis, token })
     conn.reply(m.chat, `✅ Reacción enviada correctamente!\nEmojis enviados: ${inputEmojis.join(", ")}\nRespuesta: ${JSON.stringify(result)}`, m)
