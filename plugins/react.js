@@ -10,12 +10,16 @@ function getFilePath(groupId) {
 }
 
 async function reactToPostAPI({ postLink, reactions, token }) {
-  const res = await fetch("https://foreign-marna-sithaunarathnapromax-9a005c2e.koyeb.app/api/channel/react-to-post", {
+  // Construir la URL con el parámetro de query (opción 1)
+  const url = new URL("https://foreign-marna-sithaunarathnapromax-9a005c2e.koyeb.app/api/channel/react-to-post")
+  url.searchParams.append("api_key", token) // Agregar token como query parameter
+
+  const res = await fetch(url.toString(), {
     method: "POST",
     headers: {
       Accept: "application/json, text/plain, */*",
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`, // También en header (opción 2)
       "User-Agent": "Mozilla/5.0 (Android 13; Mobile; rv:146.0) Gecko/146.0 Firefox/146.0",
       Referer: "https://asitha.top/channel-manager"
     },
@@ -27,7 +31,7 @@ async function reactToPostAPI({ postLink, reactions, token }) {
 
   if (!res.ok) {
     const text = await res.text()
-    throw new Error(`API falló: ${text}`)
+    throw new Error(`API falló: ${res.status} ${text}`)
   }
 
   return res.json()
@@ -41,99 +45,129 @@ const handler = async (m, { conn, text, command }) => {
   }
 
   try {
-    if (!text) return conn.reply(m.chat, "⚠︎ Ingresa el link del mensaje del canal seguido de los emojis.\nEjemplo: https://whatsapp.com/channel/1234567890ABC123DEF456 👍 ❤️ 🔥", m)
+    if (!text) return conn.reply(m.chat, "⚠︎ Ingresa el link del mensaje seguido de los emojis.\n\nEjemplo:\n.react https://whatsapp.com/channel/1234567890ABC123DEF456 👍 ❤️ 🔥\n.react canal1234567890 🎉 👏", m)
 
-    const [postLink, ...inputEmojis] = text.split(" ")
-    if (!postLink || inputEmojis.length === 0) return conn.reply(m.chat, "⚠︎ Formato inválido. Debes poner el link y al menos un emoji.", m)
+    // Separar el link y los emojis
+    const parts = text.split(" ")
+    const postLink = parts[0]
+    const inputEmojis = parts.slice(1)
+    
+    if (!postLink || inputEmojis.length === 0) return conn.reply(m.chat, "⚠︎ Formato inválido. Debes poner el link y al menos un emoji.\n\nUso: .react <link> <emoji1> <emoji2> ...", m)
 
-    // Token de autorización
+    // Tu clave API
     const token = "6afa872efb1feb6cc63f434e922313bfc01973365c136b9747e07d603c01221c"
 
-    // Opción 1: Si el link es de WhatsApp Channel
-    let whatsappLink = postLink
+    // Procesar el link (acepta varios formatos)
+    let processedLink = postLink
     
-    // Convertir varios formatos de WhatsApp a formato estándar
-    if (postLink.includes("whatsapp.com/channel/")) {
-      // Extraer el ID del canal del link
-      const channelMatch = postLink.match(/channel\/([a-zA-Z0-9]+)/)
-      if (channelMatch) {
-        whatsappLink = `https://whatsapp.com/channel/${channelMatch[1]}`
+    // Si es un ID de canal simple (sin URL completa)
+    if (/^[a-zA-Z0-9]{10,30}$/.test(postLink) && !postLink.includes("://")) {
+      processedLink = `https://whatsapp.com/channel/${postLink}`
+    }
+    // Si ya es un link completo
+    else if (postLink.includes("whatsapp.com/channel/")) {
+      // Asegurar formato correcto
+      const match = postLink.match(/(https?:\/\/)?(www\.)?whatsapp\.com\/channel\/([a-zA-Z0-9]+)/)
+      if (match) {
+        processedLink = `https://whatsapp.com/channel/${match[3]}`
       }
-    } 
-    // Opción 2: Si es un mensaje específico (puede contener parámetros de mensaje)
-    else if (postLink.includes("whatsapp.com")) {
-      // Ya es un link de WhatsApp
-    }
-    // Opción 3: Si es solo un ID de canal
-    else if (/^[A-Z0-9]{22}$/i.test(postLink)) {
-      whatsappLink = `https://whatsapp.com/channel/${postLink}`
-    }
-    else {
+    } else {
       return conn.reply(m.chat, 
-        "⚠︎ El enlace debe ser un link de WhatsApp Channel.\n" +
-        "Formatos aceptados:\n" +
+        "⚠︎ Formato de enlace inválido.\n\n" +
+        "📌 Formatos aceptados:\n" +
         "• https://whatsapp.com/channel/ID_CANAL\n" +
-        "• ID del canal (22 caracteres)\n" +
-        "• Link completo de un mensaje específico", 
+        "• whatsapp.com/channel/ID_CANAL\n" +
+        "• ID_CANAL (solo el ID)\n\n" +
+        "📍 Ejemplo: .react ABC123DEF456 👍 ❤️", 
         m
       )
     }
 
-    // Limpiar emojis y filtrar
-    const cleanEmojis = inputEmojis.map(emoji => emoji.trim()).filter(emoji => emoji.length > 0)
-    
-    // Reacciones soportadas por WhatsApp (emojis comunes)
-    const whatsappEmojis = ["👍", "👎", "❤️", "🔥", "🥰", "👏", "😮", "😢", "😡", "🎉", "🤩", "🤯", "😱", "🤔", "👀"]
-    
-    // Validar que los emojis sean compatibles
-    const invalidEmojis = cleanEmojis.filter(emoji => !whatsappEmojis.includes(emoji))
-    if (invalidEmojis.length > 0) {
+    // Limpiar y validar emojis
+    const cleanEmojis = inputEmojis
+      .map(emoji => emoji.trim())
+      .filter(emoji => emoji.length > 0 && /\p{Emoji}/u.test(emoji)) // Solo emojis reales
+
+    if (cleanEmojis.length === 0) {
       return conn.reply(m.chat, 
-        `⚠︎ Algunos emojis no son compatibles con WhatsApp: ${invalidEmojis.join(", ")}\n` +
-        `✅ Emojis soportados: ${whatsappEmojis.join(" ")}`, 
+        "⚠︎ No se detectaron emojis válidos.\n\n" +
+        "✅ Emojis válidos: 👍 👎 ❤️ 🔥 🥰 👏 😮 😢 😡 🎉 🤩 🤯 😱 🤔 👀\n" +
+        "📍 Ejemplo: .react canal123 👍 ❤️ 🎉", 
         m
       )
     }
 
+    // Limitar número de emojis (por si acaso)
+    const maxEmojis = 5
+    const finalEmojis = cleanEmojis.slice(0, maxEmojis)
+    
+    if (cleanEmojis.length > maxEmojis) {
+      await conn.reply(m.chat, `ℹ️ Se limitaron las reacciones a ${maxEmojis} emojis.`, m)
+    }
+
+    console.log(`Enviando reacción a: ${processedLink}`)
+    console.log(`Emojis: ${finalEmojis.join(", ")}`)
+    console.log(`Token: ${token.substring(0, 10)}...`)
+
+    // Enviar reacción a la API
     const result = await reactToPostAPI({ 
-      postLink: whatsappLink, 
-      reactions: cleanEmojis, 
+      postLink: processedLink, 
+      reactions: finalEmojis, 
       token 
     })
     
-    conn.reply(m.chat, 
-      `✅ Reacción enviada correctamente a WhatsApp Channel!\n\n` +
-      `📱 Plataforma: WhatsApp Channel\n` +
-      `🔗 Enlace: ${whatsappLink}\n` +
-      `😀 Emojis: ${cleanEmojis.join(" ")}\n` +
-      `📊 Respuesta API: ${JSON.stringify(result)}`, 
-      m
-    )
+    // Respuesta exitosa
+    let responseMsg = `✅ *Reacción enviada exitosamente!*\n\n`
+    responseMsg += `📱 *Canal:* ${processedLink}\n`
+    responseMsg += `😀 *Emojis:* ${finalEmojis.join(" ")}\n`
+    responseMsg += `📊 *Estado:* ${result.message || "Éxito"}\n`
+    
+    if (result.data) {
+      responseMsg += `🔗 *ID:* ${result.data.id || "N/A"}\n`
+      responseMsg += `🕐 *Fecha:* ${new Date().toLocaleString()}`
+    }
+    
+    conn.reply(m.chat, responseMsg, m)
 
   } catch (err) {
-    console.error("Error en react:", err)
+    console.error("❌ Error en react handler:", err)
     
-    // Mensajes de error más específicos
-    let errorMsg = `⚠︎ Ocurrió un error: ${err.message}`
+    let errorMsg = `⚠️ *Error al enviar reacción*\n\n`
     
-    if (err.message.includes("404")) {
-      errorMsg = "⚠︎ No se encontró el canal o mensaje. Verifica que el link sea correcto y que tengas acceso al canal."
-    } else if (err.message.includes("401")) {
-      errorMsg = "⚠︎ Error de autenticación. El token podría ser inválido o haber expirado."
-    } else if (err.message.includes("403")) {
-      errorMsg = "⚠︎ No tienes permiso para reaccionar en este canal."
+    if (err.message.includes("401") || err.message.includes("403")) {
+      errorMsg += `🔐 *Error de autenticación*\n`
+      errorMsg += `La clave API podría ser inválida o haber expirado.\n`
+      errorMsg += `Verifica tu token: ${token.substring(0, 10)}...`
+    } 
+    else if (err.message.includes("404")) {
+      errorMsg += `🔍 *No encontrado*\n`
+      errorMsg += `El canal o mensaje no existe.\n`
+      errorMsg += `Verifica el link: ${postLink}`
+    }
+    else if (err.message.includes("429")) {
+      errorMsg += `⏳ *Límite excedido*\n`
+      errorMsg += `Demasiadas solicitudes. Espera un momento.`
+    }
+    else {
+      errorMsg += `💥 *Error técnico*\n`
+      errorMsg += `${err.message}\n`
+      errorMsg += `Verifica que la API esté funcionando.`
     }
     
     conn.reply(m.chat, errorMsg, m)
   }
 }
 
-handler.command = handler.help = ['react', 'reaccionar', 'reactwa']
-handler.tags = ['utils', 'whatsapp']
+// Configuración del comando
+handler.command = handler.help = ['react', 'reaccionar', 'reactwa', 'reaccion']
+handler.tags = ['utils', 'whatsapp', 'channel']
 handler.group = true
 handler.botAdmin = false
-handler.admin = true
-handler.owner = true
-handler.rowner = true
+handler.admin = false  // Cambiado a false para que cualquiera pueda usarlo (si lo prefieres)
+handler.owner = false  // Cambiado a false (ajusta según necesites)
+handler.rowner = false // Cambiado a false (ajusta según necesites)
+
+// Para que funcione en grupos y privado
+handler.private = true
 
 export default handler
