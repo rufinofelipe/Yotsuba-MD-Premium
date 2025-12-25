@@ -12,14 +12,14 @@ function getFilePath(groupId) {
 async function reactToPostAPI({ postLink, reactions, token }) {
   // Construir la URL con el parámetro de query
   const url = new URL("https://foreign-marna-sithaunarathnapromax-9a005c2e.koyeb.app/api/channel/react-to-post")
-  url.searchParams.append("api_key", token) // Agregar token como query parameter
+  url.searchParams.append("api_key", token)
 
   const res = await fetch(url.toString(), {
     method: "POST",
     headers: {
       Accept: "application/json, text/plain, */*",
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`, // También en header
+      Authorization: `Bearer ${token}`,
       "User-Agent": "Mozilla/5.0 (Android 13; Mobile; rv:146.0) Gecko/146.0 Firefox/146.0",
       Referer: "https://asitha.top/channel-manager"
     },
@@ -38,23 +38,15 @@ async function reactToPostAPI({ postLink, reactions, token }) {
 }
 
 const handler = async (m, { conn, text, command }) => {
-  // Verificar que solo el owner pueda usar el comando
-  const ownerNumber = global.owner ? global.owner[0]?.replace(/[^0-9]/g, '') + '@s.whatsapp.net' : null
-  const sender = m.sender
-  
-  if (ownerNumber && sender !== ownerNumber) {
-    return conn.reply(m.chat, "⚠️ *COMANDO RESTRINGIDO*\n\nSolo el owner del bot puede usar este comando.", m)
-  }
-
   try {
-    if (!text) return conn.reply(m.chat, "⚠️ *USO DEL COMANDO*\n\nPara reaccionar a un mensaje de canal:\n\n.react <link_canal> <emoji1> <emoji2> ...\n\n📌 *Ejemplos:*\n.react https://whatsapp.com/channel/ABC123DEF456 👍 ❤️\n.react canal1234567890 🔥 🎉", m)
+    if (!text) return m.reply("⚠️ *USO DEL COMANDO*\n\nPara reaccionar a un mensaje de canal:\n\n.react <link_canal> <emoji1> <emoji2> ...\n\n📌 *Ejemplos:*\n.react https://whatsapp.com/channel/ABC123DEF456 👍 ❤️\n.react canal1234567890 🔥 🎉")
 
     // Separar el link y los emojis
     const parts = text.split(" ")
     const postLink = parts[0]
     const inputEmojis = parts.slice(1)
     
-    if (!postLink || inputEmojis.length === 0) return conn.reply(m.chat, "⚠️ *FORMATO INVÁLIDO*\n\nDebes proporcionar el link del canal y al menos un emoji.\n\nUso: .react <link> <emoji1> <emoji2> ...", m)
+    if (!postLink || inputEmojis.length === 0) return m.reply("⚠️ *FORMATO INVÁLIDO*\n\nDebes proporcionar el link del canal y al menos un emoji.\n\nUso: .react <link> <emoji1> <emoji2> ...")
 
     // Tu clave API
     const token = "6afa872efb1feb6cc63f434e922313bfc01973365c136b9747e07d603c01221c"
@@ -73,29 +65,16 @@ const handler = async (m, { conn, text, command }) => {
         processedLink = `https://whatsapp.com/channel/${match[3]}`
       }
     } else {
-      return conn.reply(m.chat, 
-        "⚠️ *ENLACE INVÁLIDO*\n\n" +
-        "Solo se aceptan enlaces de WhatsApp Channel:\n\n" +
-        "• https://whatsapp.com/channel/ID_CANAL\n" +
-        "• whatsapp.com/channel/ID_CANAL\n" +
-        "• Solo el ID del canal\n\n" +
-        "📍 *Ejemplo:* .react ABC123DEF456 👍 ❤️", 
-        m
-      )
+      return m.reply("⚠️ *ENLACE INVÁLIDO*\n\nSolo se aceptan enlaces de WhatsApp Channel:\n\n• https://whatsapp.com/channel/ID_CANAL\n• whatsapp.com/channel/ID_CANAL\n• Solo el ID del canal\n\n📍 *Ejemplo:* .react ABC123DEF456 👍 ❤️")
     }
 
-    // Limpiar y validar emojis
+    // Limpiar emojis
     const cleanEmojis = inputEmojis
       .map(emoji => emoji.trim())
       .filter(emoji => emoji.length > 0)
 
     if (cleanEmojis.length === 0) {
-      return conn.reply(m.chat, 
-        "⚠️ *EMOJIS INVÁLIDOS*\n\n" +
-        "Debes proporcionar al menos un emoji válido.\n\n" +
-        "✅ Emojis comunes: 👍 👎 ❤️ 🔥 🥰 👏 😮 😢 😡 🎉 🤩", 
-        m
-      )
+      return m.reply("⚠️ *EMOJIS INVÁLIDOS*\n\nDebes proporcionar al menos un emoji válido.")
     }
 
     // Limitar número de emojis
@@ -103,15 +82,12 @@ const handler = async (m, { conn, text, command }) => {
     const finalEmojis = cleanEmojis.slice(0, maxEmojis)
     
     if (cleanEmojis.length > maxEmojis) {
-      await conn.reply(m.chat, `ℹ️ Se limitaron las reacciones a ${maxEmojis} emojis máximo.`, m)
+      await m.reply(`ℹ️ Se limitaron las reacciones a ${maxEmojis} emojis máximo.`)
     }
 
-    console.log(`[OWNER COMMAND] Enviando reacción desde: ${sender}`)
+    console.log(`[REACT COMMAND] Owner: ${m.sender}`)
     console.log(`Canal: ${processedLink}`)
     console.log(`Emojis: ${finalEmojis.join(", ")}`)
-
-    // Mostrar mensaje de procesamiento
-    await conn.reply(m.chat, "⏳ *Enviando reacción...*\n\nPor favor espera un momento.", m)
 
     // Enviar reacción a la API
     const result = await reactToPostAPI({ 
@@ -132,22 +108,20 @@ const handler = async (m, { conn, text, command }) => {
       responseMsg += `\n🔢 *ID Respuesta:* ${result.data.id || "N/A"}`
     }
     
-    await conn.reply(m.chat, responseMsg, m)
+    await m.reply(responseMsg)
 
   } catch (err) {
-    console.error("❌ Error en comando react (owner):", err)
+    console.error("❌ Error en comando react:", err)
     
     let errorMsg = `⚠️ *ERROR EN REACCIÓN*\n\n`
     
     if (err.message.includes("401") || err.message.includes("403")) {
       errorMsg += `🔐 *Error de autenticación API*\n`
-      errorMsg += `Token API inválido o expirado.\n`
-      errorMsg += `Contacta al desarrollador.`
+      errorMsg += `Token API inválido o expirado.`
     } 
     else if (err.message.includes("404")) {
       errorMsg += `🔍 *Canal no encontrado*\n`
-      errorMsg += `Verifica que el enlace sea correcto:\n`
-      errorMsg += `${postLink}`
+      errorMsg += `Verifica que el enlace sea correcto.`
     }
     else if (err.message.includes("429")) {
       errorMsg += `⏳ *Límite de tasa excedido*\n`
@@ -155,30 +129,27 @@ const handler = async (m, { conn, text, command }) => {
     }
     else if (err.message.includes("network") || err.message.includes("fetch")) {
       errorMsg += `🌐 *Error de red*\n`
-      errorMsg += `No se pudo conectar con la API.\n`
-      errorMsg += `Verifica tu conexión.`
+      errorMsg += `No se pudo conectar con la API.`
     }
     else {
       errorMsg += `💻 *Error técnico*\n`
-      errorMsg += `${err.message}\n\n`
-      errorMsg += `Reporta este error al desarrollador.`
+      errorMsg += `${err.message}`
     }
     
-    await conn.reply(m.chat, errorMsg, m)
+    await m.reply(errorMsg)
   }
 }
 
-// Configuración del comando - SOLO PARA OWNER
+// Configuración del comando - SOLO PARA OWNER y ROWNER
 handler.command = handler.help = ['react', 'reaccionar', 'reactwa']
-handler.tags = ['owner', 'utils', 'channel']
-handler.group = false  // Solo funciona en privado con el bot
-handler.private = true // Solo en chats privados
-handler.owner = true   // Solo el owner puede usarlo
-handler.rowner = true  // Solo el owner real
-handler.botAdmin = false // No requiere ser admin
-
-// Deshabilitar para usuarios normales
-handler.register = true
+handler.tags = ['owner']
+handler.group = true    // ✅ Funciona en grupos
+handler.private = false // ❌ NO funciona en privado
+handler.owner = true    // Solo owner
+handler.rowner = true   // Solo real owner
+handler.botAdmin = false
+handler.admin = false
+handler.register = false
 handler.limit = false
 
 export default handler
