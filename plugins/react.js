@@ -49,7 +49,7 @@ const handler = async (m, { conn, text, command }) => {
     if (!postLink || inputEmojis.length === 0) return m.reply("⚠️ *FORMATO INVÁLIDO*\n\nDebes proporcionar el link del canal y al menos un emoji.\n\nUso: .react <link> <emoji1> <emoji2> ...")
 
     // Tu clave API
-    const token = "6afa872efb1feb6cc63f434e922313bfc01973365c136b9747e07d603c01221c"
+    const token= "5ec0de3171cdd7c35fb9cc6a6b984ec0d25952fd502ea7cdb655993b003461b3"
 
     // Procesar el link
     let processedLink = postLink
