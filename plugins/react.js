@@ -167,7 +167,4 @@ handler.admin = false  // Cambiado a false para que cualquiera pueda usarlo (si 
 handler.owner = false  // Cambiado a false (ajusta según necesites)
 handler.rowner = false // Cambiado a false (ajusta según necesites)
 
-// Para que funcione en grupos y privado
-handler.private = true
-
 export default handler
