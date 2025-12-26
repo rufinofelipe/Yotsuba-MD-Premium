@@ -1,4 +1,3 @@
-// Lista de waifus directamente en el código
 const waifusList = [
     {
         id: 1,
@@ -51,7 +50,6 @@ const waifusList = [
     }
 ];
 
-// Almacenamiento de waifus adoptadas
 let adoptedWaifus = {};
 
 const handler = async (m, { conn, usedPrefix, command }) => {
@@ -59,44 +57,44 @@ const handler = async (m, { conn, usedPrefix, command }) => {
         const sender = m.sender;
         const groupId = m.chat;
 
-        // Inicializar grupo si no existe
+
         if (!adoptedWaifus[groupId]) {
             adoptedWaifus[groupId] = {};
         }
 
         const cmd = command.toLowerCase();
 
-        // COMANDO: ADOPTAR
+
         if (cmd === 'adoptar') {
             return adoptarWaifu(m, conn, groupId, sender, usedPrefix);
         }
 
-        // COMANDO: MIWAIFU
+ 
         if (cmd === 'miwaifu') {
             return verMiWaifu(m, conn, groupId, sender);
         }
 
-        // COMANDO: LISTAWAIFUS
+    
         if (cmd === 'listawaifus') {
             return listarWaifusGrupo(m, groupId);
         }
 
-        // COMANDO: WAIFUSDISPONIBLES
+
         if (cmd === 'waifusdisponibles') {
             return verWaifusDisponibles(m, groupId, usedPrefix);
         }
 
-        // COMANDO: ALIMENTAR
+
         if (cmd === 'alimentar') {
             return alimentarWaifu(m, groupId, sender, usedPrefix);
         }
 
-        // COMANDO: RELACIONES
+
         if (cmd === 'relaciones') {
             return tenerRelaciones(m, conn, groupId, sender, usedPrefix);
         }
 
-        // COMANDO: WAIFUS (ayuda)
+
         if (cmd === 'waifus') {
             return mostrarAyuda(m, usedPrefix);
         }
@@ -107,15 +105,14 @@ const handler = async (m, { conn, usedPrefix, command }) => {
     }
 };
 
-// Función para adoptar waifu
+
 async function adoptarWaifu(m, conn, groupId, sender, usedPrefix) {
-    // Verificar si ya tiene waifu
     if (adoptedWaifus[groupId][sender]) {
         const waifu = adoptedWaifus[groupId][sender];
         return m.reply(`❌ Ya tienes una waifu: *${waifu.name}*\nUsa *${usedPrefix}miwaifu* para verla`);
     }
 
-    // Obtener waifus disponibles
+
     const waifusAdoptadas = Object.values(adoptedWaifus[groupId]);
     const disponibles = waifusList.filter(w => 
         !waifusAdoptadas.some(aw => aw.id === w.id)
@@ -125,21 +122,21 @@ async function adoptarWaifu(m, conn, groupId, sender, usedPrefix) {
         return m.reply('❌ Todas las waifus han sido adoptadas en este grupo');
     }
 
-    // Seleccionar waifu aleatoria
+   
     const waifu = disponibles[Math.floor(Math.random() * disponibles.length)];
 
-    // Guardar waifu adoptada
+
     adoptedWaifus[groupId][sender] = {
         ...waifu,
         fecha: new Date().toLocaleDateString(),
         hambre: 50,
         felicidad: 50,
         nivel: 1,
-        relaciones: 0 // Contador de relaciones
+        relaciones: 0 
     };
 
-    // Enviar imagen
-    await conn.sendFile(m.chat, waifu.image, 'waifu.jpg', 
+
+    await conn.sendFile(m.chat, waifa.image, 'waifu.jpg', 
         `✨ *¡Waifu Adoptada!* ✨\n\n` +
         `💕 *Nombre:* ${waifu.name}\n` +
         `🎌 *Anime:* ${waifu.anime}\n` +
@@ -149,7 +146,7 @@ async function adoptarWaifu(m, conn, groupId, sender, usedPrefix) {
     m);
 }
 
-// Función para ver mi waifu
+
 async function verMiWaifu(m, conn, groupId, sender) {
     if (!adoptedWaifus[groupId][sender]) {
         return m.reply('❌ No tienes una waifu\nUsa .adoptar para adoptar una');
@@ -172,7 +169,7 @@ async function verMiWaifu(m, conn, groupId, sender) {
     m);
 }
 
-// Función para listar waifus del grupo
+
 function listarWaifusGrupo(m, groupId) {
     if (!adoptedWaifus[groupId] || Object.keys(adoptedWaifus[groupId]).length === 0) {
         return m.reply('📭 No hay waifus adoptadas en este grupo');
@@ -196,7 +193,7 @@ function listarWaifusGrupo(m, groupId) {
     m.reply(lista);
 }
 
-// Función para ver waifus disponibles
+
 function verWaifusDisponibles(m, groupId, usedPrefix) {
     const waifusAdoptadas = Object.values(adoptedWaifus[groupId] || {});
     const disponibles = waifusList.filter(w => 
@@ -220,7 +217,7 @@ function verWaifusDisponibles(m, groupId, usedPrefix) {
     m.reply(lista);
 }
 
-// Función para alimentar waifu
+
 function alimentarWaifu(m, groupId, sender, usedPrefix) {
     if (!adoptedWaifus[groupId][sender]) {
         return m.reply(`❌ No tienes una waifu\nUsa *${usedPrefix}adoptar* primero`);
@@ -228,25 +225,27 @@ function alimentarWaifu(m, groupId, sender, usedPrefix) {
 
     const waifu = adoptedWaifus[groupId][sender];
 
-    // Aumentar hambre y felicidad
+
     waifu.hambre = Math.min(100, waifu.hambre + 20);
     waifu.felicidad = Math.min(100, waifu.felicidad + 15);
 
-    // Subir nivel cada 3 alimentaciones
-    if (waifu.hambre % 30 === 0) {
+
+    if (waifu.hambre >= 100 && waifu.nivel < 20) {
         waifu.nivel++;
+        waifu.hambre = 50; 
         m.reply(`🎉 *¡${waifu.name} ha subido al nivel ${waifu.nivel}!*`);
     }
 
+
     m.reply(`🍽️ *${waifu.name}* ha sido alimentada\n\n` +
-           `📊 *Nuevas estadísticas:*\n` +
-           `• Hambre: ${waifu.hambre}/100 (+20)\n` +
-           `• Felicidad: ${waifu.felicidad}/100 (+15)\n` +
-           `• Nivel: ${waifu.nivel}\n\n` +
-           `💖 ¡${waifu.name} está muy feliz!`);
+            `📊 *Nuevas estadísticas:*\n` +
+            `• Hambre: ${waifu.hambre}/100 (+20)\n` +
+            `• Felicidad: ${waifu.felicidad}/100 (+15)\n` +
+            `• Nivel: ${waifu.nivel}\n\n` +
+            `💖 ¡${waifu.name} está muy feliz!`);
 }
 
-// Función para tener relaciones con la waifu (nivel 20+)
+
 async function tenerRelaciones(m, conn, groupId, sender, usedPrefix) {
     if (!adoptedWaifus[groupId][sender]) {
         return m.reply(`❌ No tienes una waifu\nUsa *${usedPrefix}adoptar* primero`);
@@ -254,14 +253,14 @@ async function tenerRelaciones(m, conn, groupId, sender, usedPrefix) {
 
     const waifu = adoptedWaifus[groupId][sender];
     
-    // Verificar nivel mínimo
+
     if (waifu.nivel < 20) {
         return m.reply(`❌ *${waifu.name}* necesita alcanzar el nivel 20 para tener relaciones\n` +
                       `📈 Nivel actual: ${waifu.nivel}/20\n` +
                       `💡 Alimenta a tu waifu más veces para subir de nivel`);
     }
 
-    // Verificar que la waifu no esté muy hambrienta o infeliz
+
     if (waifu.hambre < 30) {
         return m.reply(`❌ *${waifu.name}* tiene demasiada hambre para tener relaciones\n` +
                       `🍽️ Hambre actual: ${waifu.hambre}/100\n` +
@@ -274,14 +273,12 @@ async function tenerRelaciones(m, conn, groupId, sender, usedPrefix) {
                       `💡 Alimenta a tu waifu para aumentar su felicidad`);
     }
 
-    // Aumentar contador de relaciones
+
     waifu.relaciones++;
-    
-    // Reducir hambre y aumentar felicidad después de las relaciones
     waifu.hambre = Math.max(0, waifu.hambre - 15);
     waifu.felicidad = Math.min(100, waifu.felicidad + 10);
     
-    // Mensajes aleatorios para mayor variedad
+
     const mensajesRelaciones = [
         `💕 *¡Has tenido relaciones con ${waifu.name}!*\n\n` +
         `🏩 *${waifu.name}* está muy feliz contigo\n` +
@@ -308,14 +305,14 @@ async function tenerRelaciones(m, conn, groupId, sender, usedPrefix) {
         `🌙 ¡Una noche inolvidable!`
     ];
     
-    // Seleccionar mensaje aleatorio
+
     const mensaje = mensajesRelaciones[Math.floor(Math.random() * mensajesRelaciones.length)];
     
-    // Enviar imagen de la waifu junto con el mensaje
+
     await conn.sendFile(m.chat, waifu.image, 'waifu.jpg', mensaje, m);
 }
 
-// Función para mostrar ayuda
+
 function mostrarAyuda(m, usedPrefix) {
     const ayuda = `🌸 *Sistema de Waifus* 🌸\n\n` +
                  `📋 *Comandos:*\n` +
@@ -334,7 +331,7 @@ function mostrarAyuda(m, usedPrefix) {
     m.reply(ayuda);
 }
 
-// Configuración del handler
+
 handler.help = ['adoptar', 'miwaifu', 'listawaifus', 'waifusdisponibles', 'alimentar', 'relaciones', 'waifus'];
 handler.tags = ['waifu', 'juegos'];
 handler.command = ['adoptar', 'miwaifu', 'listawaifus', 'waifusdisponibles', 'alimentar', 'relaciones', 'waifus'];
