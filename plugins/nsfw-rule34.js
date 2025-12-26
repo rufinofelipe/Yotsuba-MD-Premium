@@ -8,7 +8,8 @@ const handler = async (m, { conn, args, usedPrefix }) => {
         return;
     }
     const tag = args[0];
-    const url = `https://rule34.xxx/index.php?page=account&s=options`;
+    const url =
+    const API_KEY:&api_key=&user_id=5744206 `https://rule34.xxx/index.php?page=account&s=options`;
     try {
         const response = await fetch(url);
         const data = await response.json();
