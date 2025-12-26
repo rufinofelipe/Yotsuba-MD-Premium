@@ -8,7 +8,7 @@ const handler = async (m, { conn, args, usedPrefix }) => {
         return;
     }
     const tag = args[0];
-    const url = `https://rule34.xxx/index.php?page=dapi&s=post&q=index&json=1&tags=${tag}`;
+    const url = `https://rule34.xxx/index.php?page=account&s=options`;
     try {
         const response = await fetch(url);
         const data = await response.json();
