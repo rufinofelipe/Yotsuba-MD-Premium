@@ -53,57 +53,31 @@ handler.register = true
 handler.command = ['isagi', 'yoichi']
 export default handler
 
-// Función para interactuar con la API de Alyabotpe con API key
+// Función para interactuar con la API de Alyabotpe
 async function luminsesi(q, username, logic) {
   try {
-    const apiKey = 'stellar-t1opU0P4'
-    const url = `https://rest.alyabotpe.xyz/ai/gptprompt`
-    
-    // Enviar la solicitud con la API key y los parámetros
-    const response = await axios.get(url, {
-      params: {
-        prompt: logic,
-        apikey: apiKey
-      },
-      headers: {
-        'Accept': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (WhatsApp Bot)'
-      }
-    })
+    const response = await axios.get(
+      `https://rest.alyabotpe.xyz/ai/gptprompt?prompt=${encodeURIComponent(logic)}&apikey=stellar-t1opU0P4`
+    )
     
     // Verificar la estructura de la respuesta
-    console.log('Respuesta completa de la API:', response.data)
-    
     if (response.data && response.data.response) {
       return response.data.response
     } else if (response.data && response.data.message) {
       return response.data.message
-    } else if (response.data && response.data.result) {
-      return response.data.result
     } else if (response.data && typeof response.data === 'string') {
       return response.data
-    } else if (response.data && response.data.text) {
-      return response.data.text
     } else {
       console.log('Estructura de respuesta inesperada:', response.data)
       return "⚽ Lo veo... pero mi visión no es clara en este momento. Intenta de nuevo."
     }
   } catch (error) {
-    console.error('*[ ℹ️ ] Error en la API:*', {
-      message: error.message,
-      status: error.response?.status,
-      data: error.response?.data,
-      url: error.config?.url
-    })
+    console.error('*[ ℹ️ ] Error en la API:*', error.response?.data || error.message)
     
     // Manejar errores específicos de la API
     if (error.response) {
-      if (error.response.status === 401) {
-        throw new Error('API key inválida o no autorizada')
-      } else if (error.response.status === 404) {
-        throw new Error('Endpoint de API no encontrado')
-      } else if (error.response.status === 429) {
-        throw new Error('Límite de solicitudes excedido')
+      if (error.response.status === 404) {
+        throw new Error('La API no está disponible en este momento')
       } else if (error.response.status === 500) {
         throw new Error('Error interno del servidor de la API')
       }
