@@ -18,5 +18,6 @@ let audioMsg = {
   'buenas tardes': 'https://b.top4top.io/m_2826v2zg51.mp3',
   'buenas noches': 'https://i.top4top.io/m_2826o8rfj1.mp3',
   'sad': 'https://h.top4top.io/m_2826mcim21.mp3',
-  '@5491168352204|@59172945992': 'https://l.top4top.io/m_2492i4mdu1.mp3'
+  '@5491168352204|@59172945992': 'https://l.top4top.io/m_2492i4mdu1.mp3',
+'https://files.catbox.moe/3xodgw'
 }
