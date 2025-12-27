@@ -2,8 +2,9 @@ import { createHash } from 'crypto'
 import fetch from 'node-fetch'
 import uploadFile from '../lib/uploadFile.js'
 import uploadImage from '../lib/uploadImage.js'
-import { FormData, Blob } from "formdata-node"
+import { FormData } from "formdata-node"
 import { fileTypeFromBuffer } from "file-type"
+import { Readable } from 'stream'
 import crypto from "crypto"
 
 const handler = async (m, { conn, command, usedPrefix, text }) => {
@@ -71,21 +72,26 @@ return url
 
 async function catbox(content) {
 try {
-
 const buffer = Buffer.isBuffer(content) ? content : Buffer.from(content)
-const { ext, mime } = (await fileTypeFromBuffer(buffer)) || {}
-const blob = new Blob([buffer], { type: mime })
+const { ext, mime } = await fileTypeFromBuffer(buffer)
 const formData = new FormData()
 const randomBytes = crypto.randomBytes(5).toString("hex")
+const filename = randomBytes + "." + ext
+
+
 formData.append("reqtype", "fileupload")
-formData.append("fileToUpload", blob, randomBytes + "." + ext)
+formData.append("fileToUpload", buffer, {
+filename: filename,
+contentType: mime
+})
+
 const response = await fetch("https://catbox.moe/user/api.php", { 
 method: "POST", 
-body: formData, 
-headers: { "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36" }
+body: formData
 })
+
 const result = await response.text()
-if (result.includes('http')) {
+if (result && result.startsWith('http')) {
 return result.trim()
 }
 throw new Error(`Catbox error: ${result}`)
@@ -97,16 +103,21 @@ throw new Error(`Catbox upload falló: ${error.message}`)
 async function quax(content) {
 try {
 const buffer = Buffer.isBuffer(content) ? content : Buffer.from(content)
-const { ext, mime } = (await fileTypeFromBuffer(buffer)) || {}
-const blob = new Blob([buffer], { type: mime })
+const { ext, mime } = await fileTypeFromBuffer(buffer)
 const formData = new FormData()
 const randomBytes = crypto.randomBytes(5).toString("hex")
-formData.append("files[]", blob, randomBytes + "." + ext)
+const filename = randomBytes + "." + ext
+
+formData.append("files[]", buffer, {
+filename: filename,
+contentType: mime
+})
+
 const response = await fetch("https://qu.ax/upload.php", { 
 method: "POST", 
-body: formData, 
-headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" }
+body: formData
 })
+
 const data = await response.json()
 if (data.success && data.files?.[0]?.url) {
 return data.files[0].url
