@@ -48,5 +48,7 @@ let audioMsg = {
 'se me olvidó':
 'https://files.catbox.moe/soqudv.mp3',
 'JAJAJA':
-'https://files.catbox.moe/2qtkaq.mp3'
+'https://files.catbox.moe/2qtkaq.mp3',
+'puta':
+'https://files.catbox.moe/6rkkxg.mp3'
 }
