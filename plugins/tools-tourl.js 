@@ -1,73 +1,41 @@
 import fetch from 'node-fetch'
-import { fileTypeFromBuffer } from 'file-type'
-import { FormData, Blob } from 'formdata-node'
-import crypto from 'crypto'
-import axios from 'axios'
+import FormData from 'form-data'
 
 let handler = async (m, { conn }) => {
-    let q = m.quoted ? m.quoted : m
-    let mime = (q.msg || q).mimetype || ''
-    
-    if (!mime) return m.reply('✰ Responde a un video, imagen o gif. ꕤ')
+  let q = m.quoted ? m.quoted : m
+  let mime = (q.msg || q).mimetype || ''
+  if (!mime) return conn.reply(m.chat, `${emoji} Por favor, responda a una *Imagen* o *Vídeo.*`, m)
 
-    m.reply('✰ Generando enlace... ꕤ')
+  await m.react(rwait)
 
-    try {
-        let buffer = await q.download()
-        
-        // Intento 1: Catbox
-        let link = await uploadCatbox(buffer)
-        
-        // Intento 2: FreeImage (si falla Catbox)
-        if (!link || !link.startsWith('http')) {
-            link = await uploadFreeImage(buffer, mime)
-        }
+  try {
+    let media = await q.download()
 
-        if (!link) throw new Error('Ambos servidores fallaron')
+    // Subida a Catbox
+    let link = await uploadCatbox(media, mime)
 
-        m.reply(`❀ *Link Generado* ✰\n\nꕤ *URL:* ${link}`)
+    let img = mime.startsWith('image/')
+      ? media
+      : await (await fetch('https://files.catbox.moe/1.png')).buffer()
 
-    } catch (e) {
-        console.error(e)
-        m.reply('✰ Error al generar el link en ambos servidores. ꕤ')
-    }
-}
+    let txt = `乂  *L I N K - E N L A C E*  乂\n\n`
+    txt += `*» Enlace* : ${link}\n`
+    txt += `*» Acortado* : ${await shortUrl(link)}\n`
+    txt += `*» Tamaño* : ${formatBytes(media.length)}\n`
+    txt += `*» Expiración* : No expira\n\n`
+    txt += `> *${dev}*`
 
-async function uploadCatbox(buffer) {
-    try {
-        const { ext } = await fileTypeFromBuffer(buffer) || { ext: 'bin' }
-        const formData = new FormData()
-        const name = crypto.randomBytes(4).toString('hex')
-        const blob = new Blob([buffer], { type: `video/${ext}` })
-        
-        formData.append('reqtype', 'fileupload')
-        formData.append('fileToUpload', blob, `${name}.${ext}`)
-        
-        const res = await fetch('https://catbox.moe/user/api.php', {
-            method: 'POST',
-            body: formData
-        })
-        return (await res.text()).trim()
-    } catch {
-        return null
-    }
-}
+    await conn.sendFile(m.chat, img, 'thumbnail.jpg', txt, m, fkontak)
+    await m.react(done)
 
-async function uploadFreeImage(buffer, mime) {
-    try {
-        const form = new FormData()
-        form.append('source', buffer.toString('base64'))
-        const res = await axios.post('https://freeimage.host/api/1/upload', form, {
-            params: { key: '6d207e02198a847aa98d0a2a901485a5' }
-        })
-        return res.data.image.url
-    } catch {
-        return null
-    }
+  } catch (e) {
+    await m.react(error)
+  }
 }
 
 handler.help = ['tourl']
-handler.tags = ['tools']
-handler.command = ['tourl', 'url', 'link']
+handler.tags = ['transformador']
+handler.command = ['tourl', 'upload']
+handler.register = true
 
 export default handler
