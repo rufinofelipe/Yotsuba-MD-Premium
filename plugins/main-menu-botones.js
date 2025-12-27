@@ -60,7 +60,7 @@ const handler = async (m, { conn, usedPrefix, command, args }) => {
 🔥 ¡Hagamos el mejor juego posible! ⚽`
 
     const footer = '⚽ Powered by DuarteXV'
-    const menuImage = 'https://raw.githubusercontent.com/ANDERSONARRUE/Img.2/main/upload_1766764726110.jpg'
+    const menuImage = 'https://i.pinimg.com/736x/3a/18/99/3a1899d88c95c5a57404b4f9af324bb3.jpg'
 
     try {
       return await conn.sendNCarousel(m.chat, text, footer, menuImage, buttons, null, null, null, m)
@@ -156,7 +156,7 @@ const handler = async (m, { conn, usedPrefix, command, args }) => {
 ⬅️ *para volver al menú principal*`
 
     const footer = '📥 Módulo de Descargas - Isagi Yoichi Bot'
-    const descargasImage = 'https://raw.githubusercontent.com/ANDERSONARRUE/Img.2/main/upload_1766764726110.jpg'
+    const descargasImage = 'https://i.pinimg.com/736x/3a/18/99/3a1899d88c95c5a57404b4f9af324bb3.jpg'
 
     try {
       return await conn.sendNCarousel(m.chat, text, footer, descargasImage, buttons, null, null, null, m)
@@ -274,7 +274,7 @@ const handler = async (m, { conn, usedPrefix, command, args }) => {
 ⚽ *Usa los comandos o el botón*
 ⬅️ *para volver al menú principal*`
 
-    const herramientasImage = 'https://raw.githubusercontent.com/ANDERSONARRUE/Img.2/main/upload_1766764726110.jpg'
+    const herramientasImage = 'https://i.pinimg.com/736x/3a/18/99/3a1899d88c95c5a57404b4f9af324bb3.jpg'
 
     try {
       return await conn.sendNCarousel(m.chat, text, '🔧 Módulo de Herramientas - Isagi Yoichi Bot', herramientasImage, buttons, null, null, null, m)
@@ -337,7 +337,7 @@ const handler = async (m, { conn, usedPrefix, command, args }) => {
 ⚽ *Usa los comandos o el botón*
 ⬅️ *para volver al menú principal*`
 
-    const buscadoresImage = 'https://raw.githubusercontent.com/ANDERSONARRUE/Img.2/main/upload_1766764726110.jpg'
+    const buscadoresImage = 'https://i.pinimg.com/736x/3a/18/99/3a1899d88c95c5a57404b4f9af324bb3.jpg'
 
     try {
       return await conn.sendNCarousel(m.chat, text, '🔍 Módulo de Buscadores - Isagi Yoichi Bot', buscadoresImage, buttons, null, null, null, m)
@@ -426,7 +426,7 @@ const handler = async (m, { conn, usedPrefix, command, args }) => {
 ⚽ *Usa los comandos o el botón*
 ⬅️ *para volver al menú principal*`
 
-    const juegosImage = 'https://raw.githubusercontent.com/ANDERSONARRUE/Img.2/main/upload_1766764726110.jpg'
+    const juegosImage = 'https://i.pinimg.com/736x/3a/18/99/3a1899d88c95c5a57404b4f9af324bb3.jpg'
 
     try {
       return await conn.sendNCarousel(m.chat, text, '🎮 Módulo de Juegos - Isagi Yoichi Bot', juegosImage, buttons, null, null, null, m)
@@ -505,7 +505,7 @@ const handler = async (m, { conn, usedPrefix, command, args }) => {
 ⚽ *Usa los comandos o el botón*
 ⬅️ *para volver al menú principal*`
 
-    const futbolImage = 'https://raw.githubusercontent.com/ANDERSONARRUE/Img.2/main/upload_1766764726110.jpg'
+    const futbolImage = 'https://i.pinimg.com/736x/3a/18/99/3a1899d88c95c5a57404b4f9af324bb3.jpg'
 
     try {
       return await conn.sendNCarousel(m.chat, text, '⚽ Módulo de Fútbol - Isagi Yoichi Bot', futbolImage, buttons, null, null, null, m)
@@ -566,7 +566,7 @@ const handler = async (m, { conn, usedPrefix, command, args }) => {
 ⚽ *Usa los comandos*
 ⬅️ *Escribe* \`menu\` *para volver*`
 
-    const gruposImage = 'https://raw.githubusercontent.com/ANDERSONARRUE/Img.2/main/upload_1766764726110.jpg'
+    const gruposImage = 'https://i.pinimg.com/736x/3a/18/99/3a1899d88c95c5a57404b4f9af324bb3.jpg'
 
     try {
       return await conn.sendMessage(m.chat, {
@@ -629,7 +629,7 @@ const handler = async (m, { conn, usedPrefix, command, args }) => {
 ⚽ *Usa los comandos*
 ⬅️ *Escribe* \`menu\` *para volver*`
 
-    const infoImage = 'https://raw.githubusercontent.com/ANDERSONARRUE/Img.2/main/upload_1766764726110.jpg'
+    const infoImage = 'https://i.pinimg.com/736x/3a/18/99/3a1899d88c95c5a57404b4f9af324bb3.jpg'
 
     try {
       return await conn.sendMessage(m.chat, {
