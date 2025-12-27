@@ -32,9 +32,9 @@ Tus respuestas reflejan tu filosofía de juego: directo al punto, estratégico y
     const query = m.text.toLowerCase()
     const username = m.pushName
 
-    async function adoAPI(q, role) {
+    async function AlyaApi(q, role) {
       try {
-        const url = `https://api-adonix.ultraplus.click/ai/geminiact?apikey=Adofreekey&text=${encodeURIComponent(q)}&role=${encodeURIComponent(role)}`
+        const url = `https://rest.alyabotpe.xyz/ai/gptprompt`
         const res = await axios.get(url)
         if (res.data?.status && res.data?.message) return res.data.message
         return null

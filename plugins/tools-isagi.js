@@ -53,15 +53,35 @@ handler.register = true
 handler.command = ['isagi', 'yoichi']
 export default handler
 
-// Función para interactuar con la IA usando prompts
+// Función para interactuar con la API de Alyabotpe
 async function luminsesi(q, username, logic) {
   try {
     const response = await axios.get(
-      `https://api-adonix.ultraplus.click/ai/geminiact?apikey=Adofreekey&text=${encodeURIComponent(q)}&role=${encodeURIComponent(logic)}`
+      `https://rest.alyabotpe.xyz/ai/gptprompt?prompt=${encodeURIComponent(logic)}&apikey=stellar-t1opU0P4`
     )
-    return response.data.message
+    
+    // Verificar la estructura de la respuesta
+    if (response.data && response.data.response) {
+      return response.data.response
+    } else if (response.data && response.data.message) {
+      return response.data.message
+    } else if (response.data && typeof response.data === 'string') {
+      return response.data
+    } else {
+      console.log('Estructura de respuesta inesperada:', response.data)
+      return "⚽ Lo veo... pero mi visión no es clara en este momento. Intenta de nuevo."
+    }
   } catch (error) {
-    console.error('*[ ℹ️ ] Error al obtener:*', error)
+    console.error('*[ ℹ️ ] Error en la API:*', error.response?.data || error.message)
+    
+    // Manejar errores específicos de la API
+    if (error.response) {
+      if (error.response.status === 404) {
+        throw new Error('La API no está disponible en este momento')
+      } else if (error.response.status === 500) {
+        throw new Error('Error interno del servidor de la API')
+      }
+    }
     throw error
   }
 }
