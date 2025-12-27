@@ -38,5 +38,15 @@ let audioMsg = {
 'chi':
 'https://files.catbox.moe/apwcdg.mp3',
 'mierda':
-'https://files.catbox.moe/fdmpnn.mp3'
+'https://files.catbox.moe/fdmpnn.mp3',
+'hola grupo':
+'https://files.catbox.moe/11l1x8.mp3',
+'XD':
+'https://files.catbox.moe/coj3eq.mp3',
+'amarillo':
+'https://files.catbox.moe/moe8mk.mp3',
+'se me olvidó':
+'https://files.catbox.moe/soqudv.mp3',
+'JAJAJA':
+'https://files.catbox.moe/2qtkaq.mp3'
 }
