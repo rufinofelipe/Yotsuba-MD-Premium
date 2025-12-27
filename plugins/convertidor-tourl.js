@@ -26,7 +26,6 @@ case 'catbox': {
 if (!mime) return conn.reply(m.chat, `❀ Por favor, responde a una *Imagen* o *Vídeo.*`, m)
 await m.react('🕒')
 const media = await q.download()
-const isTele = /image\/(png|jpe?g|gif)|video\/mp4/.test(mime)
 const link = await catbox(media)
 const txt = `*乂 C A T B O X - U P L O A D E R 乂*\n\n*» Enlace* : ${link}\n*» Tamaño* : ${formatBytes(media.length)}\n*» Expiración* : Permanente\n\n> *${dev}*`
 await conn.sendFile(m.chat, media, 'thumbnail.jpg', txt, m, fkontak)
@@ -37,15 +36,15 @@ case 'quax': {
 if (!mime) return conn.reply(m.chat, `❀ Por favor, responde a una *Imagen* o *Vídeo.*`, m)
 await m.react('🕒')
 const media = await q.download()
-const isTele = /image\/(png|jpe?g|gif)|video\/mp4/.test(mime)
 const link = await quax(media)
 const txt = `*乂 Q U . A X - U P L O A D E R 乂*\n\n*» Enlace* : ${link}\n*» Tamaño* : ${formatBytes(media.length)}\n*» Expiración* : Permanente\n\n> *${dev}*`
 await conn.sendFile(m.chat, media, 'thumbnail.jpg', txt, m, fkontak)
 await m.react('✔️')
 break
 }}} catch (error) {
+console.error('Error completo:', error)
 await m.react('✖️')
-await conn.reply(m.chat, `⚠︎ Se ha producido un problema.\n> Usa *${usedPrefix}report* para informarlo.\n\n*Error:* ${error.message}`, m)
+await conn.reply(m.chat, `⚠︎ Se ha producido un problema.\n> Usa *${usedPrefix}report* para informarlo.\n\n*Error:* ${error.message || error}`, m)
 }}
 
 handler.help = ['tourl', 'catbox', 'quax']
@@ -62,31 +61,58 @@ return `${(bytes / 1024 ** i).toFixed(2)} ${sizes[i]}`
 }
 
 async function shortUrl(url) {
+try {
 const res = await fetch(`https://tinyurl.com/api-create.php?url=${url}`)
 return await res.text()
+} catch {
+return url
+}
 }
 
 async function catbox(content) {
-const { ext, mime } = (await fileTypeFromBuffer(content)) || {}
-const blob = new Blob([content.toArrayBuffer()], { type: mime })
+try {
+
+const buffer = Buffer.isBuffer(content) ? content : Buffer.from(content)
+const { ext, mime } = (await fileTypeFromBuffer(buffer)) || {}
+const blob = new Blob([buffer], { type: mime })
 const formData = new FormData()
 const randomBytes = crypto.randomBytes(5).toString("hex")
 formData.append("reqtype", "fileupload")
 formData.append("fileToUpload", blob, randomBytes + "." + ext)
-const response = await fetch("https://catbox.moe/user/api.php", { method: "POST", body: formData, headers: { "User-Agent": "Mozilla/5.0 (X11; Linux x86_64)" }})
-return await response.text()
+const response = await fetch("https://catbox.moe/user/api.php", { 
+method: "POST", 
+body: formData, 
+headers: { "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36" }
+})
+const result = await response.text()
+if (result.includes('http')) {
+return result.trim()
+}
+throw new Error(`Catbox error: ${result}`)
+} catch (error) {
+throw new Error(`Catbox upload falló: ${error.message}`)
+}
 }
 
 async function quax(content) {
-const { ext, mime } = (await fileTypeFromBuffer(content)) || {}
-const blob = new Blob([content.toArrayBuffer()], { type: mime })
+try {
+const buffer = Buffer.isBuffer(content) ? content : Buffer.from(content)
+const { ext, mime } = (await fileTypeFromBuffer(buffer)) || {}
+const blob = new Blob([buffer], { type: mime })
 const formData = new FormData()
 const randomBytes = crypto.randomBytes(5).toString("hex")
 formData.append("files[]", blob, randomBytes + "." + ext)
-const response = await fetch("https://qu.ax/upload.php", { method: "POST", body: formData, headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" }})
+const response = await fetch("https://qu.ax/upload.php", { 
+method: "POST", 
+body: formData, 
+headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" }
+})
 const data = await response.json()
 if (data.success && data.files?.[0]?.url) {
 return data.files[0].url
 }
-throw new Error("qu.ax no pudo procesar el archivo")
+throw new Error(`qu.ax error: ${JSON.stringify(data)}`)
+} catch (error) {
+throw new Error(`qu.ax upload falló: ${error.message}`)
+}
 }
