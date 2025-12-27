@@ -78,5 +78,3 @@ async function shortUrl(url) {
   let res = await fetch(`https://tinyurl.com/api-create.php?url=${url}`)
   return await res.text()
 }
-=======
->>>>>>> eef1bab788040bd268ec52bf9298ba340ef1a638
