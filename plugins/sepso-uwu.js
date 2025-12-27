@@ -24,5 +24,19 @@ let audioMsg = {
 'perdón':
 'https://sndup.net/64cvt/a',
 'orgulloso':
-'https://sndup.net/jv2j8/a'
+'https://files.catbox.moe/4qv74p.mp3',
+'Kevin de bruyne':
+'https://files.catbox.moe/0uhxxc.mp3',
+'princesa':
+'https://files.catbox.moe/ej6yxs.mp3',
+'brutal':
+'https://files.catbox.moe/ou3a3c.mp3',
+'negra':
+'https://files.catbox.moe/ruaw1w.mp3',
+'tarde':
+'https://files.catbox.moe/1gceio.mp3',
+'chi':
+'https://files.catbox.moe/apwcdg.mp3',
+'mierda':
+'https://files.catbox.moe/fdmpnn.mp3'
 }
