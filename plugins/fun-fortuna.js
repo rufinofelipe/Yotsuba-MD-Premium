@@ -103,8 +103,8 @@ Tu ego es lo único que te llevará a ser el número 1."
   }, 2000);
 }
 
-handler.help = ['fortuna', 'galleta', 'suerte', 'bluelock']
-handler.tags = ['fun', 'entertainment', 'anime']
-handler.command = /^(fortuna|galleta|suerte|bluelock|isagi)$/i
+handler.help = ['fortuna', 'galleta', 'suerte']
+handler.tags = ['fun', 'entertainment']
+handler.command = /^(fortuna|galleta|suerte)$/i
 
 export default handler
