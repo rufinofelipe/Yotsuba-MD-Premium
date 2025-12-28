@@ -1,25 +1,19 @@
 import fetch from 'node-fetch';
 
-const API_KEY = 'stellar-t1opU0P4';
-const API_URL = 'https://rest.alyabotpe.xyz/ai/copilot';
-
 async function handler(m, { text }) {
-    if (!text) {
-        throw "❌ Escribe tu pregunta\n*Ejemplo:* .copilot ¿quién eres?";
-    }
+    if (!text) throw "❌ Escribe tu pregunta\n*Ejemplo:* .isagi ¿quién eres?";
     
     try {
-        const url = `${API_URL}?text=${encodeURIComponent(text)}&key=${API_KEY}`;
+        const url = `https://rest.alyabotpe.xyz/ai/copilot?text=${encodeURIComponent(text)}&key=stellar-t1opU0P4`;
         const res = await fetch(url);
-        const data = await res.json();
+        const data = await res.json(); 
         
-
-        const responseText = data.result || data.response || data.text || data;
     
-        await m.reply(`${responseText}`);
+        const responseText = data.result || data.response || data.text || data;
         
+        await m.reply(`${responseText}`);
     } catch (error) {
-        console.error('Error en Copilot:', error);
+        console.error(error);
         throw "❌ Error al conectar con Copilot";
     }
 }
