@@ -11,7 +11,7 @@ async function handler(m, { text }) {
     
         const responseText = data.result || data.response || data.text || data;
         
-        await m.reply(`🤖 *Copilot:*\n\n${responseText}`);
+        await m.reply(`${responseText}`);
     } catch (error) {
         console.error(error);
         throw "❌ Error al conectar con Copilot";
