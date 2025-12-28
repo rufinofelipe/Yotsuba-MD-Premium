@@ -75,7 +75,7 @@ Mensaje del usuario: "${text}"
 
 handler.help = ["isagi"];
 handler.tags = ["ai"];
-handler.command = ["isagi"];
+handler.command = ["isagi2"];
 handler.limit = true;
 handler.register = true;
 handler.group = true;
