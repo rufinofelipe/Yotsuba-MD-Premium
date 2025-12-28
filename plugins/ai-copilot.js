@@ -5,7 +5,7 @@ const API_URL = 'https://rest.alyabotpe.xyz/ai/copilot';
 
 async function handler(m, { text, conn }) {
     if (!text) {
-        return m.reply("Por favor, ingresa una petición para Copilot.\n\n*Ejemplo:* .copilot ¿quién eres?");
+        return m.reply("Por favor, ingresa una petición para Copilot.\n> *Ejemplo:* .copilot ¿quién eres?");
     }
     
     const processingMsg = await conn.sendMessage(
