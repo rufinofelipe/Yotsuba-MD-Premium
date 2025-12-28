@@ -6,17 +6,21 @@ async function handler(m, { text }) {
     try {
         const url = `https://rest.alyabotpe.xyz/ai/copilot?text=${encodeURIComponent(text)}&key=stellar-t1opU0P4`;
         const res = await fetch(url);
-        const data = await res.text();
+        const data = await res.json(); 
         
-        await m.reply(`🤖 *Copilot:*\n\n${data}`);
-    } catch {
+    
+        const responseText = data.result || data.response || data.text || data;
+        
+        await m.reply(`🤖 *Copilot:*\n\n${responseText}`);
+    } catch (error) {
+        console.error(error);
         throw "❌ Error al conectar con Copilot";
     }
 }
 
-handler.help = ["copilot"];
+handler.help = ["isagi"];
 handler.tags = ["ai"];
-handler.command = ["copilot"];
+handler.command = ["isagi"];
 handler.limit = true;
 handler.register = true;
 handler.group = true;
