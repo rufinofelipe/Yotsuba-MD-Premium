@@ -18,9 +18,9 @@ async function handler(m, { text }) {
     }
 }
 
-handler.help = ["isagi"];
+handler.help = ["copilot"];
 handler.tags = ["ai"];
-handler.command = ["isagi"];
+handler.command = ["copilot"];
 handler.limit = true;
 handler.register = true;
 handler.group = true;
