@@ -53,7 +53,7 @@ const audioMap = {
   'me pican los cocos': 'me-pican-los-cocos.mp3',
   'contexto': 'contexto.mp3',
   'me voy': 'A bueno adios master.mp3',
-  'tengo los calzones del admin': 'admin-calzones.mp3',
+  'tengo los calzones del admin': 'https://files.catbox.moe/9yk6we.mp3',
   'entrada épica': 'entrada-epica-al-chat.mp3',
   'esto va ser épico papus': 'esto va a hacer epico papus.mp3',
   'ingresa épicamente': 'entrada-epica-al-chat.mp3',
