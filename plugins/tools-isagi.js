@@ -39,7 +39,7 @@ Ahora responde lo siguiente manteniendo tu personaje:`
 
   try {
     const prompt = `${basePrompt} ${text}`
-    const response = await luminsesi(text, username, prompt)
+    const response = await geminiAPI(text, username, prompt)
     await conn.reply(m.chat, response, m)
   } catch (error) {
     console.error('*[ ℹ️ ] Error al obtener la respuesta:*', error)
@@ -50,38 +50,62 @@ Ahora responde lo siguiente manteniendo tu personaje:`
 handler.help = ['ia']
 handler.tags = ['tools']
 handler.register = true
-handler.command = ['isagi', 'yoichi']
+handler.command = ['gemini']
 export default handler
 
-// Función para interactuar con la API de Alyabotpe
-async function luminsesi(q, username, logic) {
+// Función para interactuar con la API de Gemini
+async function geminiAPI(q, username, logic) {
   try {
-    const response = await axios.get(
-      `https://rest.alyabotpe.xyz/ai/gptprompt?prompt=${encodeURIComponent(logic)}&apikey=stellar-t1opU0P4`
-    )
+    const apiKey = 'DuarteXVKey34'
+    const endpoint = 'https://api-adonix.ultraplus.click/ai/gemini'
     
-    // Verificar la estructura de la respuesta
-    if (response.data && response.data.response) {
-      return response.data.response
+    const response = await axios.get(endpoint, {
+      params: {
+        apikey: apiKey,
+        prompt: logic,
+        query: q
+      },
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent': 'Mozilla/5.0'
+      }
+    })
+
+    // Verificar la estructura de la respuesta basada en la API de Gemini
+    if (response.data && response.data.result) {
+      return response.data.result
     } else if (response.data && response.data.message) {
       return response.data.message
+    } else if (response.data && response.data.response) {
+      return response.data.response
     } else if (response.data && typeof response.data === 'string') {
       return response.data
+    } else if (response.data && response.data.data && response.data.data.text) {
+      return response.data.data.text
     } else {
       console.log('Estructura de respuesta inesperada:', response.data)
       return "⚽ Lo veo... pero mi visión no es clara en este momento. Intenta de nuevo."
     }
   } catch (error) {
-    console.error('*[ ℹ️ ] Error en la API:*', error.response?.data || error.message)
-    
+    console.error('*[ ℹ️ ] Error en la API de Gemini:*', error.response?.data || error.message)
+
     // Manejar errores específicos de la API
     if (error.response) {
-      if (error.response.status === 404) {
-        throw new Error('La API no está disponible en este momento')
+      if (error.response.status === 400) {
+        throw new Error('Solicitud incorrecta a la API')
+      } else if (error.response.status === 401) {
+        throw new Error('API key inválida o no autorizada')
+      } else if (error.response.status === 404) {
+        throw new Error('Endpoint no encontrado')
+      } else if (error.response.status === 429) {
+        throw new Error('Límite de solicitudes excedido')
       } else if (error.response.status === 500) {
         throw new Error('Error interno del servidor de la API')
       }
+    } else if (error.request) {
+      throw new Error('No se recibió respuesta del servidor')
     }
+    
     throw error
   }
 }
