@@ -25,7 +25,7 @@ conn.reply(m.chat, personalidad, m)
 }
 handler.help = ['bluelock', 'isagi', 'ego']
 handler.tags = ['fun', 'anime']
-handler.command = ['bluelock', 'isagi', 'ego', 'analisis']
+handler.command = ['isagi','analisis']
 handler.group = true;
 handler.register = true
 
