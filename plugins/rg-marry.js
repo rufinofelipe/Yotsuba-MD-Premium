@@ -1,253 +1,210 @@
-// Código para simulación de casamiento y divorcio - Versión para bot
-function weddingBot() {
-    // Estado inicial
-    let estado = {
-        casados: false,
-        pareja1: "Ana",
-        pareja2: "Carlos",
-        fechaCasamiento: null,
-        fechaDivorcio: null
-    };
+import fetch from 'node-fetch';
 
-    // URL de la imagen del casamiento
-    const fotoCasamiento = "https://raw.githubusercontent.com/ANDERSONARRUE/Img.2/main/upload_1767040943824.jpg";
-    
-    // Emojis para hacerlo más divertido
-    const emojis = {
-        casado: "💍💑❤️🎉",
-        divorcio: "💔😭📄✂️",
-        soltero: "👰🤵💒"
-    };
-
-    // Función principal que maneja los comandos
-    function manejarComando(comando, nombre1, nombre2) {
-        if (comando === "casarse") {
-            return casarPareja(nombre1, nombre2);
-        } else if (comando === "divorcio") {
-            return divorciarPareja();
-        } else if (comando === "estado") {
-            return mostrarEstado();
-        } else if (comando === "ayuda") {
-            return mostrarAyuda();
-        } else {
-            return `Comando no reconocido. Usa "ayuda" para ver opciones.`;
-        }
-    }
-
-    // Función para casar a la pareja
-    function casarPareja(nombre1, nombre2) {
-        if (estado.casados) {
-            return `${emojis.casado} ¡YA ESTÁN CASADOS! ${emojis.casado}\n` +
-                   `${estado.pareja1} y ${estado.pareja2} ya se casaron el ${estado.fechaCasamiento.toLocaleDateString()}\n` +
-                   `Foto del casamiento: ${fotoCasamiento}`;
-        }
-
-        // Actualizar nombres si se proporcionan
-        if (nombre1) estado.pareja1 = nombre1;
-        if (nombre2) estado.pareja2 = nombre2;
-
-        estado.casados = true;
-        estado.fechaCasamiento = new Date();
-        estado.fechaDivorcio = null;
-
-        const mensaje = 
-            `${emojis.casado} *¡FELICIDADES! SE HAN CASADO* ${emojis.casado}\n\n` +
-            `💒 **Pareja:** ${estado.pareja1} & ${estado.pareja2}\n` +
-            `📅 **Fecha:** ${estado.fechaCasamiento.toLocaleDateString()}\n` +
-            `⏰ **Hora:** ${estado.fechaCasamiento.toLocaleTimeString()}\n\n` +
-            `*"Por esta simulación, yo los declaro marido y mujer"*\n\n` +
-            `📸 **Foto del casamiento:**\n${fotoCasamiento}\n\n` +
-            `_Usa el comando "divorcio" cuando quieran separarse_`;
-
-        return mensaje;
-    }
-
-    // Función para divorciar a la pareja
-    function divorciarPareja() {
-        if (!estado.casados) {
-            return `${emojis.divorcio} PRIMERO DEBEN CASARSE ${emojis.divorcio}\n` +
-                   `Usa el comando "casarse" para comenzar la simulación.`;
-        }
-
-        estado.casados = false;
-        estado.fechaDivorcio = new Date();
-        
-        // Calcular duración del matrimonio
-        const duracionMs = estado.fechaDivorcio - estado.fechaCasamiento;
-        const duracionSeg = Math.floor(duracionMs / 1000);
-        const duracionMin = Math.floor(duracionSeg / 60);
-        const duracionHoras = Math.floor(duracionMin / 60);
-
-        let duracionTexto = "";
-        if (duracionHoras > 0) {
-            duracionTexto = `${duracionHoras} horas, ${duracionMin % 60} minutos`;
-        } else if (duracionMin > 0) {
-            duracionTexto = `${duracionMin} minutos, ${duracionSeg % 60} segundos`;
-        } else {
-            duracionTexto = `${duracionSeg} segundos`;
-        }
-
-        const mensaje = 
-            `${emojis.divorcio} *¡SE HAN DIVORCIADO!* ${emojis.divorcio}\n\n` +
-            `💔 **Pareja divorciada:** ${estado.pareja1} & ${estado.pareja2}\n` +
-            `📅 **Fecha de divorcio:** ${estado.fechaDivorcio.toLocaleDateString()}\n` +
-            `⏳ **Duración del matrimonio:** ${duracionTexto}\n\n` +
-            `📄 **Acta de divorcio firmada virtualmente**\n` +
-            `✂️ **Custodia de los emojis dividida:**\n` +
-            `   - ${estado.pareja1} se queda con: 💍👰\n` +
-            `   - ${estado.pareja2} se queda con: 🤵🎩\n\n` +
-            `_Pueden volver a casarse usando "casarse" de nuevo_`;
-
-        return mensaje;
-    }
-
-    // Función para mostrar el estado actual
-    function mostrarEstado() {
-        if (estado.casados) {
-            return `📋 **ESTADO ACTUAL:** CASADOS ${emojis.casado}\n` +
-                   `👫 Pareja: ${estado.pareja1} & ${estado.pareja2}\n` +
-                   `💒 Casados desde: ${estado.fechaCasamiento.toLocaleDateString()}\n` +
-                   `⏰ Hora: ${estado.fechaCasamiento.toLocaleTimeString()}`;
-        } else {
-            return `📋 **ESTADO ACTUAL:** SOLTEROS ${emojis.soltero}\n` +
-                   `💔 Última pareja: ${estado.pareja1} & ${estado.pareja2}\n` +
-                   `📅 Último divorcio: ${estado.fechaDivorcio ? estado.fechaDivorcio.toLocaleDateString() : "Nunca"}\n` +
-                   `💌 Usa "casarse" para comenzar una nueva unión`;
-        }
-    }
-
-    // Función de ayuda
-    function mostrarAyuda() {
-        return `💍 *BOT DE CASAMIENTO VIRTUAL* 💍\n\n` +
-               `📋 **COMANDOS DISPONIBLES:**\n` +
-               `• "casarse [nombre1] [nombre2]" - Para casar a una pareja\n` +
-               `• "divorcio" - Para divorciar a la pareja actual\n` +
-               `• "estado" - Muestra el estado actual\n` +
-               `• "ayuda" - Muestra esta ayuda\n\n` +
-               `📸 **Foto del casamiento incluida:**\n${fotoCasamiento}\n\n` +
-               `💡 **Ejemplos:**\n` +
-               `- casarse Ana Carlos\n` +
-               `- divorcio\n` +
-               `- estado`;
-    }
-
-    // Función para crear un certificado de casamiento ASCII
-    function crearCertificadoAscii() {
-        return `
-╔══════════════════════════════════════════╗
-║        📜 CERTIFICADO DE MATRIMONIO      ║
-╠══════════════════════════════════════════╣
-║                                          ║
-║  CERTIFICAMOS QUE                        ║
-║                                          ║
-║  💖 ${estado.pareja1.padEnd(20)} 💖        ║
-║                 Y                        ║
-║  💖 ${estado.pareja2.padEnd(20)} 💖        ║
-║                                          ║
-║  HAN CONTRAÍDO MATRIMONIO VIRTUAL        ║
-║                                          ║
-║  Fecha: ${estado.fechaCasamiento.toLocaleDateString().padEnd(20)} ║
-║  Hora: ${estado.fechaCasamiento.toLocaleTimeString().padEnd(21)} ║
-║                                          ║
-║  "Hasta que el bot los separe"           ║
-║                                          ║
-╚══════════════════════════════════════════╝
-        `;
-    }
-
-    // Devolver las funciones públicas
-    return {
-        manejarComando,
-        crearCertificadoAscii,
-        getEstado: () => estado,
-        setPareja: (nombre1, nombre2) => {
-            estado.pareja1 = nombre1 || estado.pareja1;
-            estado.pareja2 = nombre2 || estado.pareja2;
-        }
-    };
-}
-
-// =========== EJEMPLOS DE USO EN UN BOT ===========
-
-// Crear instancia del bot
-const botCasamiento = weddingBot();
-
-// Ejemplo 1: Mostrar ayuda
-console.log("=== EJEMPLO 1: AYUDA ===");
-console.log(botCasamiento.manejarComando("ayuda"));
-console.log("\n".repeat(2));
-
-// Ejemplo 2: Casarse
-console.log("=== EJEMPLO 2: CASARSE ===");
-console.log(botCasamiento.manejarComando("casarse", "María", "Juan"));
-console.log("\n".repeat(2));
-
-// Ejemplo 3: Ver estado
-console.log("=== EJEMPLO 3: ESTADO ===");
-console.log(botCasamiento.manejarComando("estado"));
-console.log("\n".repeat(2));
-
-// Ejemplo 4: Divorciarse
-console.log("=== EJEMPLO 4: DIVORCIO ===");
-// Esperar un momento para que pase tiempo
-setTimeout(() => {
-    console.log(botCasamiento.manejarComando("divorcio"));
-    console.log("\n".repeat(2));
-    
-    // Ejemplo 5: Certificado (cuando están casados)
-    console.log("=== EJEMPLO 5: VOLVER A CASARSE ===");
-    console.log(botCasamiento.manejarComando("casarse", "Luis", "Ana"));
-}, 100);
-
-// =========== CÓMO INTEGRAR EN TU BOT ===========
-/*
-// Para Discord.js, Telegram Bot, etc.:
-
-1. Importa/requiere este código
-2. Crea una instancia: const bot = weddingBot();
-3. En tu handler de mensajes:
-
-if (mensaje.startsWith('!casarse')) {
-    const partes = mensaje.split(' ');
-    const nombre1 = partes[1];
-    const nombre2 = partes[2];
-    const respuesta = bot.manejarComando('casarse', nombre1, nombre2);
-    enviarMensaje(respuesta);
-}
-
-if (mensaje === '!divorcio') {
-    const respuesta = bot.manejarComando('divorcio');
-    enviarMensaje(respuesta);
-}
-
-if (mensaje === '!estado') {
-    const respuesta = bot.manejarComando('estado');
-    enviarMensaje(respuesta);
-}
-
-if (mensaje === '!ayuda') {
-    const respuesta = bot.manejarComando('ayuda');
-    enviarMensaje(respuesta);
-}
-*/
-
-// Versión simplificada para copiar y pegar directamente:
-const casamientoSimple = {
-    foto: "https://raw.githubusercontent.com/ANDERSONARRUE/Img.2/main/upload_1767040943824.jpg",
-    casados: false,
-    
-    casar: function(nombre1 = "Persona1", nombre2 = "Persona2") {
-        this.casados = true;
-        return `💍 ¡${nombre1} y ${nombre2} se han casado!\n📸 Foto: ${this.foto}\n🎉 ¡Felicidades!`;
-    },
-    
-    divorciar: function() {
-        this.casados = false;
-        return "💔 ¡Se han divorciado!\n📄 Acta de divorcio firmada.\n😭 Hasta la próxima...";
-    }
+const casamientoState = {
+  casados: false,
+  pareja1: 'Ana',
+  pareja2: 'Carlos',
+  fechaCasamiento: null,
+  fechaDivorcio: null,
+  contador: 0
 };
 
-// Uso ultra simple:
-console.log("\n=== VERSIÓN SIMPLIFICADA ===");
-console.log(casamientoSimple.casar("Ana", "Carlos"));
-console.log(casamientoSimple.divorciar());
+const FOTO_CASAMIENTO = 'https://raw.githubusercontent.com/ANDERSONARRUE/Img.2/main/upload_1767040943824.jpg';
+
+handler.help = ['casarse', 'divorcio', 'estadocasamiento', 'fotocasamiento', 'certificado'];
+handler.tags = ['juego', 'rg', 'fun'];
+handler.command = /^(casarse|matrimonio|wedding|divorcio|divorciar|estadocasamiento|fotocasamiento|certificadocasamiento)$/i;
+
+export default handler;
+
+handler.before = async function (m, { conn, text, usedPrefix, command }) {
+  const args = text.trim().split(' ');
+  const comando = command.toLowerCase();
+  
+  try {
+    // 📌 COMANDO: CASARSE
+    if (/^(casarse|matrimonio|wedding)$/i.test(command)) {
+      const nombre1 = args[0] || 'Persona1';
+      const nombre2 = args[1] || 'Persona2';
+      
+      if (casamientoState.casados) {
+        const tiempo = new Date() - casamientoState.fechaCasamiento;
+        const segundos = Math.floor(tiempo / 1000);
+        const minutos = Math.floor(segundos / 60);
+        const horas = Math.floor(minutos / 60);
+        
+        let tiempoTexto = '';
+        if (horas > 0) tiempoTexto = `${horas}h ${minutos % 60}m`;
+        else if (minutos > 0) tiempoTexto = `${minutos}m ${segundos % 60}s`;
+        else tiempoTexto = `${segundos}s`;
+        
+        return m.reply(`💑 *¡YA ESTÁN CASADOS!*\n\n` +
+          `👰 *Novia:* ${casamientoState.pareja1}\n` +
+          `🤵 *Novio:* ${casamientoState.pareja2}\n` +
+          `📅 *Casados desde:* ${tiempoTexto}\n` +
+          `💔 *Para divorciarse:* ${usedPrefix}divorcio`);
+      }
+      
+      casamientoState.pareja1 = nombre1;
+      casamientoState.pareja2 = nombre2;
+      casamientoState.casados = true;
+      casamientoState.fechaCasamiento = new Date();
+      casamientoState.fechaDivorcio = null;
+      casamientoState.contador++;
+      
+      try {
+        const img = await fetch(FOTO_CASAMIENTO).then(res => res.buffer());
+        await conn.sendMessage(m.chat, {
+          image: img,
+          caption: `🎉 *¡FELICIDADES! SE HAN CASADO* 🎉\n\n` +
+            `👰 *Novia:* ${nombre1}\n` +
+            `🤵 *Novio:* ${nombre2}\n` +
+            `📅 *Fecha:* ${casamientoState.fechaCasamiento.toLocaleDateString('es-ES')}\n` +
+            `⏰ *Hora:* ${casamientoState.fechaCasamiento.toLocaleTimeString('es-ES')}\n\n` +
+            `💖 *"Los declaro marido y mujer"*\n` +
+            `💔 *Para divorciarse:* ${usedPrefix}divorcio\n` +
+            `📊 *Ver estado:* ${usedPrefix}estadocasamiento`
+        }, { quoted: m });
+      } catch {
+        await m.reply(`🎉 *¡FELICIDADES! SE HAN CASADO* 🎉\n\n` +
+          `👰 *Novia:* ${nombre1}\n` +
+          `🤵 *Novio:* ${nombre2}\n` +
+          `📅 *Fecha:* ${casamientoState.fechaCasamiento.toLocaleDateString('es-ES')}\n\n` +
+          `📸 *Foto del casamiento:*\n${FOTO_CASAMIENTO}\n\n` +
+          `💖 *"Los declaro marido y mujer"*\n` +
+          `💔 *Divorcio:* ${usedPrefix}divorcio`);
+      }
+      return;
+    }
+    
+    // 📌 COMANDO: DIVORCIO
+    if (/^(divorcio|divorciar)$/i.test(command)) {
+      if (!casamientoState.casados) {
+        return m.reply(`💔 *NO ESTÁN CASADOS*\n\n` +
+          `Primero deben casarse usando:\n` +
+          `${usedPrefix}casarse [nombre1] [nombre2]\n\n` +
+          `Ejemplo: ${usedPrefix}casarse Ana Carlos`);
+      }
+      
+      casamientoState.casados = false;
+      casamientoState.fechaDivorcio = new Date();
+      
+      const duracion = casamientoState.fechaDivorcio - casamientoState.fechaCasamiento;
+      const segundos = Math.floor(duracion / 1000);
+      const minutos = Math.floor(segundos / 60);
+      const horas = Math.floor(minutos / 60);
+      
+      let duracionTexto = '';
+      if (horas > 0) duracionTexto = `${horas}h ${minutos % 60}m`;
+      else if (minutos > 0) duracionTexto = `${minutos}m ${segundos % 60}s`;
+      else duracionTexto = `${segundos}s`;
+      
+      const mensaje = `💔 *¡SE HAN DIVORCIADO!* 💔\n\n` +
+        `📄 *Acta de Divorcio*\n` +
+        `👥 *Pareja:* ${casamientoState.pareja1} & ${casamientoState.pareja2}\n` +
+        `📅 *Fecha divorcio:* ${casamientoState.fechaDivorcio.toLocaleDateString('es-ES')}\n` +
+        `⏳ *Duración matrimonio:* ${duracionTexto}\n\n` +
+        `💰 *División de bienes:*\n` +
+        `• ${casamientoState.pareja1}: 💍👗💄\n` +
+        `• ${casamientoState.pareja2}: 👔🎩💼\n\n` +
+        `💑 *Para casarse de nuevo:*\n${usedPrefix}casarse`;
+      
+      // Resetear para próximo casamiento
+      casamientoState.pareja1 = 'Ana';
+      casamientoState.pareja2 = 'Carlos';
+      
+      return m.reply(mensaje);
+    }
+    
+    // 📌 COMANDO: ESTADO CASAMIENTO
+    if (/^estadocasamiento$/i.test(command)) {
+      if (casamientoState.casados) {
+        const tiempo = new Date() - casamientoState.fechaCasamiento;
+        const segundos = Math.floor(tiempo / 1000);
+        const minutos = Math.floor(segundos / 60);
+        const horas = Math.floor(minutos / 60);
+        
+        let tiempoTexto = '';
+        if (horas > 0) tiempoTexto = `${horas}h ${minutos % 60}m`;
+        else if (minutos > 0) tiempoTexto = `${minutos}m ${segundos % 60}s`;
+        else tiempoTexto = `${segundos}s`;
+        
+        return m.reply(`📊 *ESTADO: CASADOS* 💑\n\n` +
+          `👫 *Pareja:* ${casamientoState.pareja1} & ${casamientoState.pareja2}\n` +
+          `📅 *Casados hace:* ${tiempoTexto}\n` +
+          `🏆 *Casamientos totales:* ${casamientoState.contador}\n\n` +
+          `💔 *Divorcio:* ${usedPrefix}divorcio\n` +
+          `📸 *Foto:* ${usedPrefix}fotocasamiento\n` +
+          `📜 *Certificado:* ${usedPrefix}certificadocasamiento`);
+      } else {
+        return m.reply(`📊 *ESTADO: SOLTEROS* 💔\n\n` +
+          `👥 *Última pareja:* ${casamientoState.pareja1} & ${casamientoState.pareja2}\n` +
+          `📅 *Último divorcio:* ${casamientoState.fechaDivorcio ? 
+            casamientoState.fechaDivorcio.toLocaleDateString('es-ES') : 'Nunca'}\n` +
+          `🏆 *Casamientos totales:* ${casamientoState.contador}\n\n` +
+          `💑 *Para casarse:*\n${usedPrefix}casarse [nombre1] [nombre2]\n` +
+          `Ejemplo: ${usedPrefix}casarse María José`);
+      }
+    }
+    
+    // 📌 COMANDO: FOTO CASAMIENTO
+    if (/^fotocasamiento$/i.test(command)) {
+      try {
+        const img = await fetch(FOTO_CASAMIENTO).then(res => res.buffer());
+        return conn.sendMessage(m.chat, {
+          image: img,
+          caption: `📸 *FOTO DEL CASAMIENTO*\n\n` +
+            `👰🤵 *Pareja actual:* ${casamientoState.pareja1} & ${casamientoState.pareja2}\n` +
+            `📅 *Fecha:* ${casamientoState.fechaCasamiento ? 
+              casamientoState.fechaCasamiento.toLocaleDateString('es-ES') : 'No casados aún'}\n\n` +
+            `💑 *Para casarse:* ${usedPrefix}casarse\n` +
+            `📊 *Ver estado:* ${usedPrefix}estadocasamiento`
+        }, { quoted: m });
+      } catch {
+        return m.reply(`📸 *FOTO DEL CASAMIENTO*\n\n` +
+          `${FOTO_CASAMIENTO}\n\n` +
+          `👰🤵 *Pareja actual:* ${casamientoState.pareja1} & ${casamientoState.pareja2}\n` +
+          `💑 *Para casarse:* ${usedPrefix}casarse`);
+      }
+    }
+    
+    // 📌 COMANDO: CERTIFICADO CASAMIENTO
+    if (/^certificadocasamiento$/i.test(command)) {
+      if (!casamientoState.casados) {
+        return m.reply(`📜 *NO HAY CERTIFICADO*\n\n` +
+          `Primero deben casarse usando:\n` +
+          `${usedPrefix}casarse [nombre1] [nombre2]\n\n` +
+          `Ejemplo: ${usedPrefix}casarse Luis Ana`);
+      }
+      
+      const certificado = `📜 *CERTIFICADO DE MATRIMONIO VIRTUAL*\n\n` +
+        `✨ *Certificamos que* ✨\n\n` +
+        `         💖 ${casamientoState.pareja1} 💖\n` +
+        `            Y\n` +
+        `         💖 ${casamientoState.pareja2} 💖\n\n` +
+        `📅 *Se unieron en matrimonio el:*\n` +
+        `${casamientoState.fechaCasamiento.toLocaleDateString('es-ES', { 
+          weekday: 'long', 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        })}\n` +
+        `⏰ *A las:* ${casamientoState.fechaCasamiento.toLocaleTimeString('es-ES')}\n\n` +
+        `🏛️ *Registro Virtual N°:* #${casamientoState.contador.toString().padStart(4, '0')}\n\n` +
+        `⚠️ *Sin valor legal - Solo simulación*\n` +
+        `💔 *Para divorciarse:* ${usedPrefix}divorcio`;
+      
+      return m.reply(certificado);
+    }
+    
+  } catch (error) {
+    console.error(error);
+    return m.reply(`❌ *Error en el sistema de casamiento*\n\n` +
+      `💡 *Comandos disponibles:*\n` +
+      `• ${usedPrefix}casarse [nombre1] [nombre2]\n` +
+      `• ${usedPrefix}divorcio\n` +
+      `• ${usedPrefix}estadocasamiento\n` +
+      `• ${usedPrefix}fotocasamiento\n` +
+      `• ${usedPrefix}certificadocasamiento`);
+  }
+};
