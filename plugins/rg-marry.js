@@ -1,124 +1,178 @@
 import fs from 'fs';
 
-// Archivo de datos
-const FILE = './casamientos.json';
-let casados = {};
-let propuestas = {};
+const FILE = './matrimonios.json';
+let data = { marriages: {}, proposals: {} };
 
 // Cargar
 if (fs.existsSync(FILE)) {
-    try {
-        const contenido = JSON.parse(fs.readFileSync(FILE, 'utf-8'));
-        casados = contenido.casados || {};
-        propuestas = contenido.propuestas || {};
-    } catch { }
+    try { data = JSON.parse(fs.readFileSync(FILE, 'utf-8')); } catch { }
 }
 
 // Guardar
-function guardar() {
-    fs.writeFileSync(FILE, JSON.stringify({ casados, propuestas }, null, 2));
-}
+function save() { fs.writeFileSync(FILE, JSON.stringify(data, null, 2)); }
 
 let handler = async (m, { conn, command, usedPrefix }) => {
-    const yo = m.sender;
+    const sender = m.sender;
     
-    // COMANDO MARRY - CORREGIDO
+    // COMANDO MARRY - VERSIÓN CORREGIDA
     if (command === 'marry') {
-        // Verificar mención
-        if (!m.mentionedJid || m.mentionedJid.length === 0) {
-            return m.reply(`💍 *¿Con quién?*\n\n${usedPrefix}marry @persona`);
+        if (!m.mentionedJid?.[0]) {
+            return m.reply(`💍 Debes mencionar a alguien:\n${usedPrefix}marry @amigo`);
         }
         
-        const otraPersona = m.mentionedJid[0];
+        const target = m.mentionedJid[0];
         
         // Validaciones
-        if (yo === otraPersona) return m.reply('😅 No puedes casarte contigo mismo');
-        if (casados[yo]) return m.reply(`💍 Ya tienes pareja: @${casados[yo].split('@')[0]}`);
-        if (casados[otraPersona]) return m.reply(`❌ @${otraPersona.split('@')[0]} ya está casado/a`);
+        if (sender === target) return m.reply('❌ No puedes casarte contigo mismo');
+        if (data.marriages[sender]) return m.reply(`💍 Ya estás casado con @${data.marriages[sender].split('@')[0]}`);
+        if (data.marriages[target]) return m.reply(`❌ @${target.split('@')[0]} ya está casado`);
         
-        // 🔄 **LÓGICA PRINCIPAL CORREGIDA**
-        // Caso 1: La otra persona YA ME ENVIÓ propuesta a mí
-        if (propuestas[otraPersona] === yo) {
-            console.log(`💕 ${yo.split('@')[0]} ACEPTA a ${otraPersona.split('@')[0]}`);
+        // 🔥 **LÓGICA CORREGIDA AQUÍ** 🔥
+        // 1. Si YA HAY una propuesta del TARGET hacia el SENDER (target → sender)
+        if (data.proposals[target] === sender) {
+            // ¡ACEPTAR PROPUESTA! (sender acepta la propuesta de target)
+            console.log(`✅ ${sender.split('@')[0]} ACEPTA propuesta de ${target.split('@')[0]}`);
             
-            // Limpiar propuesta
-            delete propuestas[otraPersona];
+            delete data.proposals[target]; // Limpiar propuesta
             
-            // Casarnos
-            casados[yo] = otraPersona;
-            casados[otraPersona] = yo;
-            guardar();
+            // Registrar matrimonio
+            data.marriages[sender] = target;
+            data.marriages[target] = sender;
+            save();
             
-            // Mensaje de felicitación
-            await conn.sendMessage(m.chat, {
-                text: `🎉 *¡BODA!*\n\n@${yo.split('@')[0]} 💍 @${otraPersona.split('@')[0]}\n\n¡Felicidades a los recién casados! 🥂`,
-                mentions: [yo, otraPersona]
+            // Mensaje de éxito
+            return conn.sendMessage(m.chat, {
+                text: `🎉 *¡FELICIDADES!*\n\n@${sender.split('@')[0]} 💍 @${target.split('@')[0]}\n\n¡Se han casado! 🥂\n\nUsa *${usedPrefix}mystatus* para ver tu estado.`,
+                mentions: [sender, target]
             }, { quoted: m });
-            
-            return;
         }
         
-        // Caso 2: Envío NUEVA propuesta
-        console.log(`💌 ${yo.split('@')[0]} PROPONE a ${otraPersona.split('@')[0]}`);
+        // 2. Si NO hay propuesta, crear NUEVA (sender → target)
+        console.log(`📩 ${sender.split('@')[0]} ENVÍA propuesta a ${target.split('@')[0]}`);
         
-        propuestas[yo] = otraPersona;
-        guardar();
+        data.proposals[sender] = target; // sender propone a target
+        save();
         
         // Mensaje de propuesta
-        await conn.sendMessage(m.chat, {
-            text: `💌 *TE QUIERO CASAR*\n\n@${yo.split('@')[0]} te ha propuesto matrimonio @${otraPersona.split('@')[0]}!\n\nSi quieres aceptar, responde con:\n*${usedPrefix}marry @${yo.split('@')[0]}*`,
-            mentions: [yo, otraPersona]
+        return conn.sendMessage(m.chat, {
+            text: `💌 *PROPUESTA DE MATRIMONIO*\n\n@${sender.split('@')[0]} quiere casarse contigo @${target.split('@')[0]}!\n\nPara *ACEPTAR*, responde con:\n*${usedPrefix}marry @${sender.split('@')[0]}*\n\n⏰ Tienes 5 minutos para responder.`,
+            mentions: [sender, target]
         }, { quoted: m });
-        
-        return;
     }
     
     // COMANDO DIVORCE
     if (command === 'divorce') {
-        if (!casados[yo]) {
-            return m.reply('💔 No estás casado/a');
+        if (!data.marriages[sender]) {
+            return m.reply('💔 No estás casado');
         }
         
-        const pareja = casados[yo];
-        delete casados[yo];
-        delete casados[pareja];
-        guardar();
+        const spouse = data.marriages[sender];
+        delete data.marriages[sender];
+        delete data.marriages[spouse];
         
-        return m.reply(`💔 Divorcio completado con @${pareja.split('@')[0]}`);
+        // Limpiar propuestas relacionadas
+        Object.keys(data.proposals).forEach(key => {
+            if (data.proposals[key] === sender || data.proposals[key] === spouse) {
+                delete data.proposals[key];
+            }
+        });
+        
+        save();
+        
+        return m.reply(`💔 Te has divorciado de @${spouse.split('@')[0]}`);
     }
     
-    // COMANDO STATUS
+    // COMANDO MYSTATUS
     if (command === 'mystatus') {
-        if (casados[yo]) {
-            const pareja = casados[yo];
-            return m.reply(`💍 Casado/a con @${pareja.split('@')[0]}`);
+        const userName = conn.getName(sender) || sender.split('@')[0];
+        
+        if (data.marriages[sender]) {
+            const spouse = data.marriages[sender];
+            const spouseName = conn.getName(spouse) || spouse.split('@')[0];
+            
+            return m.reply(`💍 *ESTADO*\n\n✅ *CASADO/A*\n\n👤 Tú: ${userName}\n💕 Pareja: ${spouseName}\n\nUsa *${usedPrefix}divorce* para divorciarte.`);
         } else {
-            // Ver propuestas recibidas
-            let recibidas = [];
-            for (const [de, para] of Object.entries(propuestas)) {
-                if (para === yo) {
-                    recibidas.push(de);
+            // Ver si tiene propuestas pendientes
+            let propuestasRecibidas = [];
+            for (const [de, para] of Object.entries(data.proposals)) {
+                if (para === sender) {
+                    propuestasRecibidas.push(de);
                 }
             }
             
-            if (recibidas.length > 0) {
-                let msg = '📩 *Tienes propuestas de:*\n';
-                recibidas.forEach(jid => {
-                    msg += `• @${jid.split('@')[0]}\n`;
+            let mensaje = `💔 *ESTADO*\n\n❌ *SOLTERO/A*\n\n${userName}, no estás casado/a.\n`;
+            
+            if (propuestasRecibidas.length > 0) {
+                mensaje += `\n📩 *Propuestas pendientes de:*\n`;
+                propuestasRecibidas.forEach(jid => {
+                    const nombre = conn.getName(jid) || jid.split('@')[0];
+                    mensaje += `• ${nombre}\n`;
                 });
-                msg += `\nPara aceptar: ${usedPrefix}marry @ellos`;
-                return m.reply(msg);
+                mensaje += `\nPara aceptar: *${usedPrefix}marry @nombre*`;
             } else {
-                return m.reply('💔 Soltero/a\n\nPara casarte: ' + usedPrefix + 'marry @alguien');
+                mensaje += `\nPara proponer matrimonio:\n${usedPrefix}marry @amigo`;
+            }
+            
+            return m.reply(mensaje);
+        }
+    }
+    
+    // VER PROPuestas PENDIENTES (debug)
+    if (command === 'verpropuestas') {
+        let texto = '📋 *PROPUESTAS PENDIENTES*\n\n';
+        
+        for (const [de, para] of Object.entries(data.proposals)) {
+            const nombreDe = conn.getName(de) || de.split('@')[0];
+            const nombrePara = conn.getName(para) || para.split('@')[0];
+            texto += `${nombreDe} → ${nombrePara}\n`;
+        }
+        
+        if (Object.keys(data.proposals).length === 0) {
+            texto += 'No hay propuestas pendientes.';
+        }
+        
+        return m.reply(texto);
+    }
+    
+    // VER TODOS LOS CASADOS
+    if (command === 'casados') {
+        const parejas = [];
+        const procesados = new Set();
+        
+        for (const [p1, p2] of Object.entries(data.marriages)) {
+            if (!procesados.has(p1)) {
+                parejas.push([p1, p2]);
+                procesados.add(p1);
+                procesados.add(p2);
             }
         }
+        
+        if (parejas.length === 0) {
+            return m.reply('💔 No hay matrimonios.');
+        }
+        
+        let texto = '💒 *PAREJAS CASADAS*\n\n';
+        parejas.forEach(([p1, p2], i) => {
+            const n1 = conn.getName(p1) || p1.split('@')[0];
+            const n2 = conn.getName(p2) || p2.split('@')[0];
+            texto += `${i+1}. ${n1} ❤️ ${n2}\n`;
+        });
+        
+        return m.reply(texto);
     }
 };
 
-// Configuración
-handler.help = ['marry @usuario', 'divorce', 'mystatus'];
-handler.tags = ['social'];
-handler.command = ['marry', 'divorce', 'mystatus'];
+// Información del comando
+handler.help = [
+    'marry @usuario - Proponer/aceptar matrimonio',
+    'divorce - Divorciarse',
+    'mystatus - Ver tu estado',
+    'casados - Ver parejas casadas',
+    'verpropuestas - Ver propuestas pendientes'
+];
+
+handler.tags = ['social', 'fun'];
+handler.command = ['marry', 'divorce', 'mystatus', 'casados', 'verpropuestas'];
 handler.group = true;
 handler.register = true;
 
