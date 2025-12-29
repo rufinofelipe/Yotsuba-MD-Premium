@@ -82,9 +82,10 @@ let handler = async (m, { conn, command, usedPrefix }) => {
 
 handler.before = async (m, { conn }) => {
   const proposal = proposals[m.sender];
-  if (!proposal) return;
+  if (!proposal) return true;
   
-  const texto = m.text.trim().toLowerCase();
+  const texto = m.text?.trim().toLowerCase();
+  if (!texto) return true;
   
   if (texto === 'aceptar') {
     const proposer = proposal.proposer;
@@ -93,13 +94,15 @@ handler.before = async (m, { conn }) => {
     if (global.db.data.users[m.sender].marry) {
       const partnerId = global.db.data.users[m.sender].marry;
       const partnerName = conn.getName(partnerId);
-      return m.reply(`ꕥ Ya estás casado/a con ${partnerName}.`);
+      await m.reply(`ꕥ Ya estás casado/a con ${partnerName}.`);
+      return false;
     }
     
     if (global.db.data.users[proposer].marry) {
       const partnerId = global.db.data.users[proposer].marry;
       const partnerName = conn.getName(partnerId);
-      return m.reply(`ꕥ ${conn.getName(proposer)} ya está casado/a con ${partnerName}.`);
+      await m.reply(`ꕥ ${conn.getName(proposer)} ya está casado/a con ${partnerName}.`);
+      return false;
     }
     
     global.db.data.users[m.sender].marry = proposer;
@@ -116,6 +119,8 @@ handler.before = async (m, { conn }) => {
 \`Disfruten de su luna de miel\`
 ✩.･:｡≻───── ⋆♡⋆ ─────.•:｡✩`, m);
     
+    return false;
+    
   } else if (texto === 'rechazar') {
     const proposer = proposal.proposer;
     delete proposals[m.sender];
@@ -124,7 +129,11 @@ handler.before = async (m, { conn }) => {
     let proposerName = conn.getName(proposer);
     
     await conn.reply(m.chat, `💔 ${senderName} ha rechazado la propuesta de matrimonio de ${proposerName}.`, m);
+    
+    return false;
   }
+  
+  return true;
 };
 
 handler.help = ['marry', 'divorce'];
