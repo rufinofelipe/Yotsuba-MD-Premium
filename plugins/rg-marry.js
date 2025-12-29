@@ -11,7 +11,7 @@ let handler = async (m, { conn, command, usedPrefix, args }) => {
         let target = mentioned && mentioned.length > 0 ? mentioned[0] : m.quoted ? m.quoted.sender : null;
         
         if (!target) {
-          await conn.reply(m.chat, '❀ Debes mencionar a un usuario o responder a su mensaje para proponer o aceptar matrimonio.\n> Ejemplo » #marry @usuario o responde a un mensaje con #marry', m);
+          await conn.reply(m.chat, '❀ Debes mencionar a un usuario o responder a su mensaje para proponer matrimonio.\n> Ejemplo » #marry @usuario', m);
           return;
         }
         
@@ -39,36 +39,127 @@ let handler = async (m, { conn, command, usedPrefix, args }) => {
         }
         
 
-        if (proposals[target] && proposals[target] === sender) {
-          delete proposals[target];
-          if (proposals[sender]) delete proposals[sender];
-          
-          global.db.data.users[sender].marry = target;
-          global.db.data.users[target].marry = sender;
-          
-          await conn.reply(m.chat, `✩.･:｡≻───── ⋆♡⋆ ─────.•:｡✩
+        proposals[sender] = {
+          target: target,
+          timestamp: Date.now()
+        };
+
+        let proposalMsg = await conn.reply(m.chat, `♡ @${target.split('@')[0]}, ${senderName} te ha propuesto matrimonio, ¿aceptas?
+
+⚘ Responde a este mensaje con:
+> ● *aceptar* para confirmar el matrimonio.
+> ● *rechazar* para declinar la propuesta.
+> ● La propuesta expirará en 2 minutos.`, m, { mentions: [target] });
+        
+        
+        proposals[sender].messageId = proposalMsg.key.id;
+        
+       
+        setTimeout(() => {
+          if (proposals[sender]) {
+            delete proposals[sender];
+          }
+        }, 120000);
+        
+        break;
+      }
+      
+      case 'aceptar': {
+
+        if (!m.quoted) {
+          return;
+        }
+        
+        let sender = m.sender;
+        let quotedSender = m.quoted.sender;
+        
+        
+        let proposer = null;
+        for (let user in proposals) {
+          if (proposals[user].messageId === m.quoted.id && proposals[user].target === sender) {
+            proposer = user;
+            break;
+          }
+        }
+        
+        if (!proposer) {
+          return; 
+        }
+        
+        
+        if (proposals[proposer].target !== sender) {
+          return; 
+        }
+        
+
+        if (global.db.data.users[sender].marry) {
+          const partnerId = global.db.data.users[sender].marry;
+          const partnerName = conn.getName(partnerId);
+          await conn.reply(m.chat, `ꕥ Ya estás casado/a con ${partnerName}.`, m);
+          delete proposals[proposer];
+          return;
+        }
+        
+        if (global.db.data.users[proposer].marry) {
+          const partnerId = global.db.data.users[proposer].marry;
+          const partnerName = conn.getName(partnerId);
+          await conn.reply(m.chat, `ꕥ ${conn.getName(proposer)} ya está casado/a con ${partnerName}.`, m);
+          delete proposals[proposer];
+          return;
+        }
+        
+
+        global.db.data.users[sender].marry = proposer;
+        global.db.data.users[proposer].marry = sender;
+        
+        delete proposals[proposer];
+        
+        let senderName = conn.getName(sender);
+        let proposerName = conn.getName(proposer);
+        
+        await conn.reply(m.chat, `✩.･:｡≻───── ⋆♡⋆ ─────.•:｡✩
 ¡Se han Casado! ฅ^•ﻌ•^ฅ*:･ﾟ✧
 
-*•.¸♡ Esposo/a ${senderName}. ♡¸.•
-- .¸♡ Esposo/a ${targetName}. ♡¸.•*
+*•.¸♡ Esposo/a ${proposerName}. ♡¸.•
+- .¸♡ Esposo/a ${senderName}. ♡¸.•*
 \`Disfruten de su luna de miel\`
 ✩.･:｡≻───── ⋆♡⋆ ─────.•:｡✩`, m);
-        } else {
-          proposals[sender] = target;
-          
-
-          setTimeout(() => {
-            if (proposals[sender] && proposals[sender] === target) {
-              delete proposals[sender];
-            }
-          }, 120000);
-          
-          await conn.reply(m.chat, `♡ @${target.split('@')[0]}, ${senderName} te ha propuesto matrimonio, ¿aceptas?
-
-⚘ Responde con:
-> ● ${usedPrefix + command} @${sender.split('@')[0]} para confirmar.
-> ● La propuesta expirará en 2 minutos.`, m, { mentions: [target, sender] });
+        
+        break;
+      }
+      
+      case 'rechazar': {
+        if (!m.quoted) {
+          return; 
         }
+        
+        let sender = m.sender;
+        
+
+        let proposer = null;
+        for (let user in proposals) {
+          if (proposals[user].messageId === m.quoted.id && proposals[user].target === sender) {
+            proposer = user;
+            break;
+          }
+        }
+        
+        if (!proposer) {
+          return; 
+        }
+        
+
+        if (proposals[proposer].target !== sender) {
+          return;
+        }
+        
+        delete proposals[proposer];
+        
+        let senderName = conn.getName(sender);
+        let proposerName = conn.getName(proposer);
+        
+        await conn.reply(m.chat, `💔 ${senderName} ha rechazado la propuesta de matrimonio de ${proposerName}.`, m);
+        
         break;
       }
       
@@ -98,7 +189,7 @@ let handler = async (m, { conn, command, usedPrefix, args }) => {
 
 handler.help = ['marry', 'divorce'];
 handler.tags = ['gacha'];
-handler.command = ['marry', 'divorce'];
+handler.command = ['marry', 'divorce', 'aceptar', 'rechazar'];
 handler.group = true;
 
 export default handler;
