@@ -1,8 +1,8 @@
 import { promises as fs } from 'fs';
 
-let proposals = {};
+const proposals = {};
 
-let handler = async (m, { conn, command, usedPrefix, args }) => {
+let handler = async (m, { conn, command, usedPrefix }) => {
   try {
     switch (command) {
       case 'marry': {
@@ -20,7 +20,6 @@ let handler = async (m, { conn, command, usedPrefix, args }) => {
           return;
         }
         
-
         let senderName = conn.getName(sender);
         let targetName = conn.getName(target);
         
@@ -38,127 +37,21 @@ let handler = async (m, { conn, command, usedPrefix, args }) => {
           return;
         }
         
-
-        proposals[sender] = {
-          target: target,
+        proposals[target] = {
+          proposer: sender,
           timestamp: Date.now()
         };
+        
+        await conn.reply(m.chat, `♡ @${target.split('@')[0]}, ${senderName} te ha propuesto matrimonio, ¿aceptas?
 
-        let proposalMsg = await conn.reply(m.chat, `♡ @${target.split('@')[0]}, ${senderName} te ha propuesto matrimonio, ¿aceptas?
-
-⚘ Responde a este mensaje con:
+⚘ Responde con:
 > ● *aceptar* para confirmar el matrimonio.
 > ● *rechazar* para declinar la propuesta.
 > ● La propuesta expirará en 2 minutos.`, m, { mentions: [target] });
         
-        
-        proposals[sender].messageId = proposalMsg.key.id;
-        
-       
         setTimeout(() => {
-          if (proposals[sender]) {
-            delete proposals[sender];
-          }
+          if (proposals[target]) delete proposals[target];
         }, 120000);
-        
-        break;
-      }
-      
-      case 'aceptar': {
-
-        if (!m.quoted) {
-          return;
-        }
-        
-        let sender = m.sender;
-        let quotedSender = m.quoted.sender;
-        
-        
-        let proposer = null;
-        for (let user in proposals) {
-          if (proposals[user].messageId === m.quoted.id && proposals[user].target === sender) {
-            proposer = user;
-            break;
-          }
-        }
-        
-        if (!proposer) {
-          return; 
-        }
-        
-        
-        if (proposals[proposer].target !== sender) {
-          return; 
-        }
-        
-
-        if (global.db.data.users[sender].marry) {
-          const partnerId = global.db.data.users[sender].marry;
-          const partnerName = conn.getName(partnerId);
-          await conn.reply(m.chat, `ꕥ Ya estás casado/a con ${partnerName}.`, m);
-          delete proposals[proposer];
-          return;
-        }
-        
-        if (global.db.data.users[proposer].marry) {
-          const partnerId = global.db.data.users[proposer].marry;
-          const partnerName = conn.getName(partnerId);
-          await conn.reply(m.chat, `ꕥ ${conn.getName(proposer)} ya está casado/a con ${partnerName}.`, m);
-          delete proposals[proposer];
-          return;
-        }
-        
-
-        global.db.data.users[sender].marry = proposer;
-        global.db.data.users[proposer].marry = sender;
-        
-        delete proposals[proposer];
-        
-        let senderName = conn.getName(sender);
-        let proposerName = conn.getName(proposer);
-        
-        await conn.reply(m.chat, `✩.･:｡≻───── ⋆♡⋆ ─────.•:｡✩
-¡Se han Casado! ฅ^•ﻌ•^ฅ*:･ﾟ✧
-
-*•.¸♡ Esposo/a ${proposerName}. ♡¸.•
-- .¸♡ Esposo/a ${senderName}. ♡¸.•*
-\`Disfruten de su luna de miel\`
-✩.･:｡≻───── ⋆♡⋆ ─────.•:｡✩`, m);
-        
-        break;
-      }
-      
-      case 'rechazar': {
-        if (!m.quoted) {
-          return; 
-        }
-        
-        let sender = m.sender;
-        
-
-        let proposer = null;
-        for (let user in proposals) {
-          if (proposals[user].messageId === m.quoted.id && proposals[user].target === sender) {
-            proposer = user;
-            break;
-          }
-        }
-        
-        if (!proposer) {
-          return; 
-        }
-        
-
-        if (proposals[proposer].target !== sender) {
-          return;
-        }
-        
-        delete proposals[proposer];
-        
-        let senderName = conn.getName(sender);
-        let proposerName = conn.getName(proposer);
-        
-        await conn.reply(m.chat, `💔 ${senderName} ha rechazado la propuesta de matrimonio de ${proposerName}.`, m);
         
         break;
       }
@@ -187,9 +80,56 @@ let handler = async (m, { conn, command, usedPrefix, args }) => {
   }
 };
 
+handler.before = async (m, { conn }) => {
+  const proposal = proposals[m.sender];
+  if (!proposal) return;
+  
+  const texto = m.text.trim().toLowerCase();
+  
+  if (texto === 'aceptar') {
+    const proposer = proposal.proposer;
+    delete proposals[m.sender];
+    
+    if (global.db.data.users[m.sender].marry) {
+      const partnerId = global.db.data.users[m.sender].marry;
+      const partnerName = conn.getName(partnerId);
+      return m.reply(`ꕥ Ya estás casado/a con ${partnerName}.`);
+    }
+    
+    if (global.db.data.users[proposer].marry) {
+      const partnerId = global.db.data.users[proposer].marry;
+      const partnerName = conn.getName(partnerId);
+      return m.reply(`ꕥ ${conn.getName(proposer)} ya está casado/a con ${partnerName}.`);
+    }
+    
+    global.db.data.users[m.sender].marry = proposer;
+    global.db.data.users[proposer].marry = m.sender;
+    
+    let senderName = conn.getName(m.sender);
+    let proposerName = conn.getName(proposer);
+    
+    await conn.reply(m.chat, `✩.･:｡≻───── ⋆♡⋆ ─────.•:｡✩
+¡Se han Casado! ฅ^•ﻌ•^ฅ*:･ﾟ✧
+
+*•.¸♡ Esposo/a ${proposerName}. ♡¸.•
+•.¸♡ Esposo/a ${senderName}. ♡¸.•*
+\`Disfruten de su luna de miel\`
+✩.･:｡≻───── ⋆♡⋆ ─────.•:｡✩`, m);
+    
+  } else if (texto === 'rechazar') {
+    const proposer = proposal.proposer;
+    delete proposals[m.sender];
+    
+    let senderName = conn.getName(m.sender);
+    let proposerName = conn.getName(proposer);
+    
+    await conn.reply(m.chat, `💔 ${senderName} ha rechazado la propuesta de matrimonio de ${proposerName}.`, m);
+  }
+};
+
 handler.help = ['marry', 'divorce'];
 handler.tags = ['gacha'];
-handler.command = ['marry', 'divorce', 'aceptar', 'rechazar'];
+handler.command = ['marry', 'divorce'];
 handler.group = true;
 
 export default handler;
