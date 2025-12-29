@@ -20,6 +20,7 @@ let handler = async (m, { conn, command, usedPrefix, args }) => {
           return;
         }
         
+
         let senderName = conn.getName(sender);
         let targetName = conn.getName(target);
         
@@ -37,14 +38,14 @@ let handler = async (m, { conn, command, usedPrefix, args }) => {
           return;
         }
         
-        setTimeout(() => {
-          if (proposals[sender]) delete proposals[sender];
-        }, 120000);
-        
+
         if (proposals[target] && proposals[target] === sender) {
           delete proposals[target];
+          if (proposals[sender]) delete proposals[sender];
+          
           global.db.data.users[sender].marry = target;
           global.db.data.users[target].marry = sender;
+          
           await conn.reply(m.chat, `✩.･:｡≻───── ⋆♡⋆ ─────.•:｡✩
 ¡Se han Casado! ฅ^•ﻌ•^ฅ*:･ﾟ✧
 
@@ -54,6 +55,14 @@ let handler = async (m, { conn, command, usedPrefix, args }) => {
 ✩.･:｡≻───── ⋆♡⋆ ─────.•:｡✩`, m);
         } else {
           proposals[sender] = target;
+          
+
+          setTimeout(() => {
+            if (proposals[sender] && proposals[sender] === target) {
+              delete proposals[sender];
+            }
+          }, 120000);
+          
           await conn.reply(m.chat, `♡ @${target.split('@')[0]}, ${senderName} te ha propuesto matrimonio, ¿aceptas?
 
 ⚘ Responde con:
