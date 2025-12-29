@@ -50,5 +50,7 @@ let audioMsg = {
 'JAJAJA':
 'https://files.catbox.moe/2qtkaq.mp3',
 'puta':
-'https://files.catbox.moe/6rkkxg.mp3'
+'https://files.catbox.moe/6rkkxg.mp3',
+'tengo los calzones del admin':
+'https://files.catbox.moe/9yk6we.mp3'
 }
