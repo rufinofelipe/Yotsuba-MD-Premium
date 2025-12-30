@@ -34,7 +34,7 @@ export async function before(m, { conn, participants, groupMetadata }) {
         }
 
         if (!ppUrl) {
-          ppUrl = 'https://files.catbox.moe/ckanyi.jpg'
+          ppUrl = 'https://files.catbox.moe/ax63g9.jpg'
         }
 
         console.log('📤 Enviando welcome con imagen no descargable y reenvío desde canal...')
