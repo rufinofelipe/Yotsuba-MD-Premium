@@ -227,7 +227,7 @@ renderLargerThumbnail: true
 
 handler.help = ['menu']
 handler.tags = ['main']
-handler.command = ['menucompleto', 'comandos', 'helpcompleto', 'allmenu', 'menuall', 'ayudacompleto']
+handler.command = ['menu','help','allmenu', 'menuall']
 
 export default handler
 
