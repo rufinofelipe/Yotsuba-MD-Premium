@@ -1,13 +1,17 @@
 import axios from 'axios'
 import fs from 'fs'
 
-const ISAGI_ACTIVE = true 
-
 let handler = m => m
 handler.all = async function (m, { conn }) {
   let user = global.db.data.users[m.sender]
   let chat = global.db.data.chats[m.chat]
 
+  // VERIFICACIÓN CRUCIAL: Si autoresponder está desactivado en este chat
+  if (chat.autoresponder === false) {
+    return true // No hacer nada, Isagi está desactivado
+  }
+
+  // El resto de tu código original tal cual...
   m.isBot =
     m.id.startsWith('BAE5') && m.id.length === 16 ||
     m.id.startsWith('3EB0') && (m.id.length === 12 || m.id.length === 20 || m.id.length === 22) ||
@@ -24,7 +28,7 @@ handler.all = async function (m, { conn }) {
     mentioned.includes(this.user.jid) ||
     (m.quoted && m.quoted.sender === this.user.jid)
 
-  if (triggered && ISAGI_ACTIVE) {
+  if (triggered) { // Ya no necesitamos verificar ISAGI_ACTIVE aquí
 
     if (m.text?.match(/menu|estado|serbot|jadibot|video|audio|piedra|papel|tijera/i)) return true
 
