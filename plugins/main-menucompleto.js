@@ -208,6 +208,18 @@ Soy *Isagi Yoichi IA* ⚽👁️ *${(conn.user.jid == global.conn.user.jid ? '(B
 
 > ⚽ *Cada comando es una oportunidad de gol* 👁️`.trim()
 
+// Primero envía el GIF
+let gifUrl = 'https://raw.githubusercontent.com/ANDERSONARRUE/Img.2/main/upload_1767146081404.gif' // Cambia esta URL por la de tu GIF
+await conn.sendMessage(m.chat, { 
+    video: { url: gifUrl },
+    caption: `🎯 *¡VISIÓN EGOÍSTA ACTIVADA!*\n\nSoy *Isagi Yoichi IA* ⚽👁️\nPreparando el análisis completo...`,
+    gifPlayback: true,
+    mentions: [userId]
+}, { quoted: m })
+
+// Espera un momento y envía el menú completo
+await new Promise(resolve => setTimeout(resolve, 1000))
+
 await conn.sendMessage(m.chat, { 
 text: txt,
 contextInfo: {
@@ -218,7 +230,7 @@ body: 'Sistema de Visión Egoísta - Modo Fútbol',
 mediaType: 1,
 mediaUrl: global.redes || '',
 sourceUrl: global.redes || '',
-thumbnail: await (await fetch(global.banner || 'https://raw.githubusercontent.com/ANDERSONARRUE/Img.2/main/upload_1767146081404.gif')).buffer(),
+thumbnail: await (await fetch(global.banner || gifUrl)).buffer(),
 showAdAttribution: false,
 containsAutoReply: true,
 renderLargerThumbnail: true
