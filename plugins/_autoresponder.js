@@ -1,11 +1,23 @@
-let ISAGI_ACTIVE = true 
+let ISAGI_ACTIVE = true
+let lastState = ISAGI_ACTIVE // Para rastrear cambios
 
 let handler = m => m
 handler.all = async function (m, { conn }) {
   let user = global.db.data.users[m.sender]
   let chat = global.db.data.chats[m.chat]
 
-  // Si Isagi está desactivado, no procesar nada
+  // Verificar si el estado cambió
+  if (lastState !== ISAGI_ACTIVE) {
+    if (m.chat && !ISAGI_ACTIVE) {
+      // Enviar mensaje cuando se desactiva
+      await this.sendMessage(m.chat, {
+        text: `⚽ La función *autoresponder* se *desactivó* para este equipo`
+      }, { quoted: m })
+    }
+    lastState = ISAGI_ACTIVE
+  }
+
+  // Si Isagi está desactivado, no procesar respuestas
   if (!ISAGI_ACTIVE) return true
 
   m.isBot =
@@ -14,7 +26,7 @@ handler.all = async function (m, { conn }) {
     m.id.startsWith('B24E') && m.id.length === 20
   if (m.isBot) return
 
-  const prefixRegex = new RegExp('^[' + (opts['prefix'] || '‎z/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.,\\-').replace(/[|\\{}()[\]^$+*?.\-\^]/g, '\\$&') + ']')
+  const prefixRegex = new RegExp('^[' + (opts['prefix'] || '‎z/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;??&.,\\-').replace(/[|\\{}()[\]^$+*?.\-\^]/g, '\\$&') + ']')
   if (prefixRegex.test(m.text)) return true
   if (m.sender.includes('bot') || m.sender.includes('Bot')) return true
 
