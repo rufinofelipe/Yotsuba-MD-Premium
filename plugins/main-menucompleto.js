@@ -210,25 +210,12 @@ Soy *Isagi Yoichi IA* ⚽👁️ *${(conn.user.jid == global.conn.user.jid ? '(B
 
 let gifUrl = 'https://raw.githubusercontent.com/ANDERSONARRUE/Img.2/main/upload_1767146081404.gif' // Cambia esta URL por la de tu GIF
 
-// Enviar todo en un solo mensaje con el GIF como principal
+// Enviar todo en un solo mensaje SIN anuncio externo
 await conn.sendMessage(m.chat, { 
     video: { url: gifUrl },
     caption: txt,
     gifPlayback: true,
-    contextInfo: {
-        mentionedJid: [userId],
-        externalAdReply: {                
-            title: 'Isagi Yoichi IA',
-            body: 'Sistema de Visión Egoísta - Modo Fútbol',
-            mediaType: 1,
-            mediaUrl: global.redes || '',
-            sourceUrl: global.redes || '',
-            thumbnail: await (await fetch(global.banner || gifUrl)).buffer(),
-            showAdAttribution: false,
-            containsAutoReply: true,
-            renderLargerThumbnail: true
-        }
-    }
+    mentions: [userId]
 }, { quoted: m })
 }
 
