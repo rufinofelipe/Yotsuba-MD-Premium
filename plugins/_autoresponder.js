@@ -1,24 +1,12 @@
-let ISAGI_ACTIVE = true
-let lastState = ISAGI_ACTIVE // Para rastrear cambios
+import axios from 'axios'
+import fs from 'fs'
+
+const ISAGI_ACTIVE = true 
 
 let handler = m => m
 handler.all = async function (m, { conn }) {
   let user = global.db.data.users[m.sender]
   let chat = global.db.data.chats[m.chat]
-
-  // Verificar si el estado cambió
-  if (lastState !== ISAGI_ACTIVE) {
-    if (m.chat && !ISAGI_ACTIVE) {
-      // Enviar mensaje cuando se desactiva
-      await this.sendMessage(m.chat, {
-        text: `⚽ La función *autoresponder* se *desactivó* para este equipo`
-      }, { quoted: m })
-    }
-    lastState = ISAGI_ACTIVE
-  }
-
-  // Si Isagi está desactivado, no procesar respuestas
-  if (!ISAGI_ACTIVE) return true
 
   m.isBot =
     m.id.startsWith('BAE5') && m.id.length === 16 ||
@@ -26,7 +14,7 @@ handler.all = async function (m, { conn }) {
     m.id.startsWith('B24E') && m.id.length === 20
   if (m.isBot) return
 
-  const prefixRegex = new RegExp('^[' + (opts['prefix'] || '‎z/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;??&.,\\-').replace(/[|\\{}()[\]^$+*?.\-\^]/g, '\\$&') + ']')
+  const prefixRegex = new RegExp('^[' + (opts['prefix'] || '‎z/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.,\\-').replace(/[|\\{}()[\]^$+*?.\-\^]/g, '\\$&') + ']')
   if (prefixRegex.test(m.text)) return true
   if (m.sender.includes('bot') || m.sender.includes('Bot')) return true
 
@@ -51,7 +39,7 @@ Si te preguntan por tu creador, respondes: "Mi creador es DuarteXV", con respeto
     const query = m.text
 
     async function adoAPI(q, role) {
-      try {
+try {
         const url = `https://api-adonix.ultraplus.click/ai/geminiact?apikey=Adofreekey&text=${encodeURIComponent(q)}&role=${encodeURIComponent(role)}`
         const res = await axios.get(url)
         if (res.data?.status && res.data?.message) return res.data.message
@@ -68,6 +56,28 @@ Si te preguntan por tu creador, respondes: "Mi creador es DuarteXV", con respeto
 
       if (result && result.trim().length > 0) {
         await this.reply(m.chat, result.trim(), m)
+
+        const keywords = ['gol', 'delantero', 'blue lock', 'egoísmo', 'devorar', 'fútbol', 'campo', 'portería']
+        const lowerRes = result.toLowerCase()
+        const sendSticker = keywords.some(w => lowerRes.includes(w))
+if (sendSticker) {
+          const stickers = [
+            './media/stickers/isagi-soccer.webp',
+            './media/stickers/isagi-goal.webp',
+            './media/stickers/isagi-determined.webp'
+          ]
+          const path = stickers[Math.floor(Math.random() * stickers.length)]
+          if (fs.existsSync(path)) {
+            await conn.sendFile(
+              m.chat,
+              path,
+              'sticker.webp',
+              '',
+              m,
+              { asSticker: true }
+            )
+          }
+        }
       }
     }
   }
