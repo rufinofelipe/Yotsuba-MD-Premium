@@ -218,7 +218,7 @@ body: 'Sistema de Visión Egoísta - Modo Fútbol',
 mediaType: 1,
 mediaUrl: global.redes || '',
 sourceUrl: global.redes || '',
-thumbnail: await (await fetch(global.banner || 'http://files.hostrta.win/files/xzadonix_76.jpg')).buffer(),
+thumbnail: await (await fetch(global.banner || 'https://raw.githubusercontent.com/ANDERSONARRUE/Img.2/main/upload_1767146081404.gif')).buffer(),
 showAdAttribution: false,
 containsAutoReply: true,
 renderLargerThumbnail: true
