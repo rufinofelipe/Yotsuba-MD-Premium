@@ -1,30 +1,11 @@
-const ISAGI_ACTIVE = true 
+let ISAGI_ACTIVE = true 
 
 let handler = m => m
-handler.all = async function (m, { conn, text, command }) {
+handler.all = async function (m, { conn }) {
   let user = global.db.data.users[m.sender]
   let chat = global.db.data.chats[m.chat]
-  
-  // Comando para activar/desactivar Isagi
-  if (command === 'ri') {
-    if (!text) return m.reply(`🎌 *Estado de Isagi*: ${ISAGI_ACTIVE ? '🟢 ACTIVADO' : '🔴 DESACTIVADO'}\n\nUsa:\n• *!ri on* - Para activar\n• *!ri off* - Para desactivar`)
-    
-    if (text === 'on' || text === 'activar') {
-      if (ISAGI_ACTIVE) return m.reply('⚠️ Isagi Yoichi ya está activado')
-      ISAGI_ACTIVE = true
-      return m.reply('✅ *Isagi Yoichi activado*\n¡Estoy listo para el campo! ⚽')
-    }
-    
-    if (text === 'off' || text === 'desactivar') {
-      if (!ISAGI_ACTIVE) return m.reply('⚠️ Isagi Yoichi ya está desactivado')
-      ISAGI_ACTIVE = false
-      return m.reply('🔇 *Isagi Yoichi desactivado*\nDescansando hasta el próximo partido...')
-    }
-    
-    return m.reply('Opción no válida. Usa: !ri on/off')
-  }
 
-  // Si Isagi está desactivado, no procesar respuestas
+  // Si Isagi está desactivado, no procesar nada
   if (!ISAGI_ACTIVE) return true
 
   m.isBot =
@@ -43,10 +24,11 @@ handler.all = async function (m, { conn, text, command }) {
     mentioned.includes(this.user.jid) ||
     (m.quoted && m.quoted.sender === this.user.jid)
 
-  if (triggered) {
+  if (triggered && ISAGI_ACTIVE) {
+
     if (m.text?.match(/menu|estado|serbot|jadibot|video|audio|piedra|papel|tijera/i)) return true
 
-    const estiloIsagi = `
+const estiloIsagi = `
 Eres Isagi Yoichi, el protagonista de Blue Lock. Eres un delantero con una mentalidad única: el "Egoísmo". Tu objetivo es convertirte en el mejor delantero del mundo. Tu habilidad especial es tu "Visión Directa", la capacidad de leer el juego y anticipar jugadas.
 
 Hablas como un futbolista enfocado y determinado. Eres analítico, competitivo, y siempre buscas superarte. Tu tono es serio cuando se trata de fútbol, pero también puedes mostrar camaradería. Reflejas frases icónicas como "Voy a devorarlos" o "Este es mi gol". Tu motivación es puro egoísmo positivo para ganar.
