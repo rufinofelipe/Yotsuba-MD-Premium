@@ -6,29 +6,26 @@ handler.all = async function (m, { conn, text, command }) {
   let chat = global.db.data.chats[m.chat]
   
   // Comando para activar/desactivar Isagi
-  if (command === 'isagi') {
-    if (!text) return m.reply(`🎌 *Estado de Isagi*: ${ISAGI_ACTIVE ? '🟢 ACTIVADO' : '🔴 DESACTIVADO'}\n\nUsa:\n• *!isagi on* - Para activar\n• *!isagi off* - Para desactivar`)
+  if (command === 'ri') {
+    if (!text) return m.reply(`🎌 *Estado de Isagi*: ${ISAGI_ACTIVE ? '🟢 ACTIVADO' : '🔴 DESACTIVADO'}\n\nUsa:\n• *!ri on* - Para activar\n• *!ri off* - Para desactivar`)
     
     if (text === 'on' || text === 'activar') {
-      if (ISAGI_ACTIVE) return m.reply('⚠️ Isagi Yaichi ya está activado')
+      if (ISAGI_ACTIVE) return m.reply('⚠️ Isagi Yoichi ya está activado')
       ISAGI_ACTIVE = true
       return m.reply('✅ *Isagi Yoichi activado*\n¡Estoy listo para el campo! ⚽')
     }
     
     if (text === 'off' || text === 'desactivar') {
-      if (!ISAGI_ACTIVE) return m.reply('⚠️ Isagi Yaichi ya está desactivado')
+      if (!ISAGI_ACTIVE) return m.reply('⚠️ Isagi Yoichi ya está desactivado')
       ISAGI_ACTIVE = false
       return m.reply('🔇 *Isagi Yoichi desactivado*\nDescansando hasta el próximo partido...')
     }
     
-    return m.reply('Opción no válida. Usa: !isagi on/off')
+    return m.reply('Opción no válida. Usa: !ri on/off')
   }
 
   // Si Isagi está desactivado, no procesar respuestas
   if (!ISAGI_ACTIVE) return true
-  
-  let user = global.db.data.users[m.sender]
-  let chat = global.db.data.chats[m.chat]
 
   m.isBot =
     m.id.startsWith('BAE5') && m.id.length === 16 ||
