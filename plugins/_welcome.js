@@ -34,7 +34,7 @@ export async function before(m, { conn, participants, groupMetadata }) {
         }
 
         if (!ppUrl) {
-          ppUrl = 'https://raw.githubusercontent.com/ANDERSONARRUE/Img.2/main/upload_1767108668211.jpg'
+          ppUrl = 'https://raw.githubusercontent.com/ANDERSONARRUE/Img.2/main/upload_1767297311338.jpg'
         }
 
         console.log('📤 Enviando welcome con imagen no descargable y reenvío desde canal...')
