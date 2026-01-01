@@ -20,7 +20,7 @@ let handler = async (m, { conn, text }) => {
   };
 
   try {
-    const res = await fetch(`https://rest.alyabotpe.xyz/dl/tiktokmp3?url=${encodeURIComponent(text)}&key=`stellar-t1opU0P4`);
+    const res = await fetch(`https://rest.alyabotpe.xyz/dl/tiktokmp3?url=${encodeURIComponent(text)}&key=stellar-t1opU0P4`);
     const json = await res.json();
 
     if (!json.status || !json.data || !json.data.dl) {
