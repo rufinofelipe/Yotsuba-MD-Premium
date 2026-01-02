@@ -31,7 +31,7 @@ let handler = async (m, { conn }) => {
   }
 };
 
-handler.help = ['tourl'];
+handler.help = ['tourl3'];
 handler.tags = ['transformador'];
 handler.command = ['tourl4'];
 
