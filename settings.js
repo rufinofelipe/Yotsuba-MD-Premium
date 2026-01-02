@@ -37,27 +37,27 @@ global.prems = []
 global.libreria = 'Baileys'
 global.baileys = 'V 6.7.17' 
 global.vs = '2.2.5'
-global.nameqr = '⚽️ Isagi-Yoichi-MD ⚽️'
-global.namebot = 'I S A G I Y O I C H I B O T'
+global.nameqr = '⚡Zenitsu Bot⚡'
+global.namebot = 'Z E N I T Z U - B O T'
 global.sessions = 'Sessions'
 global.jadi = 'JadiBots' 
 
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
-global.packname = '⚽️ 𝐼𝑆𝐴𝐺𝐼 𝑌𝑂𝐼𝐶𝐻𝐼 𝐵𝑂𝑇 ⚽️'
-global.botname = '† ɪsᴀɢɪ ʏᴏɪᴄʜɪ †'
-global.wm = '⚽️◟𝓘𝓼𝓪𝓰𝓲 𝓨𝓸𝓲𝓬𝓱𝓲◞⚽️'
-global.author = '© DuarteXV'
-global.dev = '© 🄿🄾🅆🄴🅁🄴🄳 DuarteXV'
-global.textbot = '🏆Isagi Yoichi, Un delantero que transforma cada partido en una partida de ajedrez con su mente letal. ♟️⚽🏆'
-global.etiqueta = '⚽️DuarteXV⚽️'
+global.packname = '⚡𝙕𝙚𝙣𝙞𝙩𝙨𝙪 𝘽𝙤𝙩 ⚡'
+global.botname = '⚡𝙕𝙚𝙣𝙞𝙩𝙨𝙪 𝘽𝙤𝙩 ⚡'
+global.wm = '⚡𝙕𝙚𝙣𝙞𝙩𝙨𝙪 𝘽𝙤𝙩 ⚡'
+global.author = '© Rufino ✝️'
+global.dev = '© 𝗽𝗼𝘄𝗲𝗿𝗲𝗱 𝗯𝘆 𝗥𝘂𝗳𝗶𝗻𝗼 ✝️'
+global.textbot = 'El mejor bot'
+global.etiqueta = 'Rufino✝️'
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
-global.moneda = 'Blue-Lock-Points'
-global.welcom1 = '! Bienvenido al campo! ⚽️ \n✨ Soy Isagi Yoichi ✨ \n⚽️ Edita este mensaje con setwelcome ⚽️'
-global.welcom2 = '💫 ¡Hasta la próxima! Gracias por jugar con nosotros 🌟 \n⚽️ ¡Esperamos verte pronto en el campo! ⚽️ \n🔥 Edita este mensaje con setbye 🔥'
+global.moneda = 'Zenitsu-coins'
+global.welcom1 = '! Bienvenido \n soy ⚡𝙕𝙚𝙣𝙞𝙩𝙨𝙪 𝘽𝙤𝙩 ⚡ \n⚽️ Edita este mensaje con setwelcome ⚽️'
+global.welcom2 = '💫 ¡Hasta la próxima! Gracias por haber estado con nosotros ⚡ \n⚽️ ¡Esperamos verte pronto en el campo! ⚽️ \n🔥 Edita este mensaje con setbye 🔥'
 global.banner = 'https://files.catbox.moe/l8qiik.jpeg'
 global.avatar = 'https://files.catbox.moe/h4vif1.jpeg'
 
@@ -88,12 +88,12 @@ global.APIs = {
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
-global.gp1 = 'https://chat.whatsapp.com/B9YHlQE1XVGDhyKhnSIrX2?mode=ems_copy_t'
-global.comunidad1 = 'https://chat.whatsapp.com/GPfABUmCuVN2Qu1d1PPcBY'
-global.channel = 'https://whatsapp.com/channel/0029Vb73g1r1NCrTbefbFQ2T'
-global.channel2 = 'https://whatsapp.com/channel/0029VbBIilK7tkj7TROe690d'
+global.gp1 = 'https://chat.whatsapp.com/EFUkB3vLyAzAc4ZQzLabsp'
+global.comunidad1 = 'https://chat.whatsapp.com/LRQrf8vv50BDtwN8JWfhrX'
+global.channel = 'https://whatsapp.com/channel/0029VbBUHyQCsU9IpJ0oIO2i'
+global.channel2 = 'https://whatsapp.com/channel/0029VbBUHyQCsU9IpJ0oIO2i'
 global.md = 'https://github.com/Brauliovh3/HATSUNE-MIKU'
-global.correo = 'duartexv.ofc@gmail.com' 
+global.correo = 'rufinofelipe495@gmail.com' 
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
@@ -104,16 +104,16 @@ global.rcanal = {
     forwardedNewsletterMessageInfo: { 
       newsletterJid: "120363350523130615@newsletter", 
       serverMessageId: 100, 
-      newsletterName: "⚽️🔥Isagi-Yoichi-Bot ⚽️🔥"
+      newsletterName: "⚡𝙕𝙚𝙣𝙞𝙩𝙨𝙪 𝘽𝙤𝙩 ⚡"
     }
   }
 }
 
 
-global.redes = 'https://whatsapp.com/channel/0029Vb73g1r1NCrTbefbFQ2T'
-global.dev = '© 🄿🄾🅆🄴🅁🄴🄳 DuarteXV'
-global.emoji = '⚽️'
-global.emoji2 = '🏆'
+global.redes = 'https://whatsapp.com/channel/0029VbBUHyQCsU9IpJ0oIO2i'
+global.dev = '© 𝗽𝗼𝘄𝗲𝗿𝗲𝗱 𝗯𝘆 𝗥𝘂𝗳𝗶𝗻𝗼 ✝️ '
+global.emoji = '⚡'
+global.emoji2 = '🤖'
 global.emoji3 = '🔥'
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
