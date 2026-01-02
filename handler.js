@@ -394,16 +394,16 @@ export async function handler(chatUpdate) {
 
 global.dfail = (type, m, conn) => {
     const msg = {
-        rowner: `⚽ El comando *${global.comando}* solo puede ser usado por DuarteXV (Creador).`,
-        owner: `⚽ El comando *${global.comando}* solo puede ser usado por los desarrolladores del bot.`,
-        mods: `⚽ El comando *${global.comando}* solo puede ser usado por los moderadores del bot.`,
-        premium: `⚽ El comando *${global.comando}* solo puede ser usado por los usuarios premium.`,
-        group: `⚽ El comando *${global.comando}* solo puede ser usado en grupos.`,
-        private: `⚽ El comando *${global.comando}* solo puede ser usado al chat privado del bot.`,
-        admin: `⚽ El comando *${global.comando}* solo puede ser usado por los administradores del grupo.`,
-        botAdmin: `⚽ Para ejecutar el comando *${global.comando}* debo ser administrador del grupo.`,
-        restrict: `⚽ Esta caracteristica está desactivada.`,
-        unreg: `🚫 *BOT RESTRINGIDO* 🚫\n\n🔥 *Para usar comandos necesitas registrarte*\n\n🎯 *Usa .reg nombre.edad*\n\n*Ejemplo:*\n.reg ${m.name || 'IsagiDelanero'}.18\n\n⚽️ *¡Regístrate para acceder a todas las funciones!*`
+        rowner: `⚡ El comando *${global.comando}* solo puede ser usado por DuarteXV (Creador).`,
+        owner: `⚡ El comando *${global.comando}* solo puede ser usado por los desarrolladores del bot.`,
+        mods: `⚡ El comando *${global.comando}* solo puede ser usado por los moderadores del bot.`,
+        premium: `⚡ El comando *${global.comando}* solo puede ser usado por los usuarios premium.`,
+        group: `⚡ El comando *${global.comando}* solo puede ser usado en grupos.`,
+        private: `⚡ El comando *${global.comando}* solo puede ser usado al chat privado del bot.`,
+        admin: `⚡ El comando *${global.comando}* solo puede ser usado por los administradores del grupo.`,
+        botAdmin: `⚡ Para ejecutar el comando *${global.comando}* debo ser administrador del grupo.`,
+        restrict: `⚡ Esta caracteristica está desactivada.`,
+        unreg: `🚫 *BOT RESTRINGIDO* 🚫\n\n🔥 *Para usar comandos necesitas registrarte*\n\n🎯 *Usa .reg nombre.edad*\n\n*Ejemplo:*\n.reg ${m.name || 'Zenitsu'}.18\n\n⚽️ *¡Regístrate para acceder a todas las funciones!*`
     }[type]
     if (msg) return conn.reply(m.chat, msg, m, global.rcanal).then(_ => m.react('✖️'))
 }
