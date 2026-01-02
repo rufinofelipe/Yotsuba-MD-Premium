@@ -11,7 +11,7 @@ let handler = async (m, { conn }) => {
 
   try {
     let media = await q.download();
-    
+
     // Llamada a la nueva función de Causas Files
     let link = await uploadToCausasFiles(media);
 
@@ -31,7 +31,7 @@ let handler = async (m, { conn }) => {
   }
 };
 
-handler.help = ['tourl3'];
+handler.help = ['tourl4'];
 handler.tags = ['transformador'];
 handler.command = ['tourl4'];
 
@@ -39,11 +39,11 @@ export default handler;
 
 async function uploadToCausasFiles(content) {
   const { ext, mime } = (await fileTypeFromBuffer(content)) || { ext: 'bin', mime: 'application/octet-stream' };
-  
+
   // Creamos el FormData tal como lo espera el servidor
   const formData = new FormData();
   const blob = new Blob([content], { type: mime });
-  
+
   // IMPORTANTE: El servidor espera el campo 'file' (visto en tu HTML)
   formData.append("file", blob, `file-${Date.now()}.${ext}`);
 
