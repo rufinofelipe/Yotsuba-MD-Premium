@@ -58,8 +58,8 @@ global.etiqueta = 'Rufino✝️'
 global.moneda = 'Zenitsu-coins'
 global.welcom1 = '! Bienvenido \n soy ⚡𝙕𝙚𝙣𝙞𝙩𝙨𝙪 𝘽𝙤𝙩 ⚡ \n⚽️ Edita este mensaje con setwelcome ⚽️'
 global.welcom2 = '💫 ¡Hasta la próxima! Gracias por haber estado con nosotros ⚡ \n⚽️ ¡Esperamos verte pronto en el campo! ⚽️ \n🔥 Edita este mensaje con setbye 🔥'
-global.banner = 'https://files.catbox.moe/l8qiik.jpeg'
-global.avatar = 'https://files.catbox.moe/h4vif1.jpeg'
+global.banner = 'https://qu.ax/zjtGm'
+global.avatar = 'https://qu.ax/zjtGm'
 
 global.api = {
   url: 'https://api.stellarwa.xyz',
