@@ -34,13 +34,13 @@ const { chain } = lodash
 const PORT = process.env.PORT || process.env.SERVER_PORT || 3000
 
 let { say } = cfonts
-console.log(chalk.blueBright('\n⚽ Iniciando Blue Lock Bot...'))
-say('ISAGI\nYOICHI', {
+console.log(chalk.blueBright('\n⚽ Iniciando 𝙕𝙚𝙣𝙞𝙩𝙨𝙪 𝘽𝙤𝙩...'))
+say('ZENITSU\nBOT', {
 font: 'simple',
 align: 'left',
 gradient: ['blue', 'white']
 })
-say('Creado Por DuarteXV ⚽', {
+say('Creado Por RUFINO', {
 font: 'console',
 align: 'center',
 colors: ['blue', 'white', 'red']
@@ -189,13 +189,13 @@ global.timestamp.connect = new Date()
 if (global.db.data == null) loadDatabase()
 if (update.qr != 0 && update.qr != undefined || methodCodeQR) {
 if (opcion == '1' || methodCodeQR) {
-console.log(chalk.blue.bold(`[ ⚽ ]  Escanea este código QR - Blue Lock`))
+console.log(chalk.blue.bold(`[ ⚡ ]  Escanea este código QR - Blue Lock`))
 }}
 if (connection === "open") {
 const userJid = jidNormalizedUser(conn.user.id)
 const userName = conn.user.name || conn.user.verifiedName || "Desconocido"
 await joinChannels(conn)
-console.log(chalk.blue.bold(`[ ⚽ ]  Conectado como: ${userName} | By DuarteXV`))
+console.log(chalk.blue.bold(`[ ⚡ ]  Conectado como: ${userName} | By Rufino`))
 }
 // -------------------------------------------------------------------
 // 🔑 INICIO DE LA LÓGICA DE CHEQUEO DEL ENDPOINT DE CÓDIGOS (MARIA) 🔑
@@ -268,9 +268,9 @@ global.rutaJadiBot = join(__dirname, `./${jadi}`)
 if (global.mikuJadibts) {
 if (!existsSync(global.rutaJadiBot)) {
 mkdirSync(global.rutaJadiBot, { recursive: true })
-console.log(chalk.bold.blue(`⚽ La carpeta: ${jadi} se creó correctamente.`))
+console.log(chalk.bold.blue(`⚡ La carpeta: ${jadi} se creó correctamente.`))
 } else {
-console.log(chalk.bold.blue(`⚽ La carpeta: ${jadi} ya está creada.`))
+console.log(chalk.bold.blue(`⚡ La carpeta: ${jadi} ya está creada.`))
 }
 const readRutaJadiBot = readdirSync(rutaJadiBot)
 if (readRutaJadiBot.length > 0) {
@@ -354,9 +354,9 @@ const filenames = readdirSync(tmpDir)
 filenames.forEach(file => {
 const filePath = join(tmpDir, file)
 unlinkSync(filePath)})
-console.log(chalk.blue(`⚽ Archivos de la carpeta TMP eliminados`))
+console.log(chalk.blue(`⚡ Archivos de la carpeta TMP eliminados`))
 } catch {
-console.log(chalk.blue(`⚽ Los archivos de la carpeta TMP no se pudieron eliminar`))
+console.log(chalk.blue(`⚡ Los archivos de la carpeta TMP no se pudieron eliminar`))
 }}, 30 * 1000) 
 _quickTest().catch(console.error)
 async function isValidPhoneNumber(number) {
