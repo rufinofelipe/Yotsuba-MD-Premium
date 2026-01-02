@@ -31,9 +31,9 @@ let handler = async (m, { conn }) => {
   }
 };
 
-handler.help = ['tourl3'];
+handler.help = ['tourl'];
 handler.tags = ['transformador'];
-handler.command = ['tourl3'];
+handler.command = ['tourl4'];
 
 export default handler;
 
