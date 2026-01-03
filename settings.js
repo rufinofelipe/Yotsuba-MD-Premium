@@ -16,20 +16,18 @@ global.botNumber = ''
 
 global.owner = [
 // <-- Número @s.whatsapp.net -->
-['18096758983', 'nevi', true],
 ['573196722008', 'DuarteXV', true], 
-['50493732693', 'Hsjajzh', true],
-['51933000214', 'Ander', true],
+['240222646582', 'Rufino', true],
 ['573135180876','Duarte', true],
   
 // <-- Número @lid -->
-  ['212137662218436', 'DuarteXV', true]
+  ['210200699113555', 'Rufino', true]
 ];
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
 global.mods = []
-global.suittag = ['573135180876'] 
+global.suittag = ['240222646582'] 
 global.prems = []
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
