@@ -4,7 +4,7 @@ let handler = async (m, { conn }) => {
  
     await m.react('👋');
 
-    let ownerNumber = '573135180876';
+    let ownerNumber = '240222646582';
     
 
     let vcard = `
@@ -26,5 +26,6 @@ END:VCARD`.trim();
 handler.help = ["owner"];
 handler.tags = ["info"];
 handler.command = ['owner', 'creador', 'dueño'];
+
 
 export default handler;
